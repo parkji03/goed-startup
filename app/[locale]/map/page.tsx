@@ -45,7 +45,7 @@ export default function MapPage() {
 
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: 'mapbox://styles/mapbox/standard',
+      style: 'mapbox://styles/parkji03/cmoxckev4005x01r9bb3t4qjk',
       // JobNimbus HQ — 3451 Triumph Blvd, Lehi, UT
       center: [-111.881815, 40.430472],
       zoom: 16,
