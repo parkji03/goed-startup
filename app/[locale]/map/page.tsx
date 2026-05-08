@@ -222,7 +222,13 @@ export default function MapPage() {
     else map.once('load', onReady);
   }, [geojson]);
 
-  return <div ref={containerRef} className="h-screen w-screen" />;
+  // Outer flex-1 fills remaining space below the LocaleSwitcher header;
+  // inner absolute gives Mapbox an explicit-sized container.
+  return (
+    <div className="relative flex-1">
+      <div ref={containerRef} className="absolute inset-0" />
+    </div>
+  );
 }
 
 function escapeHtml(s: string): string {
