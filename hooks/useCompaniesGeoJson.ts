@@ -11,6 +11,7 @@ export type CompanyFeatureProps = {
   name: string;
   slug: string;
   sector: SectorId;
+  website?: string;
 };
 
 /**
@@ -39,6 +40,7 @@ export function useCompaniesGeoJson():
           name: c.name,
           slug: c.slug,
           sector: c.sector,
+          website: c.website,
         },
       })),
     };

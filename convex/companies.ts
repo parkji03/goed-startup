@@ -41,6 +41,7 @@ export const listForMap = query({
         name: c.name,
         slug: c.slug,
         sector: c.sector,
+        website: c.website,
         lng: c.location.lng!,
         lat: c.location.lat!,
       }));
