@@ -20,12 +20,13 @@ import {
   normalizeEmployeeCount,
 } from '../lib/companies/taxonomy';
 import { ADDRESS_OVERRIDES } from '../data/address-overrides';
+import { FOUNDED_YEAR_OVERRIDES } from '../data/founded-year-overrides';
 import { geocode } from './lib/geocode';
 
 const CSV_PATH = path.resolve(
   __dirname,
   '..',
-  'Map Data for Builder Day  - Sheet1.csv',
+  'Map Data for Builder Day - with-founded.csv',
 );
 
 const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL;
@@ -45,6 +46,8 @@ type CsvRow = {
   'Stage': string;
   '# of Employees ': string;
   'Section': string;
+  'Founded Year'?: string;
+  'Founded Source'?: string;
 };
 
 function slugify(name: string): string {
@@ -67,6 +70,16 @@ function normalizeWebsite(raw: string): string | undefined {
 function cleanString(raw: string): string | undefined {
   const trimmed = raw?.trim();
   return trimmed || undefined;
+}
+
+function parseYear(raw: string | undefined): number | undefined {
+  const trimmed = raw?.trim();
+  if (!trimmed) return undefined;
+  const n = Number(trimmed);
+  if (!Number.isInteger(n) || n < 1900 || n > new Date().getFullYear() + 1) {
+    return undefined;
+  }
+  return n;
 }
 
 async function main() {
@@ -122,6 +135,7 @@ async function main() {
         sector: normalizeSector(row['Section']),
         stage: normalizeStage(row['Stage']),
         employeeCount: normalizeEmployeeCount(row['# of Employees ']),
+        yearFounded: parseYear(row['Founded Year']),
         location: {
           rawAddress,
           city: geo?.city,

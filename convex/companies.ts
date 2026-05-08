@@ -78,6 +78,7 @@ export const seedOne = mutation({
     sector: sectorValidator,
     stage: v.optional(stageValidator),
     employeeCount: v.optional(employeeCountValidator),
+    yearFounded: v.optional(v.number()),
     location: locationValidator,
   },
   handler: async (ctx, args) => {
