@@ -1,4 +1,7 @@
 {
+  "Brand": {
+    "logoAlt": "Startup Utah — Inicio"
+  },
   "LocaleLayout": {
     "title": "Utah Startup State",
     "description": "Plataforma lista para producción para la iniciativa Startup State."
@@ -7,6 +10,13 @@
     "label": "Idioma",
     "en": "Inglés",
     "es": "Español"
+  },
+  "ThemeSwitcher": {
+    "switchToDark": "Cambiar a tema oscuro",
+    "switchToLight": "Cambiar a tema claro"
+  },
+  "AdminHeader": {
+    "publicSite": "Sitio público"
   },
   "HomePage": {
     "heading": "Para empezar, edita el archivo page.tsx.",
@@ -28,5 +38,17 @@
     "title": "Página no encontrada",
     "body": "La página que buscas no existe.",
     "homeLink": "Volver al inicio"
+  },
+  "AdminHome": {
+    "title": "Admin — Utah Startup State",
+    "badge": "Consola admin",
+    "tagline": "Superficie GOED autenticada · no es el sitio público",
+    "heading": "Estás en el inicio de administración",
+    "sessionLabel": "Sesión",
+    "blurb": "Este panel ámbar solo aparece bajo /admin cuando Clerk te deja pasar; el inicio público por idioma sigue viéndose como la plantilla Next por defecto.",
+    "bulletResources": "CMS de recursos (CRUD + pestañas por idioma)",
+    "bulletCompanies": "Cola de moderación de empresas",
+    "bulletChat": "Revisión de chats (solo lectura)",
+    "bulletDistinct": "Distinto del Navigator / Mapa / Chat para founders"
   }
 }

@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@base-ui/react": "^1.4.1",
+    "@clerk/nextjs": "^7.3.3",
     "@heroicons/react": "^2.2.0",
     "@internationalized/date": "^3.12.1",
     "@react-aria/i18n": "^3.13.0",
@@ -25,6 +26,7 @@
     "motion": "^12.38.0",
     "next": "16.2.6",
     "next-intl": "^4.11.1",
+    "next-themes": "^0.4.6",
     "papaparse": "^5.5.3",
     "react": "19.2.4",
     "react-aria-components": "^1.17.0",

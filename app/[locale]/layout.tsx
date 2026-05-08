@@ -1,4 +1,4 @@
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { LocaleLayoutHeader } from "@/components/locale-layout-header";
 import { Providers } from "@/components/providers";
 import { routing } from "@/i18n/routing";
 import { appTimeZone } from "@/i18n/time-zone";
@@ -66,9 +66,7 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-full flex-col">
         <Providers locale={locale} messages={messages} timeZone={timeZone}>
-          <header className="flex justify-end border-b border-black/5 px-4 py-3 dark:border-white/10">
-            <LocaleSwitcher locale={locale} />
-          </header>
+          <LocaleLayoutHeader locale={locale} />
           {children}
         </Providers>
       </body>

@@ -1,4 +1,7 @@
 {
+  "Brand": {
+    "logoAlt": "Startup Utah — Home"
+  },
   "LocaleLayout": {
     "title": "Utah Startup State",
     "description": "Production-ready platform for the Startup State initiative."
@@ -7,6 +10,13 @@
     "label": "Language",
     "en": "English",
     "es": "Spanish"
+  },
+  "ThemeSwitcher": {
+    "switchToDark": "Switch to dark theme",
+    "switchToLight": "Switch to light theme"
+  },
+  "AdminHeader": {
+    "publicSite": "Public site"
   },
   "HomePage": {
     "heading": "To get started, edit the page.tsx file.",
@@ -28,5 +38,17 @@
     "title": "Page not found",
     "body": "The page you are looking for does not exist.",
     "homeLink": "Back home"
+  },
+  "AdminHome": {
+    "title": "Admin — Utah Startup State",
+    "badge": "Admin console",
+    "tagline": "Authenticated GOED surface · not the public site",
+    "heading": "You’re on the admin home",
+    "sessionLabel": "Signed in as",
+    "blurb": "This amber panel only appears under /admin after Clerk lets you through; the public locale home stays the default Next starter look.",
+    "bulletResources": "Resources CMS (CRUD + locale tabs)",
+    "bulletCompanies": "Company moderation queue",
+    "bulletChat": "Chat session review (read-only)",
+    "bulletDistinct": "Distinct from founder-facing Navigator / Map / Chat"
   }
 }

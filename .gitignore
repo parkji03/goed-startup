@@ -44,3 +44,6 @@ next-env.d.ts
 # python (for scripts/*.py helpers)
 __pycache__/
 *.pyc
+
+# clerk configuration (can include secrets)
+/.clerk/
