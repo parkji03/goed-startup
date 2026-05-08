@@ -82,7 +82,7 @@ export const searchForMap = query({
       ? new Set(employeeCounts)
       : null;
 
-    return rows
+    const filtered = rows
       .filter((c) => c.location.lat != null && c.location.lng != null)
       .filter((c) => !sectorSet || sectorSet.has(c.sector))
       .filter((c) => !stageSet || (c.stage != null && stageSet.has(c.stage)))
@@ -90,7 +90,25 @@ export const searchForMap = query({
         (c) =>
           !employeeSet ||
           (c.employeeCount != null && employeeSet.has(c.employeeCount)),
-      )
+      );
+
+    // Re-rank so company-name matches surface above website/description-only
+    // matches. Convex's BM25 over the combined searchText weights all three
+    // fields equally; this pass restores name primacy without a schema change.
+    const ranked = trimmed.length > 0
+      ? (() => {
+          const needle = trimmed.toLowerCase();
+          const nameHits: typeof filtered = [];
+          const rest: typeof filtered = [];
+          for (const c of filtered) {
+            if (c.name.toLowerCase().includes(needle)) nameHits.push(c);
+            else rest.push(c);
+          }
+          return [...nameHits, ...rest];
+        })()
+      : filtered;
+
+    return ranked
       .map((c) => ({
         _id: c._id,
         name: c.name,
