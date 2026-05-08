@@ -75,6 +75,7 @@ export const seedOne = mutation({
     description: v.optional(v.string()),
     website: v.optional(v.string()),
     linkedin: v.optional(v.string()),
+    logoUrl: v.optional(v.string()),
     sector: sectorValidator,
     stage: v.optional(stageValidator),
     employeeCount: v.optional(employeeCountValidator),

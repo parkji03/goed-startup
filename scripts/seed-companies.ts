@@ -26,7 +26,7 @@ import { geocode } from './lib/geocode';
 const CSV_PATH = path.resolve(
   __dirname,
   '..',
-  'Map Data for Builder Day - with-founded.csv',
+  'Map Data for Builder Day - with-logos.csv',
 );
 
 const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL;
@@ -48,6 +48,8 @@ type CsvRow = {
   'Section': string;
   'Founded Year'?: string;
   'Founded Source'?: string;
+  'Logo URL'?: string;
+  'Logo Source'?: string;
 };
 
 function slugify(name: string): string {
@@ -132,10 +134,11 @@ async function main() {
         description: cleanString(row['Description of startup']),
         website: normalizeWebsite(row['Website'] ?? ''),
         linkedin: cleanString(row['LinkedIn Link (map it to Links to get the logo)']),
+        logoUrl: cleanString(row['Logo URL']),
         sector: normalizeSector(row['Section']),
         stage: normalizeStage(row['Stage']),
         employeeCount: normalizeEmployeeCount(row['# of Employees ']),
-        yearFounded: parseYear(row['Founded Year']),
+        yearFounded: FOUNDED_YEAR_OVERRIDES[slug] ?? parseYear(row['Founded Year']),
         location: {
           rawAddress,
           city: geo?.city,

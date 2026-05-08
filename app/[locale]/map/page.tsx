@@ -9,32 +9,38 @@ import { sectorById, type SectorId } from '@/lib/companies/taxonomy';
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 const COMPANIES_SOURCE = 'companies';
+const MARKER_IMAGE_ID = 'company-marker';
+// Source of truth for the marker visuals. Edit public/marker.svg and reload —
+// no canvas drawing, no per-sector tint, no code changes here.
+const MARKER_IMAGE_SRC = '/marker.svg';
 
-// Sector colors live here, not in taxonomy.ts — visual concern stays separate
-// from the canonical id/label data. Tweak freely without touching the schema.
-const SECTOR_COLOR: Record<SectorId, string> = {
-  'b2b-software': '#22C55E',
-  'consumer':     '#F97316',
-  'fintech':      '#3B82F6',
-  'bio-medical':  '#EC4899',
-  'security':     '#A855F7',
-  'energy':       '#EAB308',
-  'marketplaces': '#14B8A6',
-  'other':        '#6B7280',
-};
-
-// Mapbox `match` expression: ['match', ['get', 'sector'], 'id1', '#aaa', 'id2', '#bbb', /* fallback */]
-const sectorColorExpression = [
-  'match',
-  ['get', 'sector'],
-  ...Object.entries(SECTOR_COLOR).flatMap(([id, color]) => [id, color]),
-  '#6B7280',
-] as mapboxgl.ExpressionSpecification;
+/**
+ * Loads an image file (any browser-renderable URL — SVG, PNG, etc.) and
+ * returns it as ImageData ready for `map.addImage`. The browser does the
+ * decoding via `<img>`; we just rasterize it onto a canvas at 2× for retina.
+ */
+function loadImageAsImageData(src: string, devicePixelRatio = 2): Promise<ImageData> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      const w = img.naturalWidth * devicePixelRatio;
+      const h = img.naturalHeight * devicePixelRatio;
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d')!;
+      ctx.drawImage(img, 0, 0, w, h);
+      resolve(ctx.getImageData(0, 0, w, h));
+    };
+    img.onerror = (e) => reject(new Error(`Failed to load marker image: ${src} (${e})`));
+    img.src = src;
+  });
+}
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const layersAddedRef = useRef(false);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
 
   const geojson = useCompaniesGeoJson();
@@ -69,7 +75,6 @@ export default function MapPage() {
       popupRef.current = null;
       map.remove();
       mapRef.current = null;
-      layersAddedRef.current = false;
     };
   }, []);
 
@@ -78,7 +83,7 @@ export default function MapPage() {
     const map = mapRef.current;
     if (!map || !geojson) return;
 
-    const onReady = () => {
+    const onReady = async () => {
       const existing = map.getSource(COMPANIES_SOURCE) as
         | mapboxgl.GeoJSONSource
         | undefined;
@@ -87,6 +92,14 @@ export default function MapPage() {
         // Reactive update — same source, new data. No re-add of layers.
         existing.setData(geojson);
         return;
+      }
+
+      // Load the marker image from public/. Idempotent — bail if already added.
+      if (!map.hasImage(MARKER_IMAGE_ID)) {
+        const imageData = await loadImageAsImageData(MARKER_IMAGE_SRC, 2);
+        // Bail if the map was torn down while we were loading
+        if (!mapRef.current) return;
+        map.addImage(MARKER_IMAGE_ID, imageData, { pixelRatio: 2 });
       }
 
       map.addSource(COMPANIES_SOURCE, {
@@ -105,7 +118,7 @@ export default function MapPage() {
         filter: ['has', 'point_count'],
         paint: {
           'circle-color': '#1F2937',
-          'circle-stroke-color': '#22C55E',
+          'circle-stroke-color': '#FFFFFF',
           'circle-stroke-width': 2,
           'circle-radius': [
             'step',
@@ -131,22 +144,38 @@ export default function MapPage() {
         paint: { 'text-color': '#FFFFFF' },
       });
 
-      // Individual companies
+      // Halo glow that appears beneath the marker on hover. Uses a paint
+      // property (circle-opacity) with feature-state — symbol layout
+      // properties can't read feature-state.
       map.addLayer({
-        id: 'companies-points',
+        id: 'companies-halo',
         source: COMPANIES_SOURCE,
         type: 'circle',
         filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': sectorColorExpression,
-          'circle-radius': 7,
-          'circle-stroke-color': '#FFFFFF',
-          'circle-stroke-width': [
+          'circle-color': '#FFFFFF',
+          'circle-radius': 22,
+          'circle-blur': 0.6,
+          'circle-opacity': [
             'case',
             ['boolean', ['feature-state', 'hover'], false],
-            3,
-            1.5,
+            0.5,
+            0,
           ],
+        },
+      });
+
+      // Individual companies — symbol layer using the loaded SVG
+      map.addLayer({
+        id: 'companies-points',
+        source: COMPANIES_SOURCE,
+        type: 'symbol',
+        filter: ['!', ['has', 'point_count']],
+        layout: {
+          'icon-image': MARKER_IMAGE_ID,
+          'icon-allow-overlap': true,
+          'icon-ignore-placement': true,
+          'icon-anchor': 'center',
         },
       });
 
@@ -223,8 +252,6 @@ export default function MapPage() {
       map.on('mouseleave', 'clusters', () => {
         map.getCanvas().style.cursor = '';
       });
-
-      layersAddedRef.current = true;
     };
 
     if (map.isStyleLoaded()) onReady();
