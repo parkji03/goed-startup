@@ -3,45 +3,26 @@
 import { useEffect, useRef } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import { useCompaniesGeoJson } from '@/hooks/useCompaniesGeoJson';
-import { sectorById, type SectorId } from '@/lib/companies/taxonomy';
+import {
+  useCompaniesGeoJson,
+  type CompanyFeatureProps,
+} from '@/hooks/useCompaniesGeoJson';
+import { sectorById } from '@/lib/companies/taxonomy';
+import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 const COMPANIES_SOURCE = 'companies';
-const MARKER_IMAGE_ID = 'company-marker';
-// Source of truth for the marker visuals. Edit public/marker.svg and reload —
-// no canvas drawing, no per-sector tint, no code changes here.
-const MARKER_IMAGE_SRC = '/marker.svg';
-
-/**
- * Loads an image file (any browser-renderable URL — SVG, PNG, etc.) and
- * returns it as ImageData ready for `map.addImage`. The browser does the
- * decoding via `<img>`; we just rasterize it onto a canvas at 2× for retina.
- */
-function loadImageAsImageData(src: string, devicePixelRatio = 2): Promise<ImageData> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const w = img.naturalWidth * devicePixelRatio;
-      const h = img.naturalHeight * devicePixelRatio;
-      const canvas = document.createElement('canvas');
-      canvas.width = w;
-      canvas.height = h;
-      const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(img, 0, 0, w, h);
-      resolve(ctx.getImageData(0, 0, w, h));
-    };
-    img.onerror = (e) => reject(new Error(`Failed to load marker image: ${src} (${e})`));
-    img.src = src;
-  });
-}
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const popupRef = useRef<mapboxgl.Popup | null>(null);
+  // Live registry of DOM markers, keyed by company `_id`. Mapbox owns cluster
+  // rendering; this map owns the per-company logo markers and reconciles them
+  // against the source's currently-unclustered features on every viewport
+  // change.
+  const markersRef = useRef<Map<string, mapboxgl.Marker>>(new Map());
 
   const geojson = useCompaniesGeoJson();
 
@@ -69,37 +50,35 @@ export default function MapPage() {
     });
     resizeObserver.observe(containerRef.current);
 
+    // Capture the ref's Map instance now so the cleanup uses the same
+    // collection we've been mutating during this effect's lifetime.
+    const markers = markersRef.current;
+
     return () => {
       resizeObserver.disconnect();
       popupRef.current?.remove();
       popupRef.current = null;
+      for (const marker of markers.values()) marker.remove();
+      markers.clear();
       map.remove();
       mapRef.current = null;
     };
   }, []);
 
-  // Wire source + layers once data is available; update source on subsequent changes
+  // Wire source + cluster layers + DOM marker sync once data is available
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !geojson) return;
 
-    const onReady = async () => {
+    const onReady = () => {
       const existing = map.getSource(COMPANIES_SOURCE) as
         | mapboxgl.GeoJSONSource
         | undefined;
 
       if (existing) {
-        // Reactive update — same source, new data. No re-add of layers.
         existing.setData(geojson);
+        // sourcedata event below will retrigger the marker sync
         return;
-      }
-
-      // Load the marker image from public/. Idempotent — bail if already added.
-      if (!map.hasImage(MARKER_IMAGE_ID)) {
-        const imageData = await loadImageAsImageData(MARKER_IMAGE_SRC, 2);
-        // Bail if the map was torn down while we were loading
-        if (!mapRef.current) return;
-        map.addImage(MARKER_IMAGE_ID, imageData, { pixelRatio: 2 });
       }
 
       map.addSource(COMPANIES_SOURCE, {
@@ -110,7 +89,9 @@ export default function MapPage() {
         clusterMaxZoom: 14,
       });
 
-      // Cluster bubbles
+      // Cluster bubbles. Stroke width matches the visual weight of the
+      // individual logo markers (which have a 2px solid white ring), so the
+      // two read as part of the same family.
       map.addLayer({
         id: 'clusters',
         source: COMPANIES_SOURCE,
@@ -119,7 +100,12 @@ export default function MapPage() {
         paint: {
           'circle-color': '#1F2937',
           'circle-stroke-color': '#FFFFFF',
-          'circle-stroke-width': 2,
+          'circle-stroke-width': 3,
+          // Mapbox v3 applies scene lighting to circle layers by default,
+          // which dims our pure white stroke to gray under the dark style's
+          // light. Bump emissive strength so the cluster renders at its
+          // actual paint colors, ignoring lighting.
+          'circle-emissive-strength': 1,
           'circle-radius': [
             'step',
             ['get', 'point_count'],
@@ -141,68 +127,12 @@ export default function MapPage() {
           'text-font': ['DIN Pro Medium', 'Arial Unicode MS Bold'],
           'text-size': 13,
         },
-        paint: { 'text-color': '#FFFFFF' },
-      });
-
-      // Halo glow that appears beneath the marker on hover. Uses a paint
-      // property (circle-opacity) with feature-state — symbol layout
-      // properties can't read feature-state.
-      map.addLayer({
-        id: 'companies-halo',
-        source: COMPANIES_SOURCE,
-        type: 'circle',
-        filter: ['!', ['has', 'point_count']],
         paint: {
-          'circle-color': '#FFFFFF',
-          'circle-radius': 22,
-          'circle-blur': 0.6,
-          'circle-opacity': [
-            'case',
-            ['boolean', ['feature-state', 'hover'], false],
-            0.5,
-            0,
-          ],
+          'text-color': '#FFFFFF',
+          // Match the cluster bubble — render at full color regardless of
+          // the dark style's scene lighting.
+          'text-emissive-strength': 1,
         },
-      });
-
-      // Individual companies — symbol layer using the loaded SVG
-      map.addLayer({
-        id: 'companies-points',
-        source: COMPANIES_SOURCE,
-        type: 'symbol',
-        filter: ['!', ['has', 'point_count']],
-        layout: {
-          'icon-image': MARKER_IMAGE_ID,
-          'icon-allow-overlap': true,
-          'icon-ignore-placement': true,
-          'icon-anchor': 'center',
-        },
-      });
-
-      // Click → popup
-      map.on('click', 'companies-points', (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-        const geom = feature.geometry;
-        if (geom.type !== 'Point') return;
-        const props = feature.properties as {
-          name: string;
-          slug: string;
-          sector: SectorId;
-        };
-        const [lng, lat] = geom.coordinates;
-
-        popupRef.current?.remove();
-        popupRef.current = new mapboxgl.Popup({ offset: 14, closeButton: true })
-          .setLngLat([lng, lat])
-          .setHTML(
-            `<div style="font-family:system-ui;padding:4px 6px;">
-               <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
-               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(sectorById(props.sector).label)}</div>
-               <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">View profile →</a>
-             </div>`,
-          )
-          .addTo(map);
       });
 
       // Click on cluster → zoom in
@@ -222,41 +152,73 @@ export default function MapPage() {
           });
         });
       });
-
-      // Hover state via feature-state (cheap; no layer repaint)
-      let hoveredId: number | null = null;
-      map.on('mousemove', 'companies-points', (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-        if (hoveredId !== null) {
-          map.setFeatureState(
-            { source: COMPANIES_SOURCE, id: hoveredId },
-            { hover: false },
-          );
-        }
-        hoveredId = feature.id as number;
-        map.setFeatureState(
-          { source: COMPANIES_SOURCE, id: hoveredId },
-          { hover: true },
-        );
-        map.getCanvas().style.cursor = 'pointer';
-      });
-      map.on('mouseleave', 'companies-points', () => {
-        if (hoveredId !== null) {
-          map.setFeatureState(
-            { source: COMPANIES_SOURCE, id: hoveredId },
-            { hover: false },
-          );
-        }
-        hoveredId = null;
-        map.getCanvas().style.cursor = '';
-      });
       map.on('mouseenter', 'clusters', () => {
         map.getCanvas().style.cursor = 'pointer';
       });
       map.on('mouseleave', 'clusters', () => {
         map.getCanvas().style.cursor = '';
       });
+
+      const openPopup = (
+        props: CompanyFeatureProps,
+        lngLat: [number, number],
+      ) => {
+        popupRef.current?.remove();
+        popupRef.current = new mapboxgl.Popup({ offset: 22, closeButton: true })
+          .setLngLat(lngLat)
+          .setHTML(
+            `<div style="font-family:system-ui;padding:4px 6px;">
+               <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
+               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(sectorById(props.sector).label)}</div>
+               <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">View profile →</a>
+             </div>`,
+          )
+          .addTo(map);
+      };
+
+      const syncMarkers = () => {
+        if (!map.getSource(COMPANIES_SOURCE)) return;
+        const markers = markersRef.current;
+        const features = map.querySourceFeatures(COMPANIES_SOURCE, {
+          filter: ['!', ['has', 'point_count']],
+        });
+
+        const visibleIds = new Set<string>();
+        for (const f of features) {
+          if (f.geometry.type !== 'Point') continue;
+          const props = f.properties as unknown as CompanyFeatureProps;
+          const id = props._id;
+          if (!id || visibleIds.has(id)) continue;
+          visibleIds.add(id);
+
+          if (markers.has(id)) continue;
+          const lngLat = f.geometry.coordinates as [number, number];
+          const el = createMarkerElement(props, () => openPopup(props, lngLat));
+          const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+            .setLngLat(lngLat)
+            .addTo(map);
+          markers.set(id, marker);
+        }
+
+        for (const [id, marker] of markers) {
+          if (!visibleIds.has(id)) {
+            marker.remove();
+            markers.delete(id);
+          }
+        }
+      };
+
+      map.on('moveend', syncMarkers);
+      map.on('sourcedata', (e) => {
+        if (
+          e.sourceId === COMPANIES_SOURCE &&
+          map.isSourceLoaded(COMPANIES_SOURCE)
+        ) {
+          syncMarkers();
+        }
+      });
+      // First paint — source may already be loaded synchronously
+      syncMarkers();
     };
 
     if (map.isStyleLoaded()) onReady();
@@ -278,6 +240,99 @@ export default function MapPage() {
       }}
     />
   );
+}
+
+function createMarkerElement(
+  props: CompanyFeatureProps,
+  onClick: () => void,
+): HTMLDivElement {
+  const logoSrc = logoDevUrl(domainFromUrl(props.website), { size: 96 });
+
+  // IMPORTANT: Mapbox writes `transform: translate(...)` to the marker's root
+  // element every frame to keep it pinned to its lng/lat. Anything we put on
+  // that element that animates `transform` (CSS transition, scale, etc.) will
+  // fight Mapbox's positioning and produce visible lag during pan/zoom. So
+  // the root is a bare positioning anchor — all visuals + hover effects live
+  // on an inner wrapper.
+  const root = document.createElement('div');
+  root.setAttribute('aria-label', props.name);
+  root.title = props.name;
+  Object.assign(root.style, {
+    width: '36px',
+    height: '36px',
+    cursor: 'pointer',
+    willChange: 'transform',
+  } as Partial<CSSStyleDeclaration>);
+
+  const inner = document.createElement('div');
+  Object.assign(inner.style, {
+    width: '100%',
+    height: '100%',
+    borderRadius: '50%',
+    backgroundColor: '#FFFFFF',
+    border: '2px solid #FFFFFF',
+    boxShadow:
+      '0 1px 2px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.18)',
+    overflow: 'hidden',
+    display: 'grid',
+    placeItems: 'center',
+    transition: 'transform 120ms ease, box-shadow 120ms ease',
+    transformOrigin: 'center',
+  } as Partial<CSSStyleDeclaration>);
+  root.appendChild(inner);
+
+  root.addEventListener('mouseenter', () => {
+    inner.style.transform = 'scale(1.12)';
+    inner.style.boxShadow =
+      '0 2px 4px rgba(0,0,0,0.12), 0 8px 20px rgba(0,0,0,0.22)';
+  });
+  root.addEventListener('mouseleave', () => {
+    inner.style.transform = '';
+    inner.style.boxShadow =
+      '0 1px 2px rgba(0,0,0,0.10), 0 4px 12px rgba(0,0,0,0.18)';
+  });
+  root.addEventListener('click', (e) => {
+    e.stopPropagation();
+    onClick();
+  });
+
+  if (logoSrc) {
+    const img = document.createElement('img');
+    img.src = logoSrc;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    Object.assign(img.style, {
+      width: '100%',
+      height: '100%',
+      objectFit: 'contain',
+      backgroundColor: '#FFFFFF',
+    } as Partial<CSSStyleDeclaration>);
+    // logo.dev returns a generic placeholder for unknown domains, so we won't
+    // usually hit `error`. If we do (network failure, blocked), fall back to
+    // an initial so the marker is never empty.
+    img.addEventListener('error', () => {
+      img.remove();
+      inner.appendChild(buildInitial(props.name));
+    });
+    inner.appendChild(img);
+  } else {
+    inner.appendChild(buildInitial(props.name));
+  }
+
+  return root;
+}
+
+function buildInitial(name: string): HTMLDivElement {
+  const initial = document.createElement('div');
+  initial.textContent = (name.trim().charAt(0) || '?').toUpperCase();
+  Object.assign(initial.style, {
+    fontFamily: 'system-ui, sans-serif',
+    fontWeight: '600',
+    fontSize: '14px',
+    color: '#1F2937',
+  } as Partial<CSSStyleDeclaration>);
+  return initial;
 }
 
 function escapeHtml(s: string): string {
