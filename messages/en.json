@@ -50,5 +50,34 @@
     "bulletCompanies": "Company moderation queue",
     "bulletChat": "Chat session review (read-only)",
     "bulletDistinct": "Distinct from founder-facing Navigator / Map / Chat"
+  },
+  "Taxonomy": {
+    "sectors": {
+      "b2b-software": "B2B Software",
+      "consumer": "Consumer",
+      "fintech": "FinTech",
+      "bio-medical": "Bio/Medical Tech",
+      "security": "Security",
+      "energy": "Energy",
+      "marketplaces": "Marketplaces",
+      "other": "Other"
+    },
+    "stages": {
+      "pre-seed": "Pre-Seed",
+      "seed": "Seed",
+      "series-a": "Series A",
+      "series-b": "Series B",
+      "series-c": "Series C",
+      "series-d-plus": "Series D+",
+      "bootstrapped": "Bootstrapped"
+    },
+    "employeeCounts": {
+      "2-10": "2–10",
+      "11-50": "11–50",
+      "51-200": "51–200",
+      "201-500": "201–500",
+      "501-1k": "501–1K",
+      "1k-5k": "1K–5K"
+    }
   }
 }

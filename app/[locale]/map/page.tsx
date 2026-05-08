@@ -1,13 +1,13 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import {
   useCompaniesGeoJson,
   type CompanyFeatureProps,
 } from '@/hooks/useCompaniesGeoJson';
-import { sectorById } from '@/lib/companies/taxonomy';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
@@ -24,6 +24,7 @@ export default function MapPage() {
   // change.
   const markersRef = useRef<Map<string, mapboxgl.Marker>>(new Map());
 
+  const t = useTranslations('Taxonomy');
   const geojson = useCompaniesGeoJson();
 
   // Initialize the map once
@@ -169,7 +170,7 @@ export default function MapPage() {
           .setHTML(
             `<div style="font-family:system-ui;padding:4px 6px;">
                <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
-               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(sectorById(props.sector).label)}</div>
+               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(t(`sectors.${props.sector}`))}</div>
                <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">View profile →</a>
              </div>`,
           )
@@ -223,7 +224,7 @@ export default function MapPage() {
 
     if (map.isStyleLoaded()) onReady();
     else map.once('load', onReady);
-  }, [geojson]);
+  }, [geojson, t]);
 
   // Pinned to the viewport below the LocaleSwitcher header. `position: fixed`
   // is relative to the viewport directly, so we don't depend on any parent

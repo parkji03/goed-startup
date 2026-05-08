@@ -50,5 +50,34 @@
     "bulletCompanies": "Cola de moderación de empresas",
     "bulletChat": "Revisión de chats (solo lectura)",
     "bulletDistinct": "Distinto del Navigator / Mapa / Chat para founders"
+  },
+  "Taxonomy": {
+    "sectors": {
+      "b2b-software": "Software B2B",
+      "consumer": "Consumo",
+      "fintech": "FinTech",
+      "bio-medical": "Biotecnología / Medicina",
+      "security": "Seguridad",
+      "energy": "Energía",
+      "marketplaces": "Marketplaces",
+      "other": "Otro"
+    },
+    "stages": {
+      "pre-seed": "Pre-semilla",
+      "seed": "Semilla",
+      "series-a": "Serie A",
+      "series-b": "Serie B",
+      "series-c": "Serie C",
+      "series-d-plus": "Serie D+",
+      "bootstrapped": "Autofinanciado"
+    },
+    "employeeCounts": {
+      "2-10": "2–10",
+      "11-50": "11–50",
+      "51-200": "51–200",
+      "201-500": "201–500",
+      "501-1k": "501–1K",
+      "1k-5k": "1K–5K"
+    }
   }
 }
