@@ -10,7 +10,8 @@ import { Text } from "@/components/ui/text";
 import { Input } from "@/components/ui/input";
 import { loadQuizAnswers } from "@/lib/founder-quiz";
 
-const THREAD_SESSION_KEY = "goed-guide-thread-v1";
+/** Bump when backend requires per-user-owned threads so stale anonymous sessions rotate. */
+const THREAD_SESSION_KEY = "goed-guide-thread-v2";
 
 function messageText(parts: unknown[] | undefined) {
   if (!parts) return "";
@@ -31,15 +32,21 @@ export function GuideClient({ initialQuery = "" }: { initialQuery?: string }) {
   const send = useAction(api.guide.sendMessage);
 
   const [input, setInput] = useState(initialQuery);
+  const [bootstrapError, setBootstrapError] = useState<string | null>(null);
 
   useEffect(() => {
     if (threadId) return;
     let cancelled = false;
     void (async () => {
-      const created = await createThread({});
-      if (cancelled) return;
-      sessionStorage.setItem(THREAD_SESSION_KEY, created.threadId);
-      setThreadId(created.threadId);
+      setBootstrapError(null);
+      try {
+        const created = await createThread({});
+        if (cancelled) return;
+        sessionStorage.setItem(THREAD_SESSION_KEY, created.threadId);
+        setThreadId(created.threadId);
+      } catch (err) {
+        if (!cancelled) setBootstrapError(err instanceof Error ? err.message : String(err));
+      }
     })();
     return () => {
       cancelled = true;
@@ -63,9 +70,22 @@ export function GuideClient({ initialQuery = "" }: { initialQuery?: string }) {
         Retrieval + profile-aware re-ranking over published resources. Responses stream through Convex;
         refresh-safe via the Agent component.
       </Text>
+      {bootstrapError ? (
+        <div className="rounded-xl border border-border bg-muted/40 p-4">
+          <Text className="text-danger-subtle-fg text-sm font-medium">Could not start guide thread</Text>
+          <Text className="text-muted-fg mt-2 text-sm">{bootstrapError}</Text>
+          <Text className="text-muted-fg mt-2 text-xs">
+            Sign in (Clerk) so Convex receives your JWT. If this persists, reset the chat below and try again.
+          </Text>
+        </div>
+      ) : null}
       <div className="space-y-4 rounded-xl border border-border bg-muted/20 p-4">
-        {results.length === 0 ? (
-          <Text className="text-muted-fg text-sm">Starting thread…</Text>
+        {bootstrapError ? (
+          <Text className="text-muted-fg text-sm">
+            Messages load after you are signed in and a thread has been created.
+          </Text>
+        ) : results.length === 0 ? (
+          <Text className="text-muted-fg text-sm">{threadId ? "Starting chat…" : "Starting thread…"}</Text>
         ) : (
           results.map((m) => (
             <div key={`${m.order}-${m.stepOrder}`} className="border-b border-border pb-3 last:border-0">
@@ -112,6 +132,7 @@ export function GuideClient({ initialQuery = "" }: { initialQuery?: string }) {
             onPress={() => {
               sessionStorage.removeItem(THREAD_SESSION_KEY);
               setThreadId(null);
+              setBootstrapError(null);
             }}
           >
             Reset thread

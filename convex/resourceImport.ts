@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { internal } from './_generated/api';
-import { internalMutation, mutation } from './_generated/server';
+import { internalMutation } from './_generated/server';
 import { resourceStatusValidator } from './resourceValidators';
 
 const importRow = v.object({
@@ -16,31 +16,8 @@ const importRow = v.object({
 });
 
 /**
- * Idempotent upsert of one resource row. Used by **`scripts/seed-resources.ts`** (CSV → Convex),
- * mirroring **`companies.seedOne`**. Intended for bootstrap / staging only — lock behind auth or move
- * to internal-only tooling before broad production exposure.
- */
-export const seedUpsertRow = mutation({
-  args: {
-    row: importRow,
-    status: v.optional(resourceStatusValidator),
-  },
-  handler: async (ctx, { row, status }) => {
-    if (!row.url.trim()) return { skipped: true as const };
-    const publishStatus = status ?? 'published';
-    await ctx.runMutation(internal.resourceInternal.upsertResource, {
-      row: {
-        ...row,
-        status: publishStatus,
-      },
-    });
-    return { skipped: false as const };
-  },
-});
-
-/**
- * Idempotent bulk import for operators (Convex dashboard → run internal mutations, scripts with
- * convex run, etc.).
+ * Idempotent bulk import (internal only — not callable from the browser).
+ * Scripts: `pnpm seed:resources`. Dashboard: run `resourceImport:importInternal`.
  */
 export const importInternal = internalMutation({
   args: {

@@ -4,7 +4,7 @@ import { getThreadMetadata, listUIMessages, syncStreams } from '@convex-dev/agen
 import { vStreamArgs } from '@convex-dev/agent/validators';
 import { components } from './_generated/api';
 import { query } from './_generated/server';
-import { founderProfileValidator } from './founderProfile';
+import { founderProfileValidator, clampFounderProfileForConvex } from './founderProfile';
 import { scoreResourceForProfile } from './lib/matchResources';
 
 function projectReco(
@@ -84,12 +84,13 @@ export const listPublishedPage = query({
 export const bySlug = query({
   args: { slug: v.string() },
   handler: async (ctx, { slug }) => {
-    const row = await ctx.db
+    const rows = await ctx.db
       .query('resources')
       .withIndex('by_slug', (q) => q.eq('slug', slug))
-      .unique();
-    if (!row || row.status !== 'published') return null;
-    return row;
+      .take(32);
+    const published = rows.filter((r) => r.status === 'published');
+    const row = published[0];
+    return row ?? null;
   },
 });
 
@@ -114,6 +115,8 @@ export const listByFacet = query({
       )
       .take(lim * 2);
 
+    const docs = await Promise.all(facetRows.map((f) => ctx.db.get(f.resourceId)));
+
     const out: Array<{
       _id: unknown;
       title: string;
@@ -125,8 +128,8 @@ export const listByFacet = query({
       communities: string[];
     }> = [];
 
-    for (const f of facetRows) {
-      const r = await ctx.db.get(f.resourceId);
+    for (let i = 0; i < facetRows.length; i++) {
+      const r = docs[i];
       if (r && r.status === 'published') {
         out.push({
           _id: r._id,
@@ -181,16 +184,18 @@ export const recommendForProfile = query({
     limit: v.number(),
   },
   handler: async (ctx, { founderProfile, limit }) => {
+    const clampedProfile = clampFounderProfileForConvex(founderProfile);
     const lim = Math.min(Math.max(limit, 1), 36);
+    // Upper bound avoids unbounded collects as the catalog grows; raise or paginate later.
     const published = await ctx.db
       .query('resources')
       .withIndex('by_status', (q) => q.eq('status', 'published'))
-      .take(400);
+      .take(3000);
 
     const scored = published
       .map((r) => ({
         doc: r,
-        score: scoreResourceForProfile(r, founderProfile),
+        score: scoreResourceForProfile(r, clampedProfile),
       }))
       .sort((a, b) => b.score - a.score);
 
@@ -227,7 +232,10 @@ export const listThreadUIMessages = query({
       threadId: args.threadId,
     });
     const identity = await ctx.auth.getUserIdentity();
-    if (meta.userId && meta.userId !== identity?.tokenIdentifier) {
+    if (!identity?.tokenIdentifier) {
+      throw new Error('Sign in required to load guide messages.');
+    }
+    if (!meta.userId || meta.userId !== identity.tokenIdentifier) {
       throw new Error('Unauthorized');
     }
 

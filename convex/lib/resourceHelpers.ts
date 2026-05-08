@@ -1,5 +1,15 @@
 import type { FacetType } from './facetTypes';
 
+/** Canonical form for Convex + mailto: (no ?, &, newlines — seeds/imports only). */
+export function sanitizeContactEmail(raw: string | undefined): string | undefined {
+  if (!raw?.trim()) return undefined;
+  const trimmed = raw.trim().replace(/^mailto:/i, '');
+  const first = trimmed.split(/[\s,;<>"']/)[0] ?? '';
+  if (first.length < 5 || first.length > 254) return undefined;
+  if (!/^[\w%+.-]+@[\w.-]+\.[a-z]{2,}$/i.test(first)) return undefined;
+  return first.toLowerCase();
+}
+
 export function slugify(input: string): string {
   return input
     .toLowerCase()

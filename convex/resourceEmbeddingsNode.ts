@@ -5,7 +5,7 @@ import { embed } from 'ai';
 import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import { internalAction } from './_generated/server';
-import type { Id } from './_generated/dataModel';
+import type { Doc, Id } from './_generated/dataModel';
 import { embeddingSourceText } from './lib/resourceHelpers';
 
 const MODEL = 'text-embedding-3-small';
@@ -47,20 +47,22 @@ export const vectorSearchPublished = internalAction({
     vector: v.array(v.float64()),
     limit: v.number(),
   },
-  handler: async (ctx, { vector, limit }) => {
+  handler: async (ctx, { vector, limit }): Promise<Array<{ resourceId: Id<'resources'>; score: number }>> => {
     const results = await ctx.vectorSearch('resourceEmbeddings', 'by_embedding', {
       vector,
       limit,
       filter: (q) => q.eq('status', 'published'),
     });
-    const out: { resourceId: Id<'resources'>; score: number }[] = [];
-    for (const r of results) {
-      const row = await ctx.runQuery(internal.resourceEmbeddings.getEmbeddingById, { id: r._id });
-      if (row) {
-        out.push({ resourceId: row.resourceId, score: r._score });
-      }
-    }
-    return out;
+    if (results.length === 0) return [];
+
+    const rows: Doc<'resourceEmbeddings'>[] = await ctx.runQuery(internal.resourceEmbeddings.batchGetEmbeddingRows, {
+      ids: results.map((hit) => hit._id),
+    });
+    const byEmbId = new Map<Id<'resourceEmbeddings'>, Doc<'resourceEmbeddings'>>(rows.map((row) => [row._id, row]));
+    return results.flatMap((hit): Array<{ resourceId: Id<'resources'>; score: number }> => {
+      const emb = byEmbId.get(hit._id);
+      return emb ? [{ resourceId: emb.resourceId, score: hit._score }] : [];
+    });
   },
 });
 

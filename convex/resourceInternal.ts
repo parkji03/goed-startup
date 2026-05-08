@@ -8,6 +8,7 @@ import {
   facetsFromResourceFields,
   inferStageTagsFromTopics,
   makeResourceSlug,
+  sanitizeContactEmail,
   splitPipeList,
 } from './lib/resourceHelpers';
 
@@ -66,6 +67,7 @@ export const upsertResource = internalMutation({
     row: upsertRowValidator,
   },
   handler: async (ctx, { row }) => {
+    const contactEmail = sanitizeContactEmail(row.contactEmail);
     const communities = splitPipeList(row.communitiesRaw);
     const industries = splitPipeList(row.industriesRaw);
     const locations = splitPipeList(row.locationsRaw);
@@ -75,7 +77,7 @@ export const upsertResource = internalMutation({
       title: row.title,
       description: row.description,
       url: row.url,
-      contactEmail: row.contactEmail,
+      contactEmail,
       communities,
       industries,
       locations,
@@ -96,7 +98,7 @@ export const upsertResource = internalMutation({
         slug,
         description: row.description,
         url: row.url,
-        contactEmail: row.contactEmail,
+        contactEmail,
         sourceId: row.sourceId,
         communities,
         industries,
@@ -114,7 +116,7 @@ export const upsertResource = internalMutation({
         slug,
         description: row.description,
         url: row.url,
-        contactEmail: row.contactEmail,
+        contactEmail,
         sourceId: row.sourceId,
         communities,
         industries,
@@ -150,21 +152,18 @@ export const upsertResource = internalMutation({
 export const loadResourcesByIds = internalQuery({
   args: { ids: v.array(v.id('resources')) },
   handler: async (ctx, { ids }) => {
-    const out = [];
-    for (const id of ids) {
-      const doc = await ctx.db.get(id);
-      if (doc && doc.status === 'published') out.push(doc);
-    }
-    return out;
+    const docs = await Promise.all(ids.map((id) => ctx.db.get(id)));
+    return docs.filter((doc): doc is NonNullable<(typeof docs)[number]> => doc?.status === 'published');
   },
 });
 
 export const getPublishedBySlug = internalQuery({
   args: { slug: v.string() },
   handler: async (ctx, { slug }) => {
-    return await ctx.db
+    const row = await ctx.db
       .query('resources')
       .withIndex('by_slug', (q) => q.eq('slug', slug))
-      .unique();
+      .first();
+    return row?.status === 'published' ? row : null;
   },
 });

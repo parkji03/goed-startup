@@ -1,33 +1,32 @@
 /**
  * Seed Convex `resources` + facet joins from Builder Day CSV (directory list).
  *
- * Usage:
+ * Usage (from repo root, with Convex dev / deploy linked — needs `pnpm exec convex` CLI):
  *   pnpm seed:resources
  *
  * Default CSV: data/resources-builder-day.csv (override: first CLI arg path).
  *
- * Idempotent by `sourceId` via `internal.resourceInternal.upsertResource`.
- * Mirrors `scripts/seed-companies.ts`: HTTP client + public seed mutation pair.
+ * Idempotent by `sourceId` via `internal.resourceImport:importInternal` (not callable from browsers).
  */
 
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
-import { ConvexHttpClient } from 'convex/browser';
 
-import { api } from '../convex/_generated/api';
+import { sanitizeContactEmail } from '../convex/lib/resourceHelpers';
 
-const CSV_PATH_DEFAULT = path.resolve(
-  __dirname,
-  '..',
-  'data',
-  'resources-builder-day.csv',
-);
+const scriptDir = path.dirname(fileURLToPath(import.meta.url));
+const CSV_PATH_DEFAULT = path.resolve(scriptDir, '..', 'data', 'resources-builder-day.csv');
+const repoRoot = path.resolve(scriptDir, '..');
+
+const CHUNK_ROWS = 40;
 
 const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
 if (!convexUrl) {
   throw new Error(
-    'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and run Convex dev/deploy.',
+    'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and link Convex.',
   );
 }
 
@@ -43,11 +42,15 @@ type CsvRow = {
   email?: string;
 };
 
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
+}
+
 async function main() {
   const csvPath =
-    typeof process.argv[2] === 'string'
-      ? path.resolve(process.cwd(), process.argv[2])
-      : CSV_PATH_DEFAULT;
+    typeof process.argv[2] === 'string' ? path.resolve(process.cwd(), process.argv[2]) : CSV_PATH_DEFAULT;
 
   const csvText = fs.readFileSync(csvPath, 'utf-8');
   const parsed = Papa.parse<CsvRow>(csvText, { header: true, skipEmptyLines: true });
@@ -62,46 +65,41 @@ async function main() {
       title: String(r.Title).trim(),
       description: (r.description ?? '').trim(),
       url: String(r.link).trim(),
-      contactEmail: r.email?.trim() || undefined,
+      contactEmail: sanitizeContactEmail(r.email?.trim()),
       communitiesRaw: r.Communities,
       industriesRaw: r.Industries,
       locationsRaw: r.Locations,
       topicsRaw: r.Topics,
     }));
 
-  console.log(`Parsed ${rows.length} CSV rows → upsert…\n`);
+  console.log(`Parsed ${rows.length} CSV rows → importInternal in chunks of ${CHUNK_ROWS}…\n`);
 
-  const client = new ConvexHttpClient(convexUrl!);
-  let applied = 0;
-  let skippedBlank = 0;
+  let appliedChunks = 0;
   let failed = 0;
 
-  for (let i = 0; i < rows.length; i++) {
-    const row = rows[i];
-    if (!row.url.trim()) {
-      skippedBlank++;
-      continue;
-    }
+  for (const batch of chunk(rows, CHUNK_ROWS)) {
+    const usable = batch.filter((r) => r.url.trim());
+    if (usable.length === 0) continue;
+
     try {
-      const result = await client.mutation(api.resourceImport.seedUpsertRow, {
-        row,
-        status: 'published',
+      const payload = JSON.stringify({ rows: usable, status: 'published' });
+      execFileSync('pnpm', ['exec', 'convex', 'run', 'resourceImport:importInternal', payload], {
+        cwd: repoRoot,
+        stdio: 'inherit',
+        env: process.env,
       });
-
-      if (result.skipped) skippedBlank++;
-      else applied++;
-
-      console.log(`[${i + 1}/${rows.length}] ${result.skipped ? 'skip' : 'ok'} ${row.title}`);
-    } catch (err) {
+      appliedChunks++;
+      console.log(`Chunk ${appliedChunks}: ${usable.length} rows (${usable[0]?.title ?? ''} …)`);
+    } catch {
       failed++;
-      console.error(`[${i + 1}/${rows.length}] ✗ ${row.title}: ${(err as Error).message}`);
+      console.error(`Chunk failed (starts with: ${usable[0]?.title})`);
     }
   }
 
   console.log('\n────────── seed summary ──────────');
-  console.log(`  applied / upserted: ${applied}`);
-  console.log(`  skipped blank URL:  ${skippedBlank}`);
-  console.log(`  failures:           ${failed}`);
+  console.log(`  chunks succeeded: ${appliedChunks}`);
+  console.log(`  chunks failed:    ${failed}`);
+  console.log('\nConvex will schedule embedding backfills for new/changed rows (see dashboard logs).');
 }
 
 main().catch((err) => {

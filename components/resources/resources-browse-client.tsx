@@ -4,7 +4,7 @@ import { usePaginatedQuery, useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Link } from "@/i18n/navigation";
-import { buttonStyles } from "@/components/ui/button";
+import { Button, buttonStyles } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
-import { Button } from "@/components/ui/button";
 export function ResourcesBrowseClient() {
   const topics = useQuery(api.resources.facetValues, { facetType: "topic", limit: 40 });
   const [topicFilter, setTopicFilter] = useState<string | null>(null);

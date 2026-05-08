@@ -130,17 +130,19 @@ export const reject = mutation({
     const admin = await requireAdmin(ctx);
     const sub = await ctx.db.get(submissionId);
     if (!sub) throw new Error('Submission not found');
+    const trimmed = reason.trim();
+    if (!trimmed) throw new Error('Rejection reason is required.');
     const now = Date.now();
     await ctx.db.patch(submissionId, {
       status: 'rejected',
-      moderatorNote: reason,
+      moderatorNote: trimmed,
       updatedAt: now,
     });
     await ctx.db.insert('resourceSubmissionEvents', {
       submissionId,
       actorTokenIdentifier: admin.tokenIdentifier,
       action: 'rejected',
-      detail: reason,
+      detail: trimmed,
       createdAt: now,
     });
   },

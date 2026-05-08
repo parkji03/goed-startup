@@ -33,3 +33,23 @@ export const emptyFounderProfile = (): FounderProfileConvex => ({
   specialStatuses: [],
   goals: [],
 });
+
+const MAX_LIST_LEN = 48;
+const MAX_TAG_LEN = 200;
+const MAX_FREE_TEXT = 2000;
+
+/** Server-side caps for Convex actions/queries — keeps prompts and payloads bounded. */
+export function clampFounderProfileForConvex(p: FounderProfileConvex): FounderProfileConvex {
+  const cap = <T extends string[]>(a: T) =>
+    a.slice(0, MAX_LIST_LEN).map((x) => x.slice(0, MAX_TAG_LEN)) as T;
+  const ft = p.freeText?.slice(0, MAX_FREE_TEXT);
+  return {
+    stages: cap(p.stages),
+    counties: cap(p.counties),
+    industries: cap(p.industries),
+    audiences: cap(p.audiences),
+    specialStatuses: cap(p.specialStatuses),
+    goals: cap(p.goals),
+    freeText: ft?.trim() ? ft.trim() : undefined,
+  };
+}

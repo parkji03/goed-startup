@@ -15,6 +15,15 @@ export const getEmbeddingById = internalQuery({
   },
 });
 
+/** One round-trip for vector search follow-up (avoid N× get in an action). */
+export const batchGetEmbeddingRows = internalQuery({
+  args: { ids: v.array(v.id('resourceEmbeddings')) },
+  handler: async (ctx, { ids }) => {
+    const docs = await Promise.all(ids.map((id) => ctx.db.get(id)));
+    return docs.filter((d) => d !== null);
+  },
+});
+
 export const upsertEmbedding = internalMutation({
   args: {
     resourceId: v.id('resources'),
@@ -43,4 +52,3 @@ export const upsertEmbedding = internalMutation({
     }
   },
 });
-

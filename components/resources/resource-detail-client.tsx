@@ -66,7 +66,10 @@ export function ResourceDetailClient({ slug }: Props) {
           >
             Visit official site ↗
           </a>
-          <Link href={`/guide?q=${encodeURIComponent(`Tell me how to use [#] for ${resource.title}`)}`} className={buttonStyles({ intent: "outline", size: "md" })}>
+          <Link
+            href={`/guide?q=${encodeURIComponent(`Explain how "${resource.title}" (${resource.slug}) fits my founder journey.`)}`}
+            className={buttonStyles({ intent: "outline", size: "md" })}
+          >
             Ask the guide about this resource
           </Link>
         </div>

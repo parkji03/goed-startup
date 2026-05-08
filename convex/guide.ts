@@ -1,9 +1,11 @@
 import { openai } from '@ai-sdk/openai';
-import { Agent } from '@convex-dev/agent';
+import { Agent, getThreadMetadata } from '@convex-dev/agent';
 import { v } from 'convex/values';
 import { components, internal } from './_generated/api';
-import { action, mutation } from './_generated/server';
+import type { Doc, Id } from './_generated/dataModel';
+import { action, internalQuery, mutation } from './_generated/server';
 import {
+  clampFounderProfileForConvex,
   founderProfileValidator,
   emptyFounderProfile,
   type FounderProfileConvex,
@@ -16,11 +18,33 @@ const guideAgent = new Agent(components.agent, {
   embeddingModel: openai.embedding('text-embedding-3-small'),
 });
 
+/** Actions must delegate thread ownership checks here (runs with the user's auth context). */
+export const assertGuideThreadOwnership = internalQuery({
+  args: { threadId: v.string() },
+  handler: async (ctx, { threadId }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    const tokenId = identity?.tokenIdentifier;
+    if (!tokenId) {
+      throw new Error('Sign in required to use the founder guide.');
+    }
+    const meta = await getThreadMetadata(ctx, components.agent, { threadId });
+    if (!meta.userId) {
+      throw new Error('This thread cannot be resumed. Reset and start a new guide chat.');
+    }
+    if (meta.userId !== tokenId) {
+      throw new Error('Unauthorized — this guide thread belongs to another account.');
+    }
+  },
+});
+
 export const createThread = mutation({
   args: {},
   handler: async (ctx) => {
     const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.tokenIdentifier ?? null;
+    const userId = identity?.tokenIdentifier;
+    if (!userId) {
+      throw new Error('Sign in required to use the founder guide.');
+    }
     const { threadId } = await guideAgent.createThread(ctx, { userId });
     return { threadId };
   },
@@ -33,13 +57,24 @@ export const sendMessage = action({
     founderProfile: v.optional(founderProfileValidator),
   },
   handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.tokenIdentifier ?? null;
+    await ctx.runQuery(internal.guide.assertGuideThreadOwnership, {
+      threadId: args.threadId,
+    });
 
-    const profile: FounderProfileConvex = args.founderProfile ?? emptyFounderProfile();
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity?.tokenIdentifier) {
+      throw new Error('Sign in required to send guide messages.');
+    }
+    const userId = identity.tokenIdentifier;
+
+    const prompt = args.prompt.trim().slice(0, 6000);
+
+    const profile: FounderProfileConvex = clampFounderProfileForConvex(
+      args.founderProfile ?? emptyFounderProfile(),
+    );
 
     const embedInput = [
-      args.prompt,
+      prompt,
       profile.freeText ?? '',
       ...profile.goals,
       ...profile.industries,
@@ -51,14 +86,14 @@ export const sendMessage = action({
       text: embedInput.slice(0, 8000),
     });
 
-    const hits = await ctx.runAction(internal.resourceEmbeddingsNode.vectorSearchPublished, {
+    const hits = (await ctx.runAction(internal.resourceEmbeddingsNode.vectorSearchPublished, {
       vector,
       limit: 40,
-    });
+    })) as Array<{ resourceId: Id<'resources'>; score: number }>;
 
-    const resources = await ctx.runQuery(internal.resourceInternal.loadResourcesByIds, {
+    const resources = (await ctx.runQuery(internal.resourceInternal.loadResourcesByIds, {
       ids: hits.map((h) => h.resourceId),
-    });
+    })) as Doc<'resources'>[];
 
     const ranked = resources
       .map((r) => ({
@@ -89,7 +124,7 @@ export const sendMessage = action({
           'If none apply, say what is missing briefly and ask one clarifying question.\n\n' +
           'RESOURCES CONTEXT:\n' +
           retrievalContext,
-        prompt: args.prompt,
+        prompt,
       },
       { saveStreamDeltas: true },
     );
