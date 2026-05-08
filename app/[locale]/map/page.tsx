@@ -8,9 +8,9 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { api } from '@/convex/_generated/api';
 import {
-  useCompaniesGeoJson,
+  useFilteredCompanies,
   type CompanyFeatureProps,
-} from '@/hooks/useCompaniesGeoJson';
+} from '@/hooks/useFilteredCompanies';
 import { parseFiltersFromParams } from '@/lib/companies/filters';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { FilterPanel } from '@/components/map/filter-panel';
@@ -43,10 +43,11 @@ export default function MapPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps -- filtersKey covers searchParams' content
     [filtersKey],
   );
-  const geojson = useCompaniesGeoJson(filters);
+  const filtered = useFilteredCompanies(filters);
+  const geojson = filtered?.geojson;
   // Total of mappable companies (denominator for "Showing X of Y").
   const totalCount = useQuery(api.companies.mapTotalCount);
-  const shownCount = geojson?.features.length ?? 0;
+  const shownCount = filtered?.companies.length ?? 0;
 
   // Initialize the map once
   useEffect(() => {

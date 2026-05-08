@@ -38,36 +38,13 @@ export const list = query({
 });
 
 /**
- * Lean projection used by the map. Returns only the fields the map source
- * needs (id, name, slug, sector, lat/lng) and skips rows without coordinates.
- * Keeps the GeoJSON payload tight and the GPU layer happy.
- */
-export const listForMap = query({
-  args: {},
-  handler: async (ctx) => {
-    const rows = await ctx.db
-      .query('companies')
-      .withIndex('by_status', (q) => q.eq('status', 'published'))
-      .collect();
-
-    return rows
-      .filter((c) => c.location.lat != null && c.location.lng != null)
-      .map((c) => ({
-        _id: c._id,
-        name: c.name,
-        slug: c.slug,
-        sector: c.sector,
-        website: c.website,
-        lng: c.location.lng!,
-        lat: c.location.lat!,
-      }));
-  },
-});
-
-/**
- * Search + filter projection for the map. Same shape as `listForMap`, but
- * with optional fuzzy text search and multi-value categorical filters
- * applied. Categorical filtering happens in memory after the index lookup —
+ * Search + filter projection for the map and the results sidebar. The map
+ * only needs id/name/slug/sector/website/lat-lng; the sidebar's company
+ * cards consume the richer fields (description, linkedin, stage, employee
+ * count, founded year, full address). Returning everything in one shot
+ * keeps it to a single Convex subscription shared by both views.
+ *
+ * Categorical filtering happens in memory after the index lookup —
  * Convex's search/index APIs only express equality on a single value, and
  * our corpus is small enough that an in-memory pass is fine.
  *
@@ -119,7 +96,18 @@ export const searchForMap = query({
         name: c.name,
         slug: c.slug,
         sector: c.sector,
+        stage: c.stage,
+        employeeCount: c.employeeCount,
+        yearFounded: c.yearFounded,
+        description: c.description,
         website: c.website,
+        linkedin: c.linkedin,
+        location: {
+          rawAddress: c.location.rawAddress,
+          city: c.location.city,
+          county: c.location.county,
+          state: c.location.state,
+        },
         lng: c.location.lng!,
         lat: c.location.lat!,
       }));
