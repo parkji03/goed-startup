@@ -25,12 +25,27 @@ export function SearchField({ className, ...props }: SearchFieldProps) {
 
 export function SearchInput(props: InputProps) {
   return (
-    <InputGroup className="[--input-gutter-end:--spacing(8)]">
+    <InputGroup
+      className={twJoin(
+        // Reserve 32px on the right for the X button when the field
+        // has text. When it's empty, override the gutter to nearly
+        // nothing so the placeholder gets the full width — `hidden`
+        // alone wouldn't do it because InputGroup sets the input's
+        // right padding via this variable, not via the button's
+        // layout presence.
+        "[--input-gutter-end:--spacing(8)]",
+        "group-data-[empty]/search-field:[--input-gutter-end:--spacing(2)]",
+      )}
+    >
       <MagnifyingGlassIcon className="in-disabled:opacity-50" />
       <Input {...props} />
       <Button
         className={twJoin(
-          "touch-target grid place-content-center pressed:text-fg text-muted-fg hover:text-fg group-empty/search-field:invisible",
+          // react-aria-components puts `data-empty` on the SearchField
+          // root when the input value is "". `hidden` (display: none)
+          // both visually hides the button and removes it from the
+          // flow, so it doesn't crowd the placeholder.
+          "touch-target grid place-content-center pressed:text-fg text-muted-fg hover:text-fg group-data-[empty]/search-field:hidden",
           "px-3 py-2 sm:px-2.5 sm:py-1.5 sm:text-sm/5",
         )}
       >
