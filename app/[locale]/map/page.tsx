@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useQuery } from 'convex/react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { api } from '@/convex/_generated/api';
 import {
   useCompaniesGeoJson,
   type CompanyFeatureProps,
@@ -42,6 +44,9 @@ export default function MapPage() {
     [filtersKey],
   );
   const geojson = useCompaniesGeoJson(filters);
+  // Total of mappable companies (denominator for "Showing X of Y").
+  const totalCount = useQuery(api.companies.mapTotalCount);
+  const shownCount = geojson?.features.length ?? 0;
 
   // Initialize the map once
   useEffect(() => {
@@ -257,7 +262,7 @@ export default function MapPage() {
           bottom: 0,
         }}
       />
-      <FilterPanel />
+      <FilterPanel shown={shownCount} total={totalCount ?? 0} />
     </>
   );
 }

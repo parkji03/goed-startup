@@ -125,6 +125,24 @@ export const searchForMap = query({
 });
 
 /**
+ * Total count of published companies that the map can plot — used by the
+ * filter panel to show "Showing X of Y". Cheap (no payload, just a count)
+ * and unaffected by the active filters, so the denominator stays stable.
+ */
+export const mapTotalCount = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db
+      .query('companies')
+      .withIndex('by_status', (q) => q.eq('status', 'published'))
+      .take(500);
+    return rows.filter(
+      (c) => c.location.lat != null && c.location.lng != null,
+    ).length;
+  },
+});
+
+/**
  * Single company by slug — for company profile pages.
  */
 export const bySlug = query({
