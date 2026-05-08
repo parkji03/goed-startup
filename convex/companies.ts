@@ -5,6 +5,7 @@ import {
   stageValidator,
   employeeCountValidator,
   locationValidator,
+  investorBriefValidator,
 } from './schema';
 
 /**
@@ -186,6 +187,52 @@ export const backfillSearchText = mutation({
 });
 
 /**
+ * One-off cleanup: clear the legacy flat investor-brief fields ahead of the
+ * `investorBrief` nested-object refactor. The schema cannot drop these fields
+ * while existing rows still carry them, so this runs first. Idempotent —
+ * once flat fields are gone everywhere, this is a no-op.
+ *
+ * Run with: `npx convex run companies:clearFlatInvestorFields`
+ */
+export const clearFlatInvestorFields = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const FLAT_FIELDS = [
+      'pitch',
+      'productCategory',
+      'targetMarket',
+      'monetizationModel',
+      'founders',
+      'notableCustomers',
+      'funding',
+      'openRoleCount',
+      'differentiationClaim',
+      'keyMetrics',
+      'integrations',
+      'investorDataPagesCrawled',
+      'investorDataFlags',
+    ] as const;
+    const rows = await ctx.db.query('companies').collect();
+    let cleared = 0;
+    for (const row of rows) {
+      const patch: Record<string, undefined> = {};
+      let touched = false;
+      for (const f of FLAT_FIELDS) {
+        if ((row as Record<string, unknown>)[f] !== undefined) {
+          patch[f] = undefined;
+          touched = true;
+        }
+      }
+      if (touched) {
+        await ctx.db.patch(row._id, patch);
+        cleared++;
+      }
+    }
+    return { scanned: rows.length, cleared };
+  },
+});
+
+/**
  * One-off cleanup: clear `logoUrl` from every company. We render logos via
  * logo.dev at request time using the company's domain, so the stored URLs
  * are no longer needed. Run with: `npx convex run companies:clearLogoUrls`.
@@ -226,6 +273,9 @@ export const seedOne = mutation({
     employeeCount: v.optional(employeeCountValidator),
     yearFounded: v.optional(v.number()),
     location: locationValidator,
+
+    // Investor brief — AI-extracted from website crawls. Best-effort, not curated.
+    investorBrief: v.optional(investorBriefValidator),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db

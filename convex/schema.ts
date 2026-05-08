@@ -36,6 +36,75 @@ export const employeeCountValidator = v.union(
   v.literal('1k-5k'),
 );
 
+export const targetMarketValidator = v.union(
+  v.literal('enterprise'),
+  v.literal('mid-market'),
+  v.literal('smb'),
+  v.literal('consumer'),
+  v.literal('developer'),
+  v.literal('prosumer'),
+);
+
+export const monetizationModelValidator = v.union(
+  v.literal('subscription'),
+  v.literal('usage-based'),
+  v.literal('marketplace'),
+  v.literal('transactional'),
+  v.literal('freemium'),
+  v.literal('contact-sales'),
+  v.literal('ads'),
+);
+
+export const founderValidator = v.object({
+  name: v.string(),
+  title: v.optional(v.string()),
+  priorCompanies: v.optional(v.array(v.string())),
+  sourceQuote: v.optional(v.string()),
+});
+
+export const fundingValidator = v.object({
+  round: v.optional(v.string()),
+  amountUsd: v.optional(v.number()),
+  leadInvestor: v.optional(v.string()),
+  sourceQuote: v.optional(v.string()),
+});
+
+export const differentiationClaimValidator = v.object({
+  claim: v.string(),
+  sourceQuote: v.optional(v.string()),
+});
+
+export const keyMetricValidator = v.object({
+  metric: v.string(),
+  value: v.string(),
+  sourceQuote: v.string(),
+});
+
+/**
+ * Container for AI-extracted investor-brief data. Nesting these fields under
+ * one object both groups the extracted data conceptually and acts as a
+ * provenance signal: anything inside `investorBrief` came from the
+ * `scripts/find-investor-data.py` pipeline (Claude Haiku 4.5 over crawled
+ * website markdown) and may not be 100% accurate. Trusted/curated fields
+ * (name, sector, stage, location, etc.) live at the top level.
+ */
+export const investorBriefValidator = v.object({
+  pitch: v.optional(v.string()),
+  productCategory: v.optional(v.string()),
+  targetMarket: v.optional(targetMarketValidator),
+  monetizationModel: v.optional(monetizationModelValidator),
+  founders: v.optional(v.array(founderValidator)),
+  notableCustomers: v.optional(v.array(v.string())),
+  funding: v.optional(fundingValidator),
+  openRoleCount: v.optional(v.number()),
+  differentiationClaim: v.optional(differentiationClaimValidator),
+  keyMetrics: v.optional(v.array(keyMetricValidator)),
+  integrations: v.optional(v.array(v.string())),
+  pagesCrawled: v.optional(v.array(v.string())),
+  flags: v.optional(v.array(v.string())),
+  extractedAt: v.optional(v.number()),
+});
+
 export const hiringStatusValidator = v.union(
   v.literal('actively'),
   v.literal('occasionally'),
@@ -82,6 +151,10 @@ export default defineSchema({
 
     // Location
     location: locationValidator,
+
+    // AI-extracted investor brief. Nested under one object so the path
+    // itself signals provenance — anything inside is best-effort, not curated.
+    investorBrief: v.optional(investorBriefValidator),
 
     // Spec-required fields, populated via self-service after seed
     yearFounded: v.optional(v.number()),
