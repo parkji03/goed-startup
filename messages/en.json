@@ -74,8 +74,21 @@
       "clear": "Clear all",
       "resultsCount": "Showing {shown} of {total}"
     },
-    "popup": {
-      "viewProfile": "View profile →"
+    "detail": {
+      "back": "Back to results",
+      "eyebrow": "Company profile",
+      "visitWebsite": "Visit website",
+      "noWebsite": "No website on file",
+      "sections": {
+        "information": "Information",
+        "links": "Links"
+      },
+      "stats": {
+        "stage": "Stage",
+        "employees": "Employees",
+        "founded": "Founded",
+        "sector": "Sector"
+      }
     },
     "card": {
       "website": "Website",

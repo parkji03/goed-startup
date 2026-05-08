@@ -1,8 +1,7 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useTranslations } from 'next-intl';
 import { useQuery } from 'convex/react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -26,15 +25,11 @@ const COMPANIES_SOURCE = 'companies';
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  const popupRef = useRef<mapboxgl.Popup | null>(null);
   // Live registry of DOM markers, keyed by company `_id`. Mapbox owns cluster
   // rendering; this map owns the per-company logo markers and reconciles them
   // against the source's currently-unclustered features on every viewport
   // change.
   const markersRef = useRef<Map<string, mapboxgl.Marker>>(new Map());
-
-  const tTax = useTranslations('Taxonomy');
-  const tMap = useTranslations('Map');
 
   // Filter state lives in the URL — shareable, refresh-safe, and read-only
   // here. Parsing memoized on the URL string so the filters object is a
@@ -53,57 +48,63 @@ export default function MapPage() {
   const totalCount = useQuery(api.companies.mapTotalCount);
   const shownCount = filtered?.companies.length ?? 0;
 
-  // Panel open whenever the user has typed something or selected any
-  // filter. Map stays full-width — the panel just grows downward from
-  // the floating chrome. No sidebar, no manual collapse.
-  const panelOpen = isFiltersActive(filters);
-
-  // Marker click and card click both reuse this. Stored in a ref so the
-  // marker DOM elements (built once and re-used across renders) always call
-  // the latest closure — without this, locale changes wouldn't update the
-  // popup labels.
-  const openPopup = useCallback(
-    (props: CompanyFeatureProps, lngLat: [number, number]) => {
-      const map = mapRef.current;
-      if (!map) return;
-      popupRef.current?.remove();
-      popupRef.current = new mapboxgl.Popup({ offset: 22, closeButton: true })
-        .setLngLat(lngLat)
-        .setHTML(
-          `<div style="font-family:system-ui;padding:4px 6px;">
-             <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
-             <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(tTax(`sectors.${props.sector}`))}</div>
-             <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">${escapeHtml(tMap('popup.viewProfile'))}</a>
-           </div>`,
-        )
-        .addTo(map);
-    },
-    [tTax, tMap],
+  // Currently-selected company id. The detail view replaces the result list
+  // when this is set; clicks come from either the list cards or the map
+  // markers. Stored as id (not the row) so we can re-resolve the latest
+  // record from `filtered.companies` on every render.
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedCompany = useMemo(
+    () => filtered?.companies.find((c) => c._id === selectedId) ?? null,
+    [filtered, selectedId],
   );
-  const openPopupRef = useRef(openPopup);
-  useEffect(() => {
-    openPopupRef.current = openPopup;
-  }, [openPopup]);
 
-  const flyToCompany = useCallback(
+  // Panel opens whenever filters are active OR a company is selected.
+  // Marker clicks therefore expand the panel into a detail view even when
+  // the user hasn't typed/filtered anything.
+  const panelOpen = isFiltersActive(filters) || selectedCompany != null;
+
+  // Soft pan to a company without changing zoom — used when the user picks
+  // a card from the list. The marker comes into view without yanking the
+  // user's current zoom level.
+  const panToCompany = useCallback((company: CompanyForList) => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.easeTo({
+      center: [company.lng, company.lat],
+      duration: 600,
+      essential: true,
+    });
+  }, []);
+
+  // Explicit "View on map" — pans + zooms in close. The detail's CTA and
+  // any list-card "View on map" link both use this.
+  const flyToCompany = useCallback((company: CompanyForList) => {
+    const map = mapRef.current;
+    if (!map) return;
+    map.flyTo({
+      center: [company.lng, company.lat],
+      zoom: 17,
+      essential: true,
+    });
+  }, []);
+
+  const onSelectCompany = useCallback(
     (company: CompanyForList) => {
-      const map = mapRef.current;
-      if (!map) return;
-      const lngLat: [number, number] = [company.lng, company.lat];
-      map.flyTo({ center: lngLat, zoom: 17, essential: true });
-      openPopup(
-        {
-          _id: company._id,
-          name: company.name,
-          slug: company.slug,
-          sector: company.sector,
-          website: company.website,
-        },
-        lngLat,
-      );
+      setSelectedId(company._id);
+      panToCompany(company);
     },
-    [openPopup],
+    [panToCompany],
   );
+
+  // Marker click — same selection state, but no auto-pan since the marker
+  // the user just clicked is already on screen.
+  const onSelectFromMarker = useCallback((id: string) => {
+    setSelectedId(id);
+  }, []);
+  const onSelectFromMarkerRef = useRef(onSelectFromMarker);
+  useEffect(() => {
+    onSelectFromMarkerRef.current = onSelectFromMarker;
+  }, [onSelectFromMarker]);
 
   // Initialize the map once
   useEffect(() => {
@@ -184,8 +185,6 @@ export default function MapPage() {
 
     return () => {
       resizeObserver.disconnect();
-      popupRef.current?.remove();
-      popupRef.current = null;
       for (const marker of markers.values()) marker.remove();
       markers.clear();
       map.remove();
@@ -305,7 +304,7 @@ export default function MapPage() {
           if (markers.has(id)) continue;
           const lngLat = f.geometry.coordinates as [number, number];
           const el = createMarkerElement(props, () =>
-            openPopupRef.current(props, lngLat),
+            onSelectFromMarkerRef.current(id),
           );
           const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
             .setLngLat(lngLat)
@@ -355,6 +354,9 @@ export default function MapPage() {
         companies={filtered?.companies}
         total={totalCount ?? 0}
         shown={shownCount}
+        selected={selectedCompany}
+        onSelect={onSelectCompany}
+        onClearSelection={() => setSelectedId(null)}
         onView={flyToCompany}
       />
     </>
@@ -454,11 +456,3 @@ function buildInitial(name: string): HTMLDivElement {
   return initial;
 }
 
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}

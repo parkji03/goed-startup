@@ -9,15 +9,21 @@ import {
   serializeFiltersToParams,
 } from '@/lib/companies/filters';
 import type { CompanyForList } from '@/hooks/useFilteredCompanies';
+import { CompanyDetail } from './company-detail';
 import { CompanyList } from './company-list';
 import { FilterBar } from './filter-bar';
 
 interface FloatingFilterBarProps {
-  /** When true, the panel grows downward to show the result list. */
+  /** When true, the panel grows downward to show the result list (or detail). */
   panelOpen: boolean;
   companies: CompanyForList[] | undefined;
   total: number;
   shown: number;
+  /** Currently-selected company; when set, the panel shows the detail view
+   * instead of the list. */
+  selected: CompanyForList | null;
+  onSelect: (company: CompanyForList) => void;
+  onClearSelection: () => void;
   onView: (company: CompanyForList) => void;
 }
 
@@ -52,6 +58,9 @@ export function FloatingFilterBar({
   companies,
   total,
   shown,
+  selected,
+  onSelect,
+  onClearSelection,
   onView,
 }: FloatingFilterBarProps) {
   const router = useRouter();
@@ -117,26 +126,42 @@ export function FloatingFilterBar({
         aria-hidden={!panelOpen}
       >
         <div className="min-h-0 overflow-hidden">
-          <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2 text-xs text-muted-fg">
-            <span aria-live="polite">
-              {tFilters('resultsCount', { shown, total })}
-            </span>
-            {active && (
-              <Button
-                type="button"
-                onPress={onClearAll}
-                className="rounded text-fg underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-none"
-              >
-                {tFilters('clear')}
-              </Button>
-            )}
-          </div>
+          {/* Status row hides while a detail is open — the detail has its own
+              header and the count would just be visual noise behind it. */}
+          {!selected && (
+            <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2 text-xs text-muted-fg">
+              <span aria-live="polite">
+                {tFilters('resultsCount', { shown, total })}
+              </span>
+              {active && (
+                <Button
+                  type="button"
+                  onPress={onClearAll}
+                  className="rounded text-fg underline-offset-2 hover:underline focus-visible:underline focus-visible:outline-none"
+                >
+                  {tFilters('clear')}
+                </Button>
+              )}
+            </div>
+          )}
 
-          <div className="max-h-[calc(70vh-130px)] overflow-y-auto border-t border-border">
-            <CompanyList
-              companies={panelOpen ? companies : undefined}
-              onView={onView}
-            />
+          {/* Inner scroll height = viewport minus the panel's top offset
+              (70px), the FilterBar (~64px), the optional status row (~36px),
+              and a 12px bottom safety margin. ~180px of chrome total. */}
+          <div className="max-h-[calc(100vh-180px)] overflow-y-auto border-t border-border">
+            {selected ? (
+              <CompanyDetail
+                company={selected}
+                onBack={onClearSelection}
+                onView={onView}
+              />
+            ) : (
+              <CompanyList
+                companies={panelOpen ? companies : undefined}
+                onSelect={onSelect}
+                onView={onView}
+              />
+            )}
           </div>
         </div>
       </div>

@@ -8,14 +8,18 @@ import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 
 interface CompanyCardProps {
   company: CompanyForList;
+  /** Body click — opens the in-panel detail view. */
+  onSelect: (company: CompanyForList) => void;
+  /** Explicit "View on map" link — pans + zooms the map. */
   onView: (company: CompanyForList) => void;
 }
 
 /**
- * Single result card in the sidebar list. Click anywhere on the card
- * (except the LinkedIn/Website links) to fly the map to the company.
+ * Single result card in the sidebar list. The card body opens the detail
+ * view inside the floating panel; the inline "View on map" button is the
+ * separate, explicit action that flies the map to the company.
  */
-export function CompanyCard({ company, onView }: CompanyCardProps) {
+export function CompanyCard({ company, onSelect, onView }: CompanyCardProps) {
   const tTax = useTranslations('Taxonomy');
   const tCard = useTranslations('Map.card');
 
@@ -26,7 +30,7 @@ export function CompanyCard({ company, onView }: CompanyCardProps) {
   return (
     <article
       className="group relative w-full cursor-pointer rounded-lg border border-border bg-bg p-3 text-left transition-colors hover:bg-muted/40 focus-within:bg-muted/40"
-      onClick={() => onView(company)}
+      onClick={() => onSelect(company)}
     >
       <div className="flex items-start gap-3">
         {/* Logo */}

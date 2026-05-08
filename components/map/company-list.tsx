@@ -7,6 +7,7 @@ import { CompanyCard } from './company-card';
 
 interface CompanyListProps {
   companies: CompanyForList[] | undefined;
+  onSelect: (company: CompanyForList) => void;
   onView: (company: CompanyForList) => void;
 }
 
@@ -33,7 +34,7 @@ function findScrollParent(el: HTMLElement | null): HTMLElement | null {
  * the parent scroll container. Cheap pseudo-virtualization — the full
  * dataset already lives in memory, this just defers DOM work.
  */
-export function CompanyList({ companies, onView }: CompanyListProps) {
+export function CompanyList({ companies, onSelect, onView }: CompanyListProps) {
   const tList = useTranslations('Map.list');
   const [visible, setVisible] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -92,7 +93,7 @@ export function CompanyList({ companies, onView }: CompanyListProps) {
     <ul className="flex flex-col gap-2 p-3" role="list">
       {windowed.map((company) => (
         <li key={company._id}>
-          <CompanyCard company={company} onView={onView} />
+          <CompanyCard company={company} onSelect={onSelect} onView={onView} />
         </li>
       ))}
       {hasMore && <div ref={sentinelRef} aria-hidden="true" className="h-px" />}
