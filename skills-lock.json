@@ -43,6 +43,12 @@
       "skillPath": "skills/deploy-to-vercel/SKILL.md",
       "computedHash": "03e0eaaa9bf13ba1e7ffa387f5893de6f324c0868c627001f179395a8feaa7c9"
     },
+    "intentui": {
+      "source": "intentui/skills",
+      "sourceType": "github",
+      "skillPath": "intentui/SKILL.md",
+      "computedHash": "7c4fb6411ebc2920d3be96c05ed55472f1069954bf85c601d21a2c7c1edd76a8"
+    },
     "mapbox-cartography": {
       "source": "mapbox/mapbox-agent-skills",
       "sourceType": "github",
@@ -126,6 +132,11 @@
       "sourceType": "github",
       "skillPath": "skills/mapbox-web-performance-patterns/SKILL.md",
       "computedHash": "e6a22ee384645f88e2955975ddda7d6b329afb8ed95af71bb55493a1e04c10df"
+    },
+    "react-aria": {
+      "source": "react-aria.adobe.com",
+      "sourceType": "well-known",
+      "computedHash": "1a62e5b866622b7ec49678be485ff18fdb26896cc8c3aa294490a7286d759903"
     },
     "vercel-cli-with-tokens": {
       "source": "vercel-labs/agent-skills",
