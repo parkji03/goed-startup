@@ -51,6 +51,33 @@
     "bulletChat": "Chat session review (read-only)",
     "bulletDistinct": "Distinct from founder-facing Navigator / Map / Chat"
   },
+  "Map": {
+    "filters": {
+      "search": {
+        "placeholder": "Search by name, website, or description"
+      },
+      "sector": {
+        "label": "Sector",
+        "placeholder": "Any sector",
+        "searchPlaceholder": "Filter sectors…"
+      },
+      "stage": {
+        "label": "Stage",
+        "placeholder": "Any stage",
+        "searchPlaceholder": "Filter stages…"
+      },
+      "employees": {
+        "label": "Employees",
+        "placeholder": "Any size",
+        "searchPlaceholder": "Filter sizes…"
+      },
+      "clear": "Clear all",
+      "resultsCount": "Showing {shown} of {total}"
+    },
+    "popup": {
+      "viewProfile": "View profile →"
+    }
+  },
   "Taxonomy": {
     "sectors": {
       "b2b-software": "B2B Software",

@@ -51,6 +51,33 @@
     "bulletChat": "Revisión de chats (solo lectura)",
     "bulletDistinct": "Distinto del Navigator / Mapa / Chat para founders"
   },
+  "Map": {
+    "filters": {
+      "search": {
+        "placeholder": "Buscar por nombre, sitio o descripción"
+      },
+      "sector": {
+        "label": "Sector",
+        "placeholder": "Cualquier sector",
+        "searchPlaceholder": "Filtrar sectores…"
+      },
+      "stage": {
+        "label": "Etapa",
+        "placeholder": "Cualquier etapa",
+        "searchPlaceholder": "Filtrar etapas…"
+      },
+      "employees": {
+        "label": "Empleados",
+        "placeholder": "Cualquier tamaño",
+        "searchPlaceholder": "Filtrar tamaños…"
+      },
+      "clear": "Limpiar todo",
+      "resultsCount": "Mostrando {shown} de {total}"
+    },
+    "popup": {
+      "viewProfile": "Ver perfil →"
+    }
+  },
   "Taxonomy": {
     "sectors": {
       "b2b-software": "Software B2B",

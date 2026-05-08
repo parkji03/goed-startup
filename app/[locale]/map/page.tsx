@@ -11,6 +11,7 @@ import {
 } from '@/hooks/useCompaniesGeoJson';
 import { parseFiltersFromParams } from '@/lib/companies/filters';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
+import { FilterPanel } from '@/components/map/filter-panel';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -26,7 +27,8 @@ export default function MapPage() {
   // change.
   const markersRef = useRef<Map<string, mapboxgl.Marker>>(new Map());
 
-  const t = useTranslations('Taxonomy');
+  const tTax = useTranslations('Taxonomy');
+  const tMap = useTranslations('Map');
 
   // Filter state lives in the URL — shareable, refresh-safe, and read-only
   // here. Parsing memoized on the URL string so the filters object is a
@@ -184,8 +186,8 @@ export default function MapPage() {
           .setHTML(
             `<div style="font-family:system-ui;padding:4px 6px;">
                <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
-               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(t(`sectors.${props.sector}`))}</div>
-               <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">View profile →</a>
+               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(tTax(`sectors.${props.sector}`))}</div>
+               <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">${escapeHtml(tMap('popup.viewProfile'))}</a>
              </div>`,
           )
           .addTo(map);
@@ -238,22 +240,25 @@ export default function MapPage() {
 
     if (map.isStyleLoaded()) onReady();
     else map.once('load', onReady);
-  }, [geojson, t]);
+  }, [geojson, tTax, tMap]);
 
   // Pinned to the viewport below the LocaleSwitcher header. `position: fixed`
   // is relative to the viewport directly, so we don't depend on any parent
   // having a definite height (the body uses min-h-full which doesn't propagate).
   return (
-    <div
-      ref={containerRef}
-      style={{
-        position: 'fixed',
-        top: 58,
-        left: 0,
-        right: 0,
-        bottom: 0,
-      }}
-    />
+    <>
+      <div
+        ref={containerRef}
+        style={{
+          position: 'fixed',
+          top: 58,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      />
+      <FilterPanel />
+    </>
   );
 }
 
