@@ -55,7 +55,16 @@ export default function MapPage() {
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
     mapRef.current = map;
 
+    // Mapbox sizes its canvas at construction time. If the container had
+    // 0×0 dimensions then, the canvas stays blank even after the layout
+    // settles. Watch the container and resize when it actually has size.
+    const resizeObserver = new ResizeObserver(() => {
+      map.resize();
+    });
+    resizeObserver.observe(containerRef.current);
+
     return () => {
+      resizeObserver.disconnect();
       popupRef.current?.remove();
       popupRef.current = null;
       map.remove();
@@ -222,12 +231,20 @@ export default function MapPage() {
     else map.once('load', onReady);
   }, [geojson]);
 
-  // Outer flex-1 fills remaining space below the LocaleSwitcher header;
-  // inner absolute gives Mapbox an explicit-sized container.
+  // Pinned to the viewport below the LocaleSwitcher header. `position: fixed`
+  // is relative to the viewport directly, so we don't depend on any parent
+  // having a definite height (the body uses min-h-full which doesn't propagate).
   return (
-    <div className="relative flex-1">
-      <div ref={containerRef} className="absolute inset-0" />
-    </div>
+    <div
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        top: 58,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    />
   );
 }
 
