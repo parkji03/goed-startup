@@ -62,6 +62,27 @@ export const bySlug = query({
 });
 
 /**
+ * One-off cleanup: clear `logoUrl` from every company. We render logos via
+ * logo.dev at request time using the company's domain, so the stored URLs
+ * are no longer needed. Run with: `npx convex run companies:clearLogoUrls`.
+ * Safe to leave in place — it's a no-op once the field is unset everywhere.
+ */
+export const clearLogoUrls = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query('companies').collect();
+    let cleared = 0;
+    for (const row of rows) {
+      if (row.logoUrl !== undefined) {
+        await ctx.db.patch(row._id, { logoUrl: undefined });
+        cleared++;
+      }
+    }
+    return { scanned: rows.length, cleared };
+  },
+});
+
+/**
  * Idempotent upsert by slug. Called by scripts/seed-companies.ts during
  * initial data loading and re-runs. Re-running on an existing slug patches
  * the row in place without creating duplicates.
@@ -76,7 +97,6 @@ export const seedOne = mutation({
     description: v.optional(v.string()),
     website: v.optional(v.string()),
     linkedin: v.optional(v.string()),
-    logoUrl: v.optional(v.string()),
     sector: sectorValidator,
     stage: v.optional(stageValidator),
     employeeCount: v.optional(employeeCountValidator),

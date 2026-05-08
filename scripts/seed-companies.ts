@@ -134,7 +134,6 @@ async function main() {
         description: cleanString(row['Description of startup']),
         website: normalizeWebsite(row['Website'] ?? ''),
         linkedin: cleanString(row['LinkedIn Link (map it to Links to get the logo)']),
-        logoUrl: cleanString(row['Logo URL'] ?? ''),
         sector: normalizeSector(row['Section'] ?? ''),
         stage: normalizeStage(row['Stage']),
         employeeCount: normalizeEmployeeCount(row['# of Employees ']),
