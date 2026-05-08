@@ -226,3 +226,14 @@
     @apply font-sans;
   }
 }
+
+/* Opt the document into animating between intrinsic sizes (auto,
+ * fit-content, max-content). Lets the floating filter chrome's
+ * `w-fit` width transition smoothly when filter chips gain a count
+ * badge. Chromium 129+ supports it; Safari/Firefox quietly ignore
+ * the declaration and snap to the new width like before. */
+@supports (interpolate-size: allow-keywords) {
+  :root {
+    interpolate-size: allow-keywords;
+  }
+}

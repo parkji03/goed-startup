@@ -106,8 +106,13 @@ export function FilterBar({
   );
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      <div className="min-w-[220px] flex-1">
+    // Single-row layout. Search has a fixed width so it never resizes
+    // when chips grow (e.g. a count badge appears); the chrome around
+    // this bar is auto-sized to fit, so the whole pill grows wider
+    // instead of compressing the input. flex-nowrap so the chips
+    // never get pushed onto a second line.
+    <div className="flex flex-nowrap items-center gap-2">
+      <div className="w-[300px] shrink-0">
         <SearchField
           aria-label={tFilters('search.placeholder')}
           value={draftQ}

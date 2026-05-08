@@ -21,10 +21,10 @@ interface FloatingFilterBarProps {
   onView: (company: CompanyForList) => void;
 }
 
-// Pinned width for both states. Sized to fit the search input plus
-// three filter chips on a single row (with badges for any selected
-// values), so the chrome never reflows when the panel toggles.
-const CHROME_WIDTH = 'w-[560px]';
+// Width is content-driven. The search input has a fixed width, the
+// chips grow naturally when a count badge appears, and the chrome
+// just sizes to fit them all on a single row — so selecting a
+// filter expands the chrome rather than compressing the input.
 
 /**
  * The single floating chrome on the map. Always pinned top-left,
@@ -72,16 +72,25 @@ export function FloatingFilterBar({
   return (
     <div
       className={[
-        'fixed left-3 top-[70px] z-10 flex flex-col overflow-hidden border border-border bg-bg/95 shadow-lg backdrop-blur-md',
-        CHROME_WIDTH,
-        // Same outer max so the box never spills off-screen on narrower
-        // viewports; mobile collapses to edge-to-edge.
-        'max-w-[calc(100vw-1.5rem)] max-md:left-2 max-md:right-2 max-md:w-auto max-md:max-w-none',
-        // Border radius is the only shape change between states. The
-        // pill in the collapsed state matches the rounded-2xl card's
-        // top half visually, so the FilterBar reads as the same
-        // surface across both.
-        panelOpen ? 'rounded-2xl' : 'rounded-full',
+        'fixed left-3 top-[70px] z-10 flex w-fit flex-col overflow-hidden border border-border bg-bg/95 shadow-lg backdrop-blur-md',
+        // Cap at 700px so the chrome doesn't grow unbounded as filters
+        // and badges stack up; the inner viewport-safety bound keeps it
+        // from spilling off-screen on narrower windows. Mobile
+        // collapses to edge-to-edge.
+        'max-w-[min(700px,calc(100vw-1.5rem))] max-md:left-2 max-md:right-2 max-md:w-auto max-md:max-w-none',
+        // Single fixed corner radius. `rounded-full` reads as a pill
+        // at the FilterBar's collapsed height, but its 9999px value
+        // gets clamped to half-min-dimension per frame — animating
+        // the height while the corners interpolate produced a giant
+        // bulging arc mid-transition. `rounded-3xl` (24px) sits in
+        // the sweet spot: at ~50px tall it visually looks like a
+        // pill, and at expanded heights it looks like a soft card.
+        'rounded-3xl',
+        // Animate the auto width when chip badges add or drop. Only
+        // takes effect in browsers that honor `interpolate-size`
+        // (set on :root in globals.css); elsewhere this is a no-op
+        // and the width snaps as before.
+        'transition-[width] duration-200 ease-out',
       ].join(' ')}
     >
       {/* The FilterBar lives at the same JSX position in both states.
@@ -91,8 +100,23 @@ export function FloatingFilterBar({
         <FilterBar size="sm" />
       </div>
 
-      {panelOpen && (
-        <>
+      {/* Result panel reveals via the grid `0fr → 1fr` trick — the
+       * track height transitions while content stays at its natural
+       * size. `min-h-0 overflow-hidden` on the inner wrapper clips
+       * whatever's beyond the current track height, so the cards
+       * appear naturally as the panel grows down. Content stays
+       * mounted across the toggle so the collapse animation has
+       * something to fold up; while collapsed, the list receives
+       * `undefined` and renders its lightweight skeleton (clipped
+       * out of view anyway). */}
+      <div
+        className={[
+          'grid transition-[grid-template-rows] duration-200 ease-out',
+          panelOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+        ].join(' ')}
+        aria-hidden={!panelOpen}
+      >
+        <div className="min-h-0 overflow-hidden">
           <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2 text-xs text-muted-fg">
             <span aria-live="polite">
               {tFilters('resultsCount', { shown, total })}
@@ -109,10 +133,13 @@ export function FloatingFilterBar({
           </div>
 
           <div className="max-h-[calc(70vh-130px)] overflow-y-auto border-t border-border">
-            <CompanyList companies={companies} onView={onView} />
+            <CompanyList
+              companies={panelOpen ? companies : undefined}
+              onView={onView}
+            />
           </div>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 }
