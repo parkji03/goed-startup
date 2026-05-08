@@ -5,8 +5,7 @@ import { Button } from 'react-aria-components/Button';
 import { Dialog } from 'react-aria-components/Dialog';
 import { DialogTrigger } from 'react-aria-components/Dialog';
 import { Popover as PopoverPrimitive } from 'react-aria-components/Popover';
-import { ListBox } from 'react-aria-components/ListBox';
-import { ListBoxItem } from '@/components/ui/list-box';
+import { ListBox, ListBoxItem } from '@/components/ui/list-box';
 import { twMerge } from 'tailwind-merge';
 
 type Option<Id extends string> = { id: Id; name: string };
@@ -66,8 +65,18 @@ export function FilterChip<Id extends string>({
 
       <PopoverPrimitive
         offset={6}
+        // `bottom start` anchors the popover's left edge to the
+        // trigger's left edge instead of center-aligning, so the menu
+        // grows down-and-right from the chip rather than spilling over
+        // its left side.
+        placement="bottom start"
+        // Auto-size to content. The styled ListBox imposes a min-w-56
+        // (224px) and max-h-96 internally, so we don't need to repeat
+        // those constraints here. No `w-(--trigger-width)` — the chip
+        // trigger is small and forcing the popover to match it
+        // collapses the labels.
         className={twMerge(
-          'w-(--trigger-width) min-w-[220px] overflow-hidden rounded-xl border border-border bg-bg shadow-lg',
+          'overflow-hidden rounded-xl shadow-lg',
           'entering:animate-in entering:fade-in-0 entering:zoom-in-95',
           'exiting:animate-out exiting:fade-out-0 exiting:zoom-out-95',
         )}
@@ -82,7 +91,6 @@ export function FilterChip<Id extends string>({
               else onChange(Array.from(keys) as Id[]);
             }}
             items={options}
-            className="max-h-[280px] overflow-y-auto p-1 outline-none"
           >
             {(item) => (
               <ListBoxItem id={item.id} textValue={item.name}>
