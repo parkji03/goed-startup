@@ -1,5 +1,10 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
+import {
+  facetTypeValidator,
+  resourceStatusValidator,
+  submissionStatusValidator,
+} from './resourceValidators';
 
 /**
  * Validators reused by mutations in this directory. These literal unions
@@ -128,6 +133,88 @@ export const locationValidator = v.object({
 });
 
 export default defineSchema({
+  /** State programs & partner resources — full-text searchable + facets. */
+  resources: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    description: v.string(),
+    url: v.string(),
+    contactEmail: v.optional(v.string()),
+    sourceId: v.optional(v.string()),
+    /** Denormalized tags from CSV/API for display — facet rows power indexed filters. */
+    communities: v.array(v.string()),
+    industries: v.array(v.string()),
+    locations: v.array(v.string()),
+    topics: v.array(v.string()),
+    stageTags: v.array(v.string()),
+    searchText: v.string(),
+    status: resourceStatusValidator,
+    submissionId: v.optional(v.id('resourceSubmissions')),
+    lastSyncedAt: v.optional(v.number()),
+    embeddingVersion: v.optional(v.number()),
+  })
+    .index('by_slug', ['slug'])
+    .index('by_status', ['status'])
+    .index('by_sourceId', ['sourceId'])
+    .searchIndex('search_resources', {
+      searchField: 'searchText',
+      filterFields: ['status'],
+      staged: false,
+    }),
+
+  resourceFacets: defineTable({
+    resourceId: v.id('resources'),
+    facetType: facetTypeValidator,
+    value: v.string(),
+    status: resourceStatusValidator,
+  })
+    .index('by_resourceId', ['resourceId'])
+    .index('by_facetType_and_status', ['facetType', 'status'])
+    .index('by_facetType_and_value_and_status', ['facetType', 'value', 'status']),
+
+  resourceEmbeddings: defineTable({
+    resourceId: v.id('resources'),
+    embedding: v.array(v.float64()),
+    embeddingModel: v.string(),
+    status: resourceStatusValidator,
+  })
+    .index('by_resourceId', ['resourceId'])
+    .vectorIndex('by_embedding', {
+      vectorField: 'embedding',
+      dimensions: 1536,
+      filterFields: ['status'],
+    }),
+
+  /** Public proposals — moderated in admin before publish. */
+  resourceSubmissions: defineTable({
+    title: v.string(),
+    description: v.string(),
+    url: v.string(),
+    submitterName: v.string(),
+    submitterEmail: v.string(),
+    organization: v.optional(v.string()),
+    suggestedCommunities: v.array(v.string()),
+    suggestedIndustries: v.array(v.string()),
+    suggestedLocations: v.array(v.string()),
+    suggestedTopics: v.array(v.string()),
+    notes: v.optional(v.string()),
+    status: submissionStatusValidator,
+    moderatorNote: v.optional(v.string()),
+    mergedIntoResourceId: v.optional(v.id('resources')),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_status', ['status'])
+    .index('by_submitterEmail', ['submitterEmail']),
+
+  resourceSubmissionEvents: defineTable({
+    submissionId: v.id('resourceSubmissions'),
+    actorTokenIdentifier: v.optional(v.string()),
+    action: v.string(),
+    detail: v.optional(v.string()),
+    createdAt: v.number(),
+  }).index('by_submissionId', ['submissionId']),
+
   companies: defineTable({
     // Identity
     name: v.string(),

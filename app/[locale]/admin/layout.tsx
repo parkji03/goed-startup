@@ -1,4 +1,3 @@
-import { ClerkProvider } from "@clerk/nextjs";
 import { AdminHeaderToolbar } from "@/components/admin-header-toolbar";
 import { StartupUtahLogoLink } from "@/components/startup-utah-logo-link";
 import { clerkUiAllowedFromHeaders } from "@/lib/clerk-admin-scope";
@@ -23,7 +22,7 @@ export default async function AdminLayout({ children, params }: Readonly<Props>)
   const t = await getTranslations({ locale, namespace: "AdminHeader" });
 
   return (
-    <ClerkProvider>
+    <>
       <div className="border-b border-border px-4 py-3">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
           <StartupUtahLogoLink />
@@ -31,6 +30,6 @@ export default async function AdminLayout({ children, params }: Readonly<Props>)
         </div>
       </div>
       <div className="mx-auto max-w-6xl flex-1 px-4 py-6">{children}</div>
-    </ClerkProvider>
+    </>
   );
 }
