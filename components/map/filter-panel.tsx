@@ -139,6 +139,7 @@ export function FilterPanel({ shown, total }: FilterPanelProps) {
             {tFilters('sector.label')}
           </label>
           <MultipleSelect
+            aria-label={tFilters('sector.label')}
             placeholder={tFilters('sector.placeholder')}
             searchPlaceholder={tFilters('sector.searchPlaceholder')}
             value={filters.sectors}
@@ -164,6 +165,7 @@ export function FilterPanel({ shown, total }: FilterPanelProps) {
             {tFilters('stage.label')}
           </label>
           <MultipleSelect
+            aria-label={tFilters('stage.label')}
             placeholder={tFilters('stage.placeholder')}
             searchPlaceholder={tFilters('stage.searchPlaceholder')}
             value={filters.stages}
@@ -189,6 +191,7 @@ export function FilterPanel({ shown, total }: FilterPanelProps) {
             {tFilters('employees.label')}
           </label>
           <MultipleSelect
+            aria-label={tFilters('employees.label')}
             placeholder={tFilters('employees.placeholder')}
             searchPlaceholder={tFilters('employees.searchPlaceholder')}
             value={filters.employeeCounts}
