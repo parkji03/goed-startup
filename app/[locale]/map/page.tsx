@@ -121,6 +121,54 @@ export default function MapPage() {
     map.addControl(new mapboxgl.NavigationControl(), 'top-right');
     mapRef.current = map;
 
+    // Hide every built-in POI icon/label that the base style ships
+    // with — restaurants, hotels, shops, transit stops — so the only
+    // points of interest on the map are the companies we control.
+    //
+    // Two paths because Mapbox styles take two shapes:
+    //
+    //   1. Mapbox Standard (or any style that imports it): use
+    //      `setConfigProperty` on the import. This is the only way
+    //      to toggle Standard's built-in features — its layers are
+    //      "hidden" inside the imported style and not directly
+    //      modifiable via setLayoutProperty.
+    //
+    //   2. Legacy custom Studio styles: layers live at the top level
+    //      and can be hidden by their source-layer.
+    //
+    // We try both. Whichever applies to your style does the work.
+    const hidePoiLayers = () => {
+      // (1) Standard-style imports. The default import id is
+      // "basemap". Wrap in try/catch — `setConfigProperty` throws
+      // if the import doesn't exist or doesn't have that property.
+      try {
+        map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
+      } catch {
+        /* not a Standard-based style */
+      }
+      try {
+        map.setConfigProperty('basemap', 'showTransitLabels', false);
+      } catch {
+        /* not a Standard-based style */
+      }
+
+      // (2) Legacy source-layer hiding — kept as a safety net for
+      // any future style that's not based on Standard.
+      const HIDDEN_SOURCE_LAYERS = new Set([
+        'poi_label',
+        'transit_stop_label',
+        'airport_label',
+      ]);
+      for (const layer of map.getStyle().layers ?? []) {
+        const sourceLayer = (layer as { 'source-layer'?: string })['source-layer'];
+        if (sourceLayer && HIDDEN_SOURCE_LAYERS.has(sourceLayer)) {
+          map.setLayoutProperty(layer.id, 'visibility', 'none');
+        }
+      }
+    };
+    if (map.isStyleLoaded()) hidePoiLayers();
+    else map.once('style.load', hidePoiLayers);
+
     // Mapbox sizes its canvas at construction time. If the container had
     // 0×0 dimensions then, the canvas stays blank even after the layout
     // settles. Watch the container and resize when it actually has size
