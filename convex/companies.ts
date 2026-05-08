@@ -83,19 +83,21 @@ export const searchForMap = query({
   handler: async (ctx, { q, sectors, stages, employeeCounts }) => {
     const trimmed = q?.trim() ?? '';
 
-    // Cap reads. The map's source is bounded — 200 is well above the dataset
-    // size today and keeps this query cheap as the corpus grows.
+    // Cap reads at a generous bound so the map can render the entire
+    // published set today (220-ish rows) and absorb growth without a
+    // schema change. Stays well within Convex's per-query limits.
+    const ROW_CAP = 1000;
     const rows = trimmed.length > 0
       ? await ctx.db
           .query('companies')
           .withSearchIndex('search_text', (qb) =>
             qb.search('searchText', trimmed).eq('status', 'published'),
           )
-          .take(200)
+          .take(ROW_CAP)
       : await ctx.db
           .query('companies')
           .withIndex('by_status', (qb) => qb.eq('status', 'published'))
-          .take(200);
+          .take(ROW_CAP);
 
     const sectorSet = sectors && sectors.length ? new Set(sectors) : null;
     const stageSet = stages && stages.length ? new Set(stages) : null;
@@ -135,7 +137,7 @@ export const mapTotalCount = query({
     const rows = await ctx.db
       .query('companies')
       .withIndex('by_status', (q) => q.eq('status', 'published'))
-      .take(500);
+      .take(1000);
     return rows.filter(
       (c) => c.location.lat != null && c.location.lng != null,
     ).length;
