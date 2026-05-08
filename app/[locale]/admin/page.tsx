@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Code, Text } from "@/components/ui/text";
+import { Link } from "@/i18n/navigation";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -66,6 +67,13 @@ export default async function AdminHomePage({ params }: Readonly<Props>) {
         </div>
 
         <Text className="max-w-prose">{t("blurb")}</Text>
+
+        <Link
+          href="/admin/resources"
+          className="inline-flex rounded-lg border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/15"
+        >
+          Open resource import / queue →
+        </Link>
 
         <ul className="grid gap-2 text-sm text-muted-fg sm:grid-cols-2">
           {bullets.map((label) => (

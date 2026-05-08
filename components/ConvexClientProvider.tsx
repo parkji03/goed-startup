@@ -1,10 +1,22 @@
 'use client';
 
-import { ReactNode } from 'react';
 import { ConvexProvider, ConvexReactClient } from 'convex/react';
+import { ReactNode, useMemo } from 'react';
 
-const convex = new ConvexReactClient(process.env.NEXT_PUBLIC_CONVEX_URL!);
+let browserClient: ConvexReactClient | undefined;
+
+export function getConvexBrowserClient(): ConvexReactClient {
+  if (!browserClient) {
+    const url = process.env.NEXT_PUBLIC_CONVEX_URL;
+    if (!url) {
+      throw new Error('NEXT_PUBLIC_CONVEX_URL is not set');
+    }
+    browserClient = new ConvexReactClient(url);
+  }
+  return browserClient;
+}
 
 export function ConvexClientProvider({ children }: { children: ReactNode }) {
-  return <ConvexProvider client={convex}>{children}</ConvexProvider>;
+  const client = useMemo(() => getConvexBrowserClient(), []);
+  return <ConvexProvider client={client}>{children}</ConvexProvider>;
 }

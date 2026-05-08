@@ -53,6 +53,8 @@ const sizes = {
 
 interface CommandMenuProps extends AutocompleteProps, MenuTriggerProps, CommandMenuProviderProps {
   isDismissable?: boolean
+  /** When true, disables client-side filtering so async/server results stay visible. */
+  disableClientFilter?: boolean
   "aria-label"?: string
   shortcut?: string
   className?: string
@@ -69,10 +71,13 @@ const CommandMenu = ({
   overlay,
   size = "lg",
   shortcut,
+  disableClientFilter,
   ...props
 }: CommandMenuProps) => {
   const { contains } = useFilter({ sensitivity: "base" })
-  const filter = (textValue: string, inputValue: string) => contains(textValue, inputValue)
+  const filter = disableClientFilter
+    ? () => true
+    : (textValue: string, inputValue: string) => contains(textValue, inputValue)
   useEffect(() => {
     if (!shortcut) return
 

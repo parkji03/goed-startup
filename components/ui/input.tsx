@@ -8,7 +8,7 @@ import {
 import { cx } from "@/lib/primitive"
 
 interface InputProps extends PrimitiveInputProps {
-  ref?: React.RefObject<HTMLInputElement>
+  ref?: React.Ref<HTMLInputElement>
 }
 
 export function Input({ className, ref, ...props }: InputProps) {

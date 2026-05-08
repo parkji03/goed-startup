@@ -9,6 +9,19 @@
  */
 
 import type * as companies from "../companies.js";
+import type * as founderProfile from "../founderProfile.js";
+import type * as guide from "../guide.js";
+import type * as lib_adminAuth from "../lib/adminAuth.js";
+import type * as lib_facetTypes from "../lib/facetTypes.js";
+import type * as lib_matchResources from "../lib/matchResources.js";
+import type * as lib_resourceHelpers from "../lib/resourceHelpers.js";
+import type * as resourceEmbeddings from "../resourceEmbeddings.js";
+import type * as resourceEmbeddingsNode from "../resourceEmbeddingsNode.js";
+import type * as resourceImport from "../resourceImport.js";
+import type * as resourceInternal from "../resourceInternal.js";
+import type * as resourceSubmissions from "../resourceSubmissions.js";
+import type * as resourceValidators from "../resourceValidators.js";
+import type * as resources from "../resources.js";
 
 import type {
   ApiFromModules,
@@ -18,6 +31,19 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   companies: typeof companies;
+  founderProfile: typeof founderProfile;
+  guide: typeof guide;
+  "lib/adminAuth": typeof lib_adminAuth;
+  "lib/facetTypes": typeof lib_facetTypes;
+  "lib/matchResources": typeof lib_matchResources;
+  "lib/resourceHelpers": typeof lib_resourceHelpers;
+  resourceEmbeddings: typeof resourceEmbeddings;
+  resourceEmbeddingsNode: typeof resourceEmbeddingsNode;
+  resourceImport: typeof resourceImport;
+  resourceInternal: typeof resourceInternal;
+  resourceSubmissions: typeof resourceSubmissions;
+  resourceValidators: typeof resourceValidators;
+  resources: typeof resources;
 }>;
 
 /**
@@ -46,4 +72,6 @@ export declare const internal: FilterApi<
   FunctionReference<any, "internal">
 >;
 
-export declare const components: {};
+export declare const components: {
+  agent: import("@convex-dev/agent/_generated/component.js").ComponentApi<"agent">;
+};
