@@ -1,4 +1,5 @@
 allowBuilds:
+  '@clerk/shared': true
   '@parcel/watcher': true
   '@swc/core': true
   esbuild: true
