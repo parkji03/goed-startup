@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'convex/react';
@@ -18,12 +18,10 @@ import {
 } from '@/lib/companies/filters';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { FloatingFilterBar } from '@/components/map/floating-filter-bar';
-import { ResultsSidebar } from '@/components/map/results-sidebar';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 const COMPANIES_SOURCE = 'companies';
-const SIDEBAR_WIDTH = 400;
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,18 +53,10 @@ export default function MapPage() {
   const totalCount = useQuery(api.companies.mapTotalCount);
   const shownCount = filtered?.companies.length ?? 0;
 
-  // Manual collapse: user clicks the sidebar's chevron. Reset on every
-  // filter change so the next active state re-opens the sidebar.
-  // Storing the last-seen filters value during render avoids the
-  // cascading-render trap of doing this in useEffect (same pattern the
-  // FilterBar uses for its draft-search sync).
-  const [manuallyCollapsed, setManuallyCollapsed] = useState(false);
-  const [lastFilters, setLastFilters] = useState(filters);
-  if (filters !== lastFilters) {
-    setLastFilters(filters);
-    setManuallyCollapsed(false);
-  }
-  const sidebarOpen = isFiltersActive(filters) && !manuallyCollapsed;
+  // Panel open whenever the user has typed something or selected any
+  // filter. Map stays full-width — the panel just grows downward from
+  // the floating chrome. No sidebar, no manual collapse.
+  const panelOpen = isFiltersActive(filters);
 
   // Marker click and card click both reuse this. Stored in a ref so the
   // marker DOM elements (built once and re-used across renders) always call
@@ -304,29 +294,21 @@ export default function MapPage() {
     <>
       <div
         ref={containerRef}
-        // Map shrinks to make room for the sidebar when filters are active.
-        // ResizeObserver above catches the width change and calls
-        // `map.resize()`, so Mapbox's canvas stays in sync.
         style={{
           position: 'fixed',
           top: 58,
-          left: sidebarOpen ? SIDEBAR_WIDTH : 0,
+          left: 0,
           right: 0,
           bottom: 0,
-          transition: 'left 200ms ease',
         }}
       />
-      {sidebarOpen ? (
-        <ResultsSidebar
-          companies={filtered?.companies}
-          total={totalCount ?? 0}
-          shown={shownCount}
-          onView={flyToCompany}
-          onCollapse={() => setManuallyCollapsed(true)}
-        />
-      ) : (
-        <FloatingFilterBar />
-      )}
+      <FloatingFilterBar
+        panelOpen={panelOpen}
+        companies={filtered?.companies}
+        total={totalCount ?? 0}
+        shown={shownCount}
+        onView={flyToCompany}
+      />
     </>
   );
 }
