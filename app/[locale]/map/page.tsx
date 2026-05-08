@@ -182,13 +182,15 @@ export default function MapPage() {
       // Click → popup
       map.on('click', 'companies-points', (e) => {
         const feature = e.features?.[0];
-        if (!feature || feature.geometry.type !== 'Point') return;
+        if (!feature) return;
+        const geom = feature.geometry;
+        if (geom.type !== 'Point') return;
         const props = feature.properties as {
           name: string;
           slug: string;
           sector: SectorId;
         };
-        const [lng, lat] = feature.geometry.coordinates;
+        const [lng, lat] = geom.coordinates;
 
         popupRef.current?.remove();
         popupRef.current = new mapboxgl.Popup({ offset: 14, closeButton: true })
@@ -206,13 +208,16 @@ export default function MapPage() {
       // Click on cluster → zoom in
       map.on('click', 'clusters', (e) => {
         const feature = e.features?.[0];
-        if (!feature || feature.geometry.type !== 'Point') return;
+        if (!feature) return;
+        const geom = feature.geometry;
+        if (geom.type !== 'Point') return;
+        const [lng, lat] = geom.coordinates;
         const clusterId = feature.properties?.cluster_id as number;
         const source = map.getSource(COMPANIES_SOURCE) as mapboxgl.GeoJSONSource;
         source.getClusterExpansionZoom(clusterId, (err, zoom) => {
           if (err) return;
           map.easeTo({
-            center: feature.geometry.coordinates as [number, number],
+            center: [lng, lat],
             zoom: zoom ?? map.getZoom() + 1,
           });
         });
