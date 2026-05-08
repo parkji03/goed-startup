@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
@@ -8,6 +9,7 @@ import {
   useCompaniesGeoJson,
   type CompanyFeatureProps,
 } from '@/hooks/useCompaniesGeoJson';
+import { parseFiltersFromParams } from '@/lib/companies/filters';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
@@ -25,7 +27,19 @@ export default function MapPage() {
   const markersRef = useRef<Map<string, mapboxgl.Marker>>(new Map());
 
   const t = useTranslations('Taxonomy');
-  const geojson = useCompaniesGeoJson();
+
+  // Filter state lives in the URL — shareable, refresh-safe, and read-only
+  // here. Parsing memoized on the URL string so the filters object is a
+  // stable reference between identical URLs (so Convex's useQuery doesn't
+  // re-subscribe on every render).
+  const searchParams = useSearchParams();
+  const filtersKey = searchParams.toString();
+  const filters = useMemo(
+    () => parseFiltersFromParams(searchParams),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- filtersKey covers searchParams' content
+    [filtersKey],
+  );
+  const geojson = useCompaniesGeoJson(filters);
 
   // Initialize the map once
   useEffect(() => {
