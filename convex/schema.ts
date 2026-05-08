@@ -70,6 +70,11 @@ export default defineSchema({
     linkedin: v.optional(v.string()),
     logoUrl: v.optional(v.string()),
 
+    // Concatenation of name + website + description, kept in sync on every
+    // write so a single search index can match across the three. Optional
+    // for pre-backfill rows; new writes always populate it.
+    searchText: v.optional(v.string()),
+
     // Classification
     sector: sectorValidator,
     stage: v.optional(stageValidator),
@@ -104,5 +109,11 @@ export default defineSchema({
   })
     .index('by_slug', ['slug'])
     .index('by_status', ['status'])
-    .index('by_sector', ['sector']),
+    .index('by_sector', ['sector'])
+    // Powers the map's text search box. `status` is a filter field so we can
+    // scope to published rows inside the search query.
+    .searchIndex('search_text', {
+      searchField: 'searchText',
+      filterFields: ['status'],
+    }),
 });

@@ -8,6 +8,22 @@ import {
 } from './schema';
 
 /**
+ * Concatenate the user-visible text fields into a single string indexed by
+ * the `search_text` search index. Joining keeps the schema to one search
+ * index instead of three (name + website + description), at the cost of
+ * losing per-field weighting — fine for our small corpus.
+ */
+function buildSearchText(
+  name: string,
+  website?: string,
+  description?: string,
+): string {
+  return [name, website, description]
+    .filter((s): s is string => Boolean(s && s.trim()))
+    .join(' ');
+}
+
+/**
  * Public list of all published companies — used by the map and any other
  * surface that needs the full ecosystem view.
  */
@@ -49,6 +65,66 @@ export const listForMap = query({
 });
 
 /**
+ * Search + filter projection for the map. Same shape as `listForMap`, but
+ * with optional fuzzy text search and multi-value categorical filters
+ * applied. Categorical filtering happens in memory after the index lookup —
+ * Convex's search/index APIs only express equality on a single value, and
+ * our corpus is small enough that an in-memory pass is fine.
+ *
+ * Empty/undefined arrays mean "no constraint on that dimension".
+ */
+export const searchForMap = query({
+  args: {
+    q: v.optional(v.string()),
+    sectors: v.optional(v.array(sectorValidator)),
+    stages: v.optional(v.array(stageValidator)),
+    employeeCounts: v.optional(v.array(employeeCountValidator)),
+  },
+  handler: async (ctx, { q, sectors, stages, employeeCounts }) => {
+    const trimmed = q?.trim() ?? '';
+
+    // Cap reads. The map's source is bounded — 200 is well above the dataset
+    // size today and keeps this query cheap as the corpus grows.
+    const rows = trimmed.length > 0
+      ? await ctx.db
+          .query('companies')
+          .withSearchIndex('search_text', (qb) =>
+            qb.search('searchText', trimmed).eq('status', 'published'),
+          )
+          .take(200)
+      : await ctx.db
+          .query('companies')
+          .withIndex('by_status', (qb) => qb.eq('status', 'published'))
+          .take(200);
+
+    const sectorSet = sectors && sectors.length ? new Set(sectors) : null;
+    const stageSet = stages && stages.length ? new Set(stages) : null;
+    const employeeSet = employeeCounts && employeeCounts.length
+      ? new Set(employeeCounts)
+      : null;
+
+    return rows
+      .filter((c) => c.location.lat != null && c.location.lng != null)
+      .filter((c) => !sectorSet || sectorSet.has(c.sector))
+      .filter((c) => !stageSet || (c.stage != null && stageSet.has(c.stage)))
+      .filter(
+        (c) =>
+          !employeeSet ||
+          (c.employeeCount != null && employeeSet.has(c.employeeCount)),
+      )
+      .map((c) => ({
+        _id: c._id,
+        name: c.name,
+        slug: c.slug,
+        sector: c.sector,
+        website: c.website,
+        lng: c.location.lng!,
+        lat: c.location.lat!,
+      }));
+  },
+});
+
+/**
  * Single company by slug — for company profile pages.
  */
 export const bySlug = query({
@@ -58,6 +134,28 @@ export const bySlug = query({
       .query('companies')
       .withIndex('by_slug', (q) => q.eq('slug', slug))
       .unique();
+  },
+});
+
+/**
+ * One-shot: populate `searchText` on every company that doesn't have it yet.
+ * Run after the schema migration with:
+ *   npx convex run companies:backfillSearchText
+ * Idempotent — re-running rewrites the same value (cheap no-op patches).
+ */
+export const backfillSearchText = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query('companies').collect();
+    let written = 0;
+    for (const row of rows) {
+      const next = buildSearchText(row.name, row.website, row.description);
+      if (row.searchText !== next) {
+        await ctx.db.patch(row._id, { searchText: next });
+        written++;
+      }
+    }
+    return { scanned: rows.length, written };
   },
 });
 
@@ -112,6 +210,7 @@ export const seedOne = mutation({
     const now = Date.now();
     const writePayload = {
       ...args,
+      searchText: buildSearchText(args.name, args.website, args.description),
       hiringStatus: 'unknown' as const,
       jobPostings: [] as { title: string; link: string; department?: string }[],
       photos: [] as never[],
