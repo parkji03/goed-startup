@@ -1,0 +1,32 @@
+{
+  "LocaleLayout": {
+    "title": "Utah Startup State",
+    "description": "Plataforma lista para producción para la iniciativa Startup State."
+  },
+  "LocaleSwitcher": {
+    "label": "Idioma",
+    "en": "Inglés",
+    "es": "Español"
+  },
+  "HomePage": {
+    "heading": "Para empezar, edita el archivo page.tsx.",
+    "introLead": "¿Buscas un punto de partida o más instrucciones? Ve a",
+    "introTemplates": "Plantillas",
+    "introOr": "o al",
+    "introLearning": "centro de aprendizaje",
+    "introTrail": ".",
+    "deployNow": "Desplegar ahora",
+    "documentation": "Documentación",
+    "templatesHref": "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
+    "learnHref": "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
+    "deployHref": "https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
+    "docsHref": "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
+    "nextLogoAlt": "Logotipo de Next.js",
+    "vercelLogoAlt": "Logotipo de Vercel"
+  },
+  "NotFoundPage": {
+    "title": "Página no encontrada",
+    "body": "La página que buscas no existe.",
+    "homeLink": "Volver al inicio"
+  }
+}

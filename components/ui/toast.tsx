@@ -2,13 +2,14 @@
 
 import { Toaster as ToasterPrimitive, type ToasterProps } from "sonner"
 import { twJoin } from "tailwind-merge"
-import { useTheme } from "@/components/theme-provider"
 
-export function Toast(props: ToasterProps) {
-  const { theme = "system" } = useTheme()
+export function Toast({
+  theme = "system",
+  ...props
+}: ToasterProps) {
   return (
     <ToasterPrimitive
-      theme={theme as ToasterProps["theme"]}
+      theme={theme}
       className="toaster group"
       richColors
       toastOptions={{
