@@ -76,6 +76,21 @@
     },
     "popup": {
       "viewProfile": "View profile →"
+    },
+    "card": {
+      "website": "Website",
+      "linkedin": "LinkedIn",
+      "viewOnMap": "View on map",
+      "employeesValue": "{count} employees",
+      "foundedValue": "Founded {year}"
+    },
+    "list": {
+      "emptyTitle": "No matches",
+      "emptyHint": "Try removing a filter or shortening your search."
+    },
+    "nav": {
+      "sidebarLabel": "Search results",
+      "collapseSidebar": "Collapse sidebar"
     }
   },
   "Taxonomy": {

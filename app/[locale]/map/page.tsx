@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'convex/react';
@@ -10,14 +10,20 @@ import { api } from '@/convex/_generated/api';
 import {
   useFilteredCompanies,
   type CompanyFeatureProps,
+  type CompanyForList,
 } from '@/hooks/useFilteredCompanies';
-import { parseFiltersFromParams } from '@/lib/companies/filters';
+import {
+  isFiltersActive,
+  parseFiltersFromParams,
+} from '@/lib/companies/filters';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
-import { FilterPanel } from '@/components/map/filter-panel';
+import { FloatingFilterBar } from '@/components/map/floating-filter-bar';
+import { ResultsSidebar } from '@/components/map/results-sidebar';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
 const COMPANIES_SOURCE = 'companies';
+const SIDEBAR_WIDTH = 400;
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -49,6 +55,66 @@ export default function MapPage() {
   const totalCount = useQuery(api.companies.mapTotalCount);
   const shownCount = filtered?.companies.length ?? 0;
 
+  // Manual collapse: user clicks the sidebar's chevron. Reset on every
+  // filter change so the next active state re-opens the sidebar.
+  // Storing the last-seen filters value during render avoids the
+  // cascading-render trap of doing this in useEffect (same pattern the
+  // FilterBar uses for its draft-search sync).
+  const [manuallyCollapsed, setManuallyCollapsed] = useState(false);
+  const [lastFilters, setLastFilters] = useState(filters);
+  if (filters !== lastFilters) {
+    setLastFilters(filters);
+    setManuallyCollapsed(false);
+  }
+  const sidebarOpen = isFiltersActive(filters) && !manuallyCollapsed;
+
+  // Marker click and card click both reuse this. Stored in a ref so the
+  // marker DOM elements (built once and re-used across renders) always call
+  // the latest closure — without this, locale changes wouldn't update the
+  // popup labels.
+  const openPopup = useCallback(
+    (props: CompanyFeatureProps, lngLat: [number, number]) => {
+      const map = mapRef.current;
+      if (!map) return;
+      popupRef.current?.remove();
+      popupRef.current = new mapboxgl.Popup({ offset: 22, closeButton: true })
+        .setLngLat(lngLat)
+        .setHTML(
+          `<div style="font-family:system-ui;padding:4px 6px;">
+             <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
+             <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(tTax(`sectors.${props.sector}`))}</div>
+             <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">${escapeHtml(tMap('popup.viewProfile'))}</a>
+           </div>`,
+        )
+        .addTo(map);
+    },
+    [tTax, tMap],
+  );
+  const openPopupRef = useRef(openPopup);
+  useEffect(() => {
+    openPopupRef.current = openPopup;
+  }, [openPopup]);
+
+  const flyToCompany = useCallback(
+    (company: CompanyForList) => {
+      const map = mapRef.current;
+      if (!map) return;
+      const lngLat: [number, number] = [company.lng, company.lat];
+      map.flyTo({ center: lngLat, zoom: 17, essential: true });
+      openPopup(
+        {
+          _id: company._id,
+          name: company.name,
+          slug: company.slug,
+          sector: company.sector,
+          website: company.website,
+        },
+        lngLat,
+      );
+    },
+    [openPopup],
+  );
+
   // Initialize the map once
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -67,7 +133,8 @@ export default function MapPage() {
 
     // Mapbox sizes its canvas at construction time. If the container had
     // 0×0 dimensions then, the canvas stays blank even after the layout
-    // settles. Watch the container and resize when it actually has size.
+    // settles. Watch the container and resize when it actually has size
+    // — also covers the sidebar open/close transition.
     const resizeObserver = new ResizeObserver(() => {
       map.resize();
     });
@@ -182,23 +249,6 @@ export default function MapPage() {
         map.getCanvas().style.cursor = '';
       });
 
-      const openPopup = (
-        props: CompanyFeatureProps,
-        lngLat: [number, number],
-      ) => {
-        popupRef.current?.remove();
-        popupRef.current = new mapboxgl.Popup({ offset: 22, closeButton: true })
-          .setLngLat(lngLat)
-          .setHTML(
-            `<div style="font-family:system-ui;padding:4px 6px;">
-               <div style="font-weight:600;font-size:14px;">${escapeHtml(props.name)}</div>
-               <div style="font-size:12px;color:#6B7280;margin-top:2px;">${escapeHtml(tTax(`sectors.${props.sector}`))}</div>
-               <a href="/companies/${escapeHtml(props.slug)}" style="display:inline-block;margin-top:8px;font-size:12px;color:#22C55E;text-decoration:none;">${escapeHtml(tMap('popup.viewProfile'))}</a>
-             </div>`,
-          )
-          .addTo(map);
-      };
-
       const syncMarkers = () => {
         if (!map.getSource(COMPANIES_SOURCE)) return;
         const markers = markersRef.current;
@@ -216,7 +266,9 @@ export default function MapPage() {
 
           if (markers.has(id)) continue;
           const lngLat = f.geometry.coordinates as [number, number];
-          const el = createMarkerElement(props, () => openPopup(props, lngLat));
+          const el = createMarkerElement(props, () =>
+            openPopupRef.current(props, lngLat),
+          );
           const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
             .setLngLat(lngLat)
             .addTo(map);
@@ -246,24 +298,35 @@ export default function MapPage() {
 
     if (map.isStyleLoaded()) onReady();
     else map.once('load', onReady);
-  }, [geojson, tTax, tMap]);
+  }, [geojson]);
 
-  // Pinned to the viewport below the LocaleSwitcher header. `position: fixed`
-  // is relative to the viewport directly, so we don't depend on any parent
-  // having a definite height (the body uses min-h-full which doesn't propagate).
   return (
     <>
       <div
         ref={containerRef}
+        // Map shrinks to make room for the sidebar when filters are active.
+        // ResizeObserver above catches the width change and calls
+        // `map.resize()`, so Mapbox's canvas stays in sync.
         style={{
           position: 'fixed',
           top: 58,
-          left: 0,
+          left: sidebarOpen ? SIDEBAR_WIDTH : 0,
           right: 0,
           bottom: 0,
+          transition: 'left 200ms ease',
         }}
       />
-      <FilterPanel shown={shownCount} total={totalCount ?? 0} />
+      {sidebarOpen ? (
+        <ResultsSidebar
+          companies={filtered?.companies}
+          total={totalCount ?? 0}
+          shown={shownCount}
+          onView={flyToCompany}
+          onCollapse={() => setManuallyCollapsed(true)}
+        />
+      ) : (
+        <FloatingFilterBar />
+      )}
     </>
   );
 }

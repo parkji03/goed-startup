@@ -76,6 +76,21 @@
     },
     "popup": {
       "viewProfile": "Ver perfil →"
+    },
+    "card": {
+      "website": "Sitio web",
+      "linkedin": "LinkedIn",
+      "viewOnMap": "Ver en el mapa",
+      "employeesValue": "{count} empleados",
+      "foundedValue": "Fundada en {year}"
+    },
+    "list": {
+      "emptyTitle": "Sin resultados",
+      "emptyHint": "Prueba a quitar un filtro o acortar la búsqueda."
+    },
+    "nav": {
+      "sidebarLabel": "Resultados de búsqueda",
+      "collapseSidebar": "Cerrar barra lateral"
     }
   },
   "Taxonomy": {
