@@ -84,7 +84,24 @@ function parseMarkdown(absPath: string): { title: string; sourceUrl: string; bod
 
 function cleanJourneyBody(raw: string, title: string): string {
   let body = raw;
+
+  // Strip the literal "# Step N: <Name>" h1 (matches frontmatter title).
   body = body.replace(`# ${title}\n`, '');
+
+  // The pages also embed "# <Name>", "## <Name>", and the all-caps "## <NAME>"
+  // variants of the same title. Strip each.
+  const nameOnly = title.replace(/^Step \d+:\s*/, '').trim();
+  if (nameOnly) {
+    const escaped = nameOnly.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const variants = new Set([nameOnly, nameOnly.toUpperCase()]);
+    for (const variant of variants) {
+      const v = variant.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      body = body.replace(new RegExp(`^#{1,3} ${v}\\s*$`, 'gm'), '');
+    }
+    // Also handle the bare nameOnly with original casing.
+    body = body.replace(new RegExp(`^#{1,3} ${escaped}\\s*$`, 'gm'), '');
+  }
+
   for (const pat of CHROME_PATTERNS) body = body.replace(pat, '');
   body = body.replace(WP_IMAGE_RE, '');
   body = body.replace(TRACKER_LINK_RE, '$1');

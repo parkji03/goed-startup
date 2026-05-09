@@ -37,6 +37,7 @@ type Props = {
 
 const navItems = [
   { href: "/" as const, label: "Resources" },
+  { href: "/guides" as const, label: "Guides" },
   { href: "/map" as const, label: "Map" },
 ];
 
@@ -55,6 +56,7 @@ const isMacEnv =
 
 function isActivePath(pathname: string, href: string) {
   if (href === "/") return pathname === "/" || pathname.startsWith("/resources");
+  if (href === "/guides") return pathname === "/guides" || pathname.startsWith("/guides/");
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
