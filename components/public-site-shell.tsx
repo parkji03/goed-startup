@@ -9,6 +9,7 @@ import { useGlobalMetaCtrlKeyToggle } from "@/hooks/use-global-keyboard-toggle";
 import { GuideChatPanel } from "@/components/guide/guide-chat-panel";
 import { GlobalCommandTrigger } from "@/components/global-command-trigger";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { QuizProvider } from "@/components/quiz/quiz-provider";
 import { StartupUtahLogoLink } from "@/components/startup-utah-logo-link";
 import { ThemeSwitcher } from "@/components/theme-switcher";
 import { Button } from "@/components/ui/button";
@@ -391,12 +392,14 @@ export function PublicSiteShell({ children, locale }: Props) {
         className="flex-1"
         style={{ "--sidebar-width": "26rem" } as React.CSSProperties}
       >
-        <SidebarInset>
-          <main className="min-h-[calc(100dvh-4rem)]">
-            {children}
-          </main>
-        </SidebarInset>
-        <AiGuideSidebar />
+        <QuizProvider>
+          <SidebarInset>
+            <main className="min-h-[calc(100dvh-4rem)]">
+              {children}
+            </main>
+          </SidebarInset>
+          <AiGuideSidebar />
+        </QuizProvider>
       </SidebarProvider>
       <FloatingAiBubble
         aiOpen={showAi}

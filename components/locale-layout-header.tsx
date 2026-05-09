@@ -24,7 +24,7 @@ export function LocaleLayoutHeader({ locale }: Props) {
           Resources
         </Link>
         <Link href="/quiz" className="text-muted-fg text-sm hover:text-fg">
-          Quiz
+          Questionnaire
         </Link>
         <Link href="/guide" className="text-muted-fg text-sm hover:text-fg">
           Guide
