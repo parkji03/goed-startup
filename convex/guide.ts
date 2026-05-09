@@ -105,7 +105,7 @@ export const retrieve = action({
         })
       : [];
 
-    let merged: GuideContextItem[] = lexical;
+    const merged: GuideContextItem[] = lexical;
 
     if (lexical.length < FALLBACK_THRESHOLD) {
       const synth = synthesizeQueryFromProfile(profile);

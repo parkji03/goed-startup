@@ -28,7 +28,7 @@ function makeHit(description: string): GuideContextItem {
     slug: 'test-resource',
     url: 'https://example.com',
     description,
-    category: 'capital',
+    category: 'capital-funding',
     tags: [],
     industries: [],
     communities: [],

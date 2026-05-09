@@ -19,7 +19,7 @@ const sampleContext: GuideContextItem[] = [
     slug: 'utah-innovation-fund',
     url: 'https://example.com/uif',
     description: 'Pre-seed capital for Utah founders.',
-    category: 'capital',
+    category: 'capital-funding',
     tags: ['pre-seed'],
     industries: ['b2b-software'],
     communities: [],
@@ -80,7 +80,7 @@ describe('buildSystemPrompt', () => {
     const prompt = buildSystemPrompt({ context: sampleContext, profile: emptyProfile, locale: 'en' });
     expect(prompt).toContain('<resource ');
     expect(prompt).toContain('slug="utah-innovation-fund"');
-    expect(prompt).toContain('category="capital"');
+    expect(prompt).toContain('category="capital-funding"');
     expect(prompt).toContain('</resource>');
   });
 
