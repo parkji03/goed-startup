@@ -16,7 +16,7 @@ const MAX_BODY_BYTES = 256 * 1024;
 export const runtime = 'nodejs';
 export const maxDuration = 30;
 
-const MODEL_ID = 'deepseek/deepseek-v4-flash';
+const MODEL_ID = 'google/gemini-3.1-flash-lite';
 const MAX_OUTPUT_TOKENS = 900;
 const TEMPERATURE = 0.4;
 // Cap how many candidates we send to the model. The visible map can hold a
@@ -163,12 +163,9 @@ export async function POST(req: Request): Promise<Response> {
     maxOutputTokens: MAX_OUTPUT_TOKENS,
     temperature: TEMPERATURE,
     abortSignal: req.signal,
-    // DeepSeek-V4-Flash emits its turn as `reasoning` parts by default.
-    // Our chat panel only renders `text` parts (we don't want a wall of
-    // chain-of-thought in the bubble), so without this the model returns
-    // completion tokens that all get dropped client-side. Disable
-    // reasoning entirely so the model emits the ranked list as plain
-    // text — simpler + faster, at some cost to ranking quality.
+    // The chat panel only renders `text` parts; any `reasoning` parts the
+    // model emits would be dropped client-side, wasting tokens and latency.
+    // Force plain-text output across providers.
     providerOptions: {
       openrouter: {
         reasoning: { effort: 'none', exclude: true },
