@@ -526,8 +526,8 @@ export function PublicSiteShell({ children, locale }: Props) {
   const pathname = usePathname();
   const [aiOpen, setAiOpen] = useState(false);
 
-  const shortcutLabel = isMacEnv ? "⌘L" : "Ctrl L";
-  const shortcutAria = isMacEnv ? "Meta+L" : "Control+L";
+  const shortcutLabel = isMacEnv ? "⌘I" : "Ctrl I";
+  const shortcutAria = isMacEnv ? "Meta+I" : "Control+I";
   const isAdminRoute = pathname.startsWith("/admin");
   const isDashboardRoute = pathname.startsWith("/dashboard");
   // Both admin and the owner dashboard render their own minimal chrome —
@@ -537,7 +537,7 @@ export function PublicSiteShell({ children, locale }: Props) {
 
   useGlobalMetaCtrlKeyToggle({
     enabled: !usesOwnChrome,
-    key: "l",
+    key: "i",
     onToggle: toggleAiOpen,
   });
 

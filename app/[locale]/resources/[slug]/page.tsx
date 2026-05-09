@@ -33,8 +33,9 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
+  const convexLocale: "en" | "es" = locale === "es" ? "es" : "en";
 
-  const resource = await fetchQueryOrNull(api.resources.bySlug, { slug });
+  const resource = await fetchQueryOrNull(api.resources.bySlug, { slug, locale: convexLocale });
   if (!resource) return {};
 
   const description = truncateForMeta(resource.description);
@@ -77,14 +78,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ResourceSlugPage({ params }: Readonly<Props>) {
   const { locale, slug } = await params;
+  const convexLocale: "en" | "es" = locale === "es" ? "es" : "en";
 
   // Validate the resource exists up-front so we can 404 the route — without
   // this the client would render the "not found" branch but Next.js would
   // still return 200, which Google treats as a soft-404.
-  const initial = await fetchQueryOrNull(api.resources.bySlug, { slug });
+  const initial = await fetchQueryOrNull(api.resources.bySlug, { slug, locale: convexLocale });
   if (initial === null) notFound();
 
-  const preloaded = await preloadQuery(api.resources.bySlug, { slug });
+  const preloaded = await preloadQuery(api.resources.bySlug, { slug, locale: convexLocale });
 
   // JSON-LD describing the resource as a curated link to an external
   // organization/program. Helps search engines surface it as a knowledge

@@ -2,6 +2,7 @@
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import type { api } from "@/convex/_generated/api";
@@ -46,9 +47,12 @@ function scrollToCategory(key: ResourceCategoryKey) {
 }
 
 export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
+  const t = useTranslations("Resources");
+  const tCat = useTranslations("Taxonomy.resourceCategories");
   // usePreloadedQuery returns server-fetched data synchronously on first
   // render and reactively updates when the underlying data changes — no
-  // loading flash on navigation, and the page is SEO-visible.
+  // loading flash on navigation, and the page is SEO-visible. Locale is
+  // baked into the preloaded args by the server page wrapper.
   const grouped = usePreloadedQuery(preloadedGrouped);
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
@@ -92,41 +96,41 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
       <section className="space-y-6">
         <div className="max-w-3xl">
           <Heading level={1} className="mt-2 text-4xl tracking-tight sm:text-5xl">
-            Utah founder resources
+            {t("browse.heading")}
           </Heading>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="bg-overlay">
             <CardHeader
-              title="Not sure where to start?"
-              description="Take the founder questionnaire to tune recommendations."
+              title={t("browse.intro.quiz.title")}
+              description={t("browse.intro.quiz.description")}
             />
             <CardFooter>
               <Button intent="primary" size="sm" onPress={quiz.open}>
-                Start questionnaire
+                {t("browse.intro.quiz.cta")}
               </Button>
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
             <CardHeader
-              title="Ask the Utah AI startup guide"
-              description="Open the AI chat for funding and program questions."
+              title={t("browse.intro.guide.title")}
+              description={t("browse.intro.guide.description")}
             />
             <CardFooter>
               <Button intent="primary" size="sm" onPress={toggleSidebar}>
-                Ask AI guide
+                {t("browse.intro.guide.cta")}
               </Button>
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
             <CardHeader
-              title="Add a resource"
-              description="Have something to contribute? Submit a partner or program for review."
+              title={t("browse.intro.submit.title")}
+              description={t("browse.intro.submit.description")}
             />
             <CardFooter>
               <Button intent="primary" size="sm" onPress={() => setSubmitOpen(true)}>
-                Submit
+                {t("browse.intro.submit.cta")}
               </Button>
             </CardFooter>
           </Card>
@@ -136,10 +140,10 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
           isOpen={submitOpen}
           onOpenChange={setSubmitOpen}
           size="xl"
-          aria-label="Submit a resource"
+          aria-label={t("submitModal.ariaLabel")}
         >
           <ModalHeader>
-            <ModalTitle>Submit a resource</ModalTitle>
+            <ModalTitle>{t("submitModal.title")}</ModalTitle>
           </ModalHeader>
           <ModalBody className="pb-6">
             <ResourceSubmitForm />
@@ -150,13 +154,13 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
       <section className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <Heading level={2} className="text-lg">
-            Jump to
+            {t("browse.jumpTo")}
           </Heading>
           <ResourcesFilterBar />
         </div>
         <div className="flex flex-wrap gap-2">
           {visibleCategories.length === 0 ? (
-            <Text className="text-muted-fg text-sm">No categories match the current filters.</Text>
+            <Text className="text-muted-fg text-sm">{t("browse.noCategoryMatches")}</Text>
           ) : (
             visibleCategories.map((c) => (
               <Button
@@ -165,7 +169,7 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
                 intent="secondary"
                 onPress={() => scrollToCategory(c.key)}
               >
-                {c.label}
+                {tCat(`${c.key}.label`)}
               </Button>
             ))
           )}
@@ -174,7 +178,7 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
 
       <section className="min-w-0 flex-1 space-y-4">
         {visibleCategories.length === 0 && filtersActive ? (
-          <Text className="text-muted-fg">No resources match the current filters.</Text>
+          <Text className="text-muted-fg">{t("browse.noMatches")}</Text>
         ) : (
           <>
             {/* Desktop: grouped collapsible rows. allowsMultipleExpanded keeps every
@@ -199,7 +203,7 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
                                 transition: "transform 200ms",
                               }}
                             />
-                            <span className="font-medium">{c.label}</span>
+                            <span className="font-medium">{tCat(`${c.key}.label`)}</span>
                             <span className="ml-auto text-muted-fg text-sm tabular-nums">
                               {total}
                             </span>
@@ -236,7 +240,7 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
                   <div key={c.key} id={sectionDomId(c.key)} className="space-y-3 scroll-mt-24">
                     <div className="flex items-baseline justify-between">
                       <Heading level={3} className="text-base">
-                        {c.label}
+                        {tCat(`${c.key}.label`)}
                       </Heading>
                       <Text className="text-muted-fg text-sm tabular-nums">{total}</Text>
                     </div>

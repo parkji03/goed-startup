@@ -18,6 +18,241 @@
   "AdminHeader": {
     "publicSite": "Public site"
   },
+  "AdminResources": {
+    "heading": "Resource moderation",
+    "intro": "Bulk directory data comes from CSV via {seedCmd} ({importCmd} in batches; requires a linked Convex project). Growing the catalog afterward happens here by approving submissions — or via future inline create/edit in admin.",
+    "access": "Access: Convex deployment variables {clerkVar} (see convex/auth.config.ts + Convex/Clerk docs) and {adminEmailsVar} including your Clerk user email.",
+    "pendingHeading": "Pending submissions",
+    "loading": "Loading…",
+    "cannotLoad": "Cannot load admin inbox",
+    "convexHint": "Convex dashboard → set {clerkVar} + {adminEmailsVar} → run {devCmd}; open this admin route signed in as a user whose email is in ADMIN_EMAILS.",
+    "inboxZero": "Inbox Zero 🎉",
+    "submittedBy": "Submitted by {name} ({email})",
+    "submittedByWithOrg": "Submitted by {name} ({email}) · {organization}",
+    "notes": "Notes: {notes}",
+    "labels": {
+      "category": "Category *",
+      "categoryPlaceholder": "Pick a category",
+      "tags": "Tags",
+      "communities": "Communities",
+      "stageTags": "Stage tags",
+      "rejectionNote": "Rejection note",
+      "rejectionNotePlaceholder": "Brief reason…"
+    },
+    "actions": {
+      "approve": "Approve",
+      "reject": "Reject",
+      "addRejectionNote": "Add a rejection note before rejecting."
+    },
+    "accessDenied": {
+      "signed_out": "Convex does not see a signed-in user. Add JWT auth in convex/auth.config.ts (Clerk integration) so tokens from this app validate on the Convex deployment.",
+      "missing_email_in_token": "Your session has no email claim for Convex. In Clerk, finish the Convex integration so JWTs include your primary email.",
+      "not_configured": "ADMIN_EMAILS is not set on this Convex deployment. Add it under Convex → Settings → Environment variables (comma-separated emails).",
+      "not_in_allowlist": "Signed-in email is not in ADMIN_EMAILS. Add your Clerk primary email (lowercase) on the Convex deployment.",
+      "other": "Admin access was denied ({reason})."
+    }
+  },
+  "Guide": {
+    "collapse": "Collapse AI guide",
+    "collapseTooltip": "Collapse",
+    "inputPlaceholder": "Ask about Utah programs...",
+    "stop": "Stop generating",
+    "stopTooltip": "Stop",
+    "send": "Send message",
+    "sendTooltip": "Send",
+    "copy": "Copy response",
+    "export": "Download chat as Markdown",
+    "exportTooltip": "Export chat",
+    "errorTitle": "Guide hiccup",
+    "errorGeneric": "Couldn't reach the guide. Try again in a moment.",
+    "tailorTitle": "Tailor responses to what you’re looking for",
+    "tailorBody": "Take our short questionnaire so the guide can weight recommendations to your stage, industry, and goals.",
+    "takeQuestionnaire": "Take questionnaire",
+    "tryAQuestion": "Try a question to get started",
+    "youLabel": "You",
+    "guideLabel": "Guide",
+    "officialSite": "Official site",
+    "resourcesHeading": "Resources",
+    "furtherReadingHeading": "Further reading",
+    "readOriginal": "Read original",
+    "exportTitle": "Utah founder guide chat",
+    "exportYou": "You",
+    "exportGuide": "Guide",
+    "exportSourcesUsed": "Sources used",
+    "exportedAt": "Exported {date}",
+    "sourcesUsed": "{count, plural, one {# source} other {# sources}} used",
+    "suggestedPrompts": {
+      "funding": "What funding is available for early-stage founders?",
+      "accelerators": "Find accelerators and incubators in Utah",
+      "underrepresented": "Programs for rural or underrepresented founders",
+      "angels": "How do I connect with Utah angel investors?"
+    }
+  },
+  "Quiz": {
+    "modal": {
+      "ariaLabel": "Founder questionnaire",
+      "title": "Founder questionnaire"
+    },
+    "headingDefault": "Founder questionnaire",
+    "headingCompletion": "You’re set",
+    "intro": "A few quick questions so the AI guide can tailor recommendations to your situation. Skippable any time.",
+    "stepCounter": "Step {step} / {total}",
+    "kickstartPrompt": "What are some resources you'd recommend for me?",
+    "steps": {
+      "stage": "Where are you in the journey?",
+      "location": "Where are you building from?",
+      "industry": "Industry focus",
+      "goal": "What outcome matters most?",
+      "communities": "Communities / special focus",
+      "freeText": "Free text (optional)"
+    },
+    "freeTextPlaceholder": "Tell us what you’re trying to do...",
+    "buttons": {
+      "back": "Back",
+      "continue": "Continue",
+      "finish": "Finish",
+      "close": "Close",
+      "skip": "Skip questionnaire"
+    },
+    "completion": {
+      "heading": "AI guide is now personalized",
+      "body": "Your answers are saved on this device. The AI guide will weight its recommendations toward your industry, stage, location, and goals — and can still answer anything about Utah’s startup ecosystem.",
+      "startChatting": "Start chatting"
+    },
+    "options": {
+      "stages": {
+        "Idea / discovery": "Idea / discovery",
+        "Building MVP": "Building MVP",
+        "Early revenue": "Early revenue",
+        "Growth / scale": "Growth / scale"
+      },
+      "counties": {
+        "Salt Lake": "Salt Lake",
+        "Utah": "Utah",
+        "Davis": "Davis",
+        "Weber": "Weber",
+        "Washington": "Washington",
+        "Carbon": "Carbon",
+        "Rural / statewide": "Rural / statewide"
+      },
+      "industries": {
+        "Software & Information Technology": "Software & Information Technology",
+        "Manufacturing": "Manufacturing",
+        "Life Sciences and Healthcare": "Life Sciences and Healthcare",
+        "Financial Services": "Financial Services",
+        "Aerospace and Defense": "Aerospace and Defense",
+        "Energy": "Energy",
+        "Other": "Other"
+      },
+      "goals": {
+        "Funding": "Funding",
+        "Start a Business": "Start a Business",
+        "International Trade": "International Trade",
+        "Marketing and Sales": "Marketing and Sales",
+        "Relocation": "Relocation",
+        "Taxes/finance": "Taxes/finance",
+        "Late Stage Growth": "Late Stage Growth",
+        "Resources for Entrepreneurs Communities": "Resources for Entrepreneurs Communities"
+      },
+      "audiences": {
+        "Student": "Student",
+        "Veteran": "Veteran",
+        "Women": "Women",
+        "Rural": "Rural",
+        "Multicultural": "Multicultural",
+        "New Americans": "New Americans",
+        "None of these": "None of these"
+      }
+    }
+  },
+  "Resources": {
+    "browse": {
+      "heading": "Utah founder resources",
+      "intro": {
+        "quiz": {
+          "title": "Not sure where to start?",
+          "description": "Take the founder questionnaire to tune recommendations.",
+          "cta": "Start questionnaire"
+        },
+        "guide": {
+          "title": "Ask the Utah AI startup guide",
+          "description": "Open the AI chat for funding and program questions.",
+          "cta": "Ask AI guide"
+        },
+        "submit": {
+          "title": "Add a resource",
+          "description": "Have something to contribute? Submit a partner or program for review.",
+          "cta": "Submit"
+        }
+      },
+      "jumpTo": "Jump to",
+      "noCategoryMatches": "No categories match the current filters.",
+      "loading": "Loading resources…",
+      "noMatches": "No resources match the current filters."
+    },
+    "submitModal": {
+      "ariaLabel": "Submit a resource",
+      "title": "Submit a resource"
+    },
+    "submitForm": {
+      "heading": "Submit a resource",
+      "intro": "Community partners can suggest programs. Admins review before anything goes live.",
+      "thanks": "Thanks! Your submission is pending review.",
+      "fields": {
+        "title": "Title *",
+        "description": "Description *",
+        "url": "URL *",
+        "submitterName": "Your name *",
+        "submitterEmail": "Email *",
+        "organization": "Organization",
+        "category": "Category *",
+        "categoryPlaceholder": "Pick a category",
+        "tags": "Suggested tags",
+        "tagsPlaceholder": "AI, women-led, climate (comma-separated)",
+        "notes": "Notes to reviewers"
+      },
+      "submitting": "Submitting…",
+      "submit": "Submit for review"
+    },
+    "card": {
+      "viewDetails": "View details",
+      "officialSite": "Official site"
+    },
+    "row": {
+      "openOfficialSite": "Open official site",
+      "openInNewTab": "Open {title} in a new tab"
+    },
+    "detail": {
+      "loading": "Loading resource…",
+      "notFound": "Resource not found",
+      "backToBrowse": "Back to browse",
+      "browseAll": "← Browse all",
+      "visitSite": "Visit official site ↗",
+      "askGuide": "Ask the guide about this resource",
+      "askGuidePrompt": "Explain how \"{title}\" ({slug}) fits my founder journey.",
+      "backgroundHeading": "Background",
+      "chips": {
+        "tags": "Tags",
+        "communities": "Communities / audiences",
+        "industries": "Industries",
+        "coverage": "Coverage",
+        "stage": "Stage cues",
+        "contact": "Contact:"
+      }
+    },
+    "filters": {
+      "label": "Filters",
+      "labelWithCount": "Filters ({count} active)",
+      "stage": "Stage",
+      "industry": "Industry",
+      "community": "Community",
+      "location": "Location",
+      "clear": "Clear",
+      "noOptions": "No options",
+      "activeCount": "{count, plural, one {# filter} other {# filters}} active",
+      "clearAll": "Clear all"
+    }
+  },
   "Dashboard": {
     "title": "My businesses — Utah Startup State",
     "publicSite": "Public site",
@@ -392,6 +627,40 @@
     }
   },
   "Taxonomy": {
+    "resourceCategories": {
+      "capital-funding": {
+        "label": "Capital & Funding",
+        "tagline": "VC, angels, grants, loans"
+      },
+      "programs-accelerators": {
+        "label": "Programs & Accelerators",
+        "tagline": "Cohorts, incubators, residencies"
+      },
+      "workforce-talent": {
+        "label": "Workforce & Talent",
+        "tagline": "Hiring, training, apprenticeships"
+      },
+      "legal-ip-operations": {
+        "label": "Legal, IP & Operations",
+        "tagline": "Legal clinics, IP, compliance"
+      },
+      "mentorship-advisory": {
+        "label": "Mentorship & Advisory",
+        "tagline": "EIRs, board help, 1:1 advising"
+      },
+      "community-events": {
+        "label": "Community & Events",
+        "tagline": "Meetups, chambers, conferences"
+      },
+      "education-training": {
+        "label": "Education & Training",
+        "tagline": "Universities, courses, certifications"
+      },
+      "government-econdev": {
+        "label": "Government & Econ Dev",
+        "tagline": "State/county programs, EDC offices"
+      }
+    },
     "sectors": {
       "b2b-software": "B2B Software",
       "consumer": "Consumer",

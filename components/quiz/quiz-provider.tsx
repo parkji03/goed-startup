@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { createContext, useCallback, useContext, useMemo, useState, type ReactNode } from "react";
 import { FounderQuizClient } from "@/components/quiz/founder-quiz-client";
 import { ModalBody, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
@@ -25,6 +26,7 @@ const QuizContext = createContext<QuizContextValue | null>(null);
  * questionnaire's own completion screen, etc. Pair with `useQuiz()`.
  */
 export function QuizProvider({ children }: { children: ReactNode }) {
+  const t = useTranslations("Quiz.modal");
   const [isOpen, setIsOpen] = useState(false);
   const [pendingPrompt, setPendingPrompt] = useState<string | null>(null);
 
@@ -43,10 +45,10 @@ export function QuizProvider({ children }: { children: ReactNode }) {
         isOpen={isOpen}
         onOpenChange={setIsOpen}
         size="2xl"
-        aria-label="Founder questionnaire"
+        aria-label={t("ariaLabel")}
       >
         <ModalHeader>
-          <ModalTitle>Founder questionnaire</ModalTitle>
+          <ModalTitle>{t("title")}</ModalTitle>
         </ModalHeader>
         <ModalBody className="pb-6">
           <FounderQuizClient onComplete={close} />

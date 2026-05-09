@@ -470,6 +470,275 @@
       "freemium": "Freemium",
       "contact-sales": "Contactar ventas",
       "ads": "Anuncios"
+    },
+    "resourceCategories": {
+      "capital-funding": {
+        "label": "Capital y financiación",
+        "tagline": "Capital riesgo, inversores ángeles, subvenciones, préstamos"
+      },
+      "programs-accelerators": {
+        "label": "Programas y aceleradoras",
+        "tagline": "Cohortes, incubadoras, residencias"
+      },
+      "workforce-talent": {
+        "label": "Personal y talento",
+        "tagline": "Contratación, formación y programas de aprendizaje"
+      },
+      "legal-ip-operations": {
+        "label": "Asuntos jurídicos, propiedad intelectual y operaciones",
+        "tagline": "Consultas jurídicas, propiedad intelectual, cumplimiento normativo"
+      },
+      "mentorship-advisory": {
+        "label": "Tutoría y asesoramiento",
+        "tagline": "Informes de investigación sobre el impacto (EIR), asistencia del consejo, asesoramiento individualizado"
+      },
+      "community-events": {
+        "label": "Comunidad y eventos",
+        "tagline": "Encuentros, cámaras de comercio, conferencias"
+      },
+      "education-training": {
+        "label": "Educación y formación",
+        "tagline": "Universidades, cursos, titulaciones"
+      },
+      "government-econdev": {
+        "label": "Gobierno y desarrollo económico",
+        "tagline": "Programas estatales y comarcales, oficinas de la EDC"
+      }
+    }
+  },
+  "AdminResources": {
+    "heading": "Moderación de recursos",
+    "intro": "Los datos del directorio a granel proceden de archivos CSV a través de {seedCmd} ({importCmd} por lotes; requiere un proyecto Convex vinculado). La ampliación posterior del catálogo se lleva a cabo aquí mediante la aprobación de las propuestas, o bien mediante futuras funciones de creación/edición directas en el panel de administración.",
+    "access": "Acceso: Variables de implementación de Convex {clerkVar} (consulta convex/auth.config.ts y la documentación de Convex/Clerk) y {adminEmailsVar}, incluyendo tu correo electrónico de usuario de Clerk.",
+    "pendingHeading": "Solicitudes pendientes",
+    "loading": "Cargando…",
+    "cannotLoad": "No se puede cargar la bandeja de entrada de administrador",
+    "convexHint": "Panel de control de Convex → configura {clerkVar} + {adminEmailsVar} → ejecuta {devCmd}; abre esta ruta de administración tras iniciar sesión como un usuario cuyo correo electrónico figure en ADMIN_EMAILS.",
+    "inboxZero": "Bandeja de entrada vacía 🎉",
+    "submittedBy": "Enviado por {name} ({email})",
+    "submittedByWithOrg": "Enviado por {name} ({email}) · {organization}",
+    "notes": "Notas: {notes}",
+    "labels": {
+      "category": "Categoría *",
+      "categoryPlaceholder": "Elige una categoría",
+      "tags": "Etiquetas",
+      "communities": "Comunidades",
+      "stageTags": "Etiquetas de etapa",
+      "rejectionNote": "Notificación de rechazo",
+      "rejectionNotePlaceholder": "Breve explicación…"
+    },
+    "actions": {
+      "approve": "Aprobar",
+      "reject": "Rechazar",
+      "addRejectionNote": "Añade una nota de rechazo antes de rechazar la solicitud."
+    },
+    "accessDenied": {
+      "signed_out": "Convex no detecta que haya ningún usuario conectado. Añade la autenticación JWT en convex/auth.config.ts (integración con Clerk) para que los tokens de esta aplicación se validen en la implementación de Convex.",
+      "missing_email_in_token": "Tu sesión no tiene ninguna asociación de correo electrónico con Convex. En Clerk, completa la integración con Convex para que los JWT incluyan tu correo electrónico principal.",
+      "not_configured": "La variable ADMIN_EMAILS no está configurada en esta instalación de Convex. Añádela en Convex → Configuración → Variables de entorno (direcciones de correo electrónico separadas por comas).",
+      "not_in_allowlist": "La dirección de correo electrónico de inicio de sesión no figura en ADMIN_EMAILS. Añade la dirección de correo electrónico principal de Clerk (en minúsculas) en la implementación de Convex.",
+      "other": "Se ha denegado el acceso de administrador ({reason})."
+    }
+  },
+  "Guide": {
+    "collapse": "Ocultar la guía de IA",
+    "collapseTooltip": "Ocultar",
+    "inputPlaceholder": "Pregunta por los programas de Utah...",
+    "stop": "Deja de generar",
+    "stopTooltip": "Alto",
+    "send": "Enviar mensaje",
+    "sendTooltip": "Enviar",
+    "copy": "Copiar respuesta",
+    "export": "Descargar el chat en formato Markdown",
+    "exportTooltip": "Exportar chat",
+    "errorTitle": "Contratiempo en la guía",
+    "errorGeneric": "No se ha podido contactar con el guía. Inténtalo de nuevo dentro de un momento.",
+    "tailorTitle": "Adapta las respuestas a lo que estás buscando",
+    "tailorBody": "Rellena nuestro breve cuestionario para que la guía pueda adaptar las recomendaciones a tu situación, sector y objetivos.",
+    "takeQuestionnaire": "Rellena el cuestionario",
+    "tryAQuestion": "Empieza con una pregunta",
+    "youLabel": "Tú",
+    "guideLabel": "Guía",
+    "officialSite": "Sitio web oficial",
+    "resourcesHeading": "Recursos",
+    "furtherReadingHeading": "Lecturas adicionales",
+    "readOriginal": "Leer original",
+    "exportTitle": "Chat de la guía para fundadores de Utah",
+    "exportYou": "Tú",
+    "exportGuide": "Guía",
+    "exportSourcesUsed": "Fuentes utilizadas",
+    "exportedAt": "Exportado {date}",
+    "sourcesUsed": "{count, plural, one {# fuente usada} other {# fuentes usadas}}",
+    "suggestedPrompts": {
+      "funding": "¿Qué ayudas económicas hay disponibles para los emprendedores que están dando sus primeros pasos?",
+      "accelerators": "Encuentra aceleradoras e incubadoras en Utah",
+      "underrepresented": "Programas para fundadores de zonas rurales o de grupos infrarrepresentados",
+      "angels": "¿Cómo puedo ponerme en contacto con inversores ángeles de Utah?"
+    }
+  },
+  "Quiz": {
+    "modal": {
+      "ariaLabel": "Cuestionario para fundadores",
+      "title": "Cuestionario para fundadores"
+    },
+    "headingDefault": "Cuestionario para fundadores",
+    "headingCompletion": "Ya está todo listo",
+    "intro": "Unas cuantas preguntas rápidas para que la guía de IA pueda adaptar las recomendaciones a tu situación. Puedes saltártelas en cualquier momento.",
+    "stepCounter": "Paso {step} / {total}",
+    "kickstartPrompt": "¿Qué recursos me recomendarías?",
+    "steps": {
+      "stage": "¿En qué punto del camino te encuentras?",
+      "location": "¿Desde dónde estás trabajando?",
+      "industry": "Enfoque sectorial",
+      "goal": "¿Qué resultado es el más importante?",
+      "communities": "Comunidades / Enfoque especial",
+      "freeText": "Texto libre (opcional)"
+    },
+    "freeTextPlaceholder": "Cuéntanos qué es lo que intentas hacer...",
+    "buttons": {
+      "back": "Atrás",
+      "continue": "Continuar",
+      "finish": "Finalizar",
+      "close": "Cerrar",
+      "skip": "Omitir el cuestionario"
+    },
+    "completion": {
+      "heading": "La guía de IA ahora es personalizada",
+      "body": "Tus respuestas se guardan en este dispositivo. La guía de IA adaptará sus recomendaciones a tu sector, fase de desarrollo, ubicación y objetivos, y además podrá responder a cualquier pregunta sobre el ecosistema de startups de Utah.",
+      "startChatting": "Empieza a chatear"
+    },
+    "options": {
+      "stages": {
+        "Idea / discovery": "Idea / descubrimiento",
+        "Building MVP": "Creación del MVP",
+        "Early revenue": "Ingresos iniciales",
+        "Growth / scale": "Crecimiento / expansión"
+      },
+      "counties": {
+        "Salt Lake": "Salt Lake",
+        "Utah": "Utah",
+        "Davis": "Davis",
+        "Weber": "Weber",
+        "Washington": "Washington",
+        "Carbon": "Carbon",
+        "Rural / statewide": "Rural / en todo el estado"
+      },
+      "industries": {
+        "Software & Information Technology": "Software y tecnologías de la información",
+        "Manufacturing": "Fabricación",
+        "Life Sciences and Healthcare": "Ciencias de la vida y salud",
+        "Financial Services": "Servicios financieros",
+        "Aerospace and Defense": "Aeroespacial y defensa",
+        "Energy": "Energía",
+        "Other": "Otros"
+      },
+      "goals": {
+        "Funding": "Financiación",
+        "Start a Business": "Crear una empresa",
+        "International Trade": "Comercio internacional",
+        "Marketing and Sales": "Marketing y ventas",
+        "Relocation": "Traslado",
+        "Taxes/finance": "Fiscalidad/finanzas",
+        "Late Stage Growth": "Fase avanzada de crecimiento",
+        "Resources for Entrepreneurs Communities": "Recursos para comunidades de emprendedores"
+      },
+      "audiences": {
+        "Student": "Estudiante",
+        "Veteran": "Veterano",
+        "Women": "Mujeres",
+        "Rural": "Rural",
+        "Multicultural": "Multicultural",
+        "New Americans": "Nuevos estadounidenses",
+        "None of these": "Ninguna de estas"
+      }
+    }
+  },
+  "Resources": {
+    "browse": {
+      "heading": "Recursos para fundadores en Utah",
+      "intro": {
+        "quiz": {
+          "title": "¿No sabes por dónde empezar?",
+          "description": "Rellena el cuestionario para fundadores para personalizar las recomendaciones.",
+          "cta": "Iniciar cuestionario"
+        },
+        "guide": {
+          "title": "Consulta la guía para startups de IA en Utah",
+          "description": "Abre el chat de IA para consultas sobre financiación y programas.",
+          "cta": "Guía de Ask AI"
+        },
+        "submit": {
+          "title": "Añadir un recurso",
+          "description": "¿Tienes algo que aportar? Envía un socio o un programa para su revisión.",
+          "cta": "Enviar"
+        }
+      },
+      "jumpTo": "Ir a",
+      "noCategoryMatches": "No hay categorías que coincidan con los filtros actuales.",
+      "loading": "Cargando recursos…",
+      "noMatches": "No hay recursos que se ajusten a los filtros actuales."
+    },
+    "submitModal": {
+      "ariaLabel": "Enviar un recurso",
+      "title": "Enviar un recurso"
+    },
+    "submitForm": {
+      "heading": "Enviar un recurso",
+      "intro": "Los socios de la comunidad pueden proponer programas. Los administradores los revisan antes de que se publiquen.",
+      "thanks": "¡Gracias! Tu solicitud está pendiente de revisión.",
+      "fields": {
+        "title": "Título *",
+        "description": "Descripción *",
+        "url": "Dirección web",
+        "submitterName": "Tu nombre *",
+        "submitterEmail": "Correo electrónico *",
+        "organization": "Organización",
+        "category": "Categoría *",
+        "categoryPlaceholder": "Elige una categoría",
+        "tags": "Etiquetas sugeridas",
+        "tagsPlaceholder": "IA, dirigidas por mujeres, clima (separadas por comas)",
+        "notes": "Notas para los revisores"
+      },
+      "submitting": "Enviando…",
+      "submit": "Enviar para revisión"
+    },
+    "card": {
+      "viewDetails": "Ver detalles",
+      "officialSite": "Sitio web oficial"
+    },
+    "row": {
+      "openOfficialSite": "Acceder a la página web oficial",
+      "openInNewTab": "Abre {title} en una nueva pestaña"
+    },
+    "detail": {
+      "loading": "Cargando recurso…",
+      "notFound": "Recurso no encontrado",
+      "backToBrowse": "Volver a la página de inicio",
+      "browseAll": "← Ver todo",
+      "visitSite": "Visita la página web oficial ↗",
+      "askGuide": "Pregunta al guía sobre este recurso",
+      "askGuidePrompt": "Explica cómo encaja «{title}» ({slug}) en mi trayectoria como fundador.",
+      "backgroundHeading": "Contexto",
+      "chips": {
+        "tags": "Etiquetas",
+        "communities": "Comunidades / públicos",
+        "industries": "Sectores",
+        "coverage": "Cobertura",
+        "stage": "Señales escénicas",
+        "contact": "Contacto:"
+      }
+    },
+    "filters": {
+      "label": "Filtros",
+      "labelWithCount": "Filtros (opción «{count}» activada)",
+      "stage": "Escenario",
+      "industry": "Sector",
+      "community": "Comunidad",
+      "location": "Ubicación",
+      "clear": "Borrar",
+      "noOptions": "No hay opciones",
+      "activeCount": "{count, plural, one {# filtro activo} other {# filtros activos}}",
+      "clearAll": "Borrar todo"
     }
   }
 }

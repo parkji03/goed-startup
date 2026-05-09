@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Link as UiLink } from "@/components/ui/link";
@@ -22,6 +23,7 @@ export type ResourceRowData = {
 };
 
 export function ResourceRow({ resource }: { resource: ResourceRowData }) {
+  const t = useTranslations("Resources.row");
   const stage = resource.stageTags[0];
   const community = resource.communities[0];
   const featuredTag = resource.tags[0];
@@ -62,13 +64,13 @@ export function ResourceRow({ resource }: { resource: ResourceRowData }) {
             href={resource.url}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label={`Open ${resource.title} in a new tab`}
+            aria-label={t("openInNewTab", { title: resource.title })}
             className="p-1 text-base font-semibold text-fg/70 hover:text-fg"
           >
             ↗
           </UiLink>
         </TooltipTrigger>
-        <TooltipContent>Open official site</TooltipContent>
+        <TooltipContent>{t("openOfficialSite")}</TooltipContent>
       </Tooltip>
     </div>
   );

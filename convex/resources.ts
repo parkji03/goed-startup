@@ -3,8 +3,20 @@ import { v } from 'convex/values';
 import { query } from './_generated/server';
 import { RESOURCE_CATEGORY_KEYS, type ResourceCategoryKey } from '../lib/resources/categories';
 import { founderProfileValidator, clampFounderProfileForConvex } from './founderProfile';
+import { pickLocalizedResourceText, type ResourceLocale } from './lib/resourceHelpers';
 import { scoreResourceForProfile } from './lib/matchResources';
 import { facetTypeValidator } from './resourceValidators';
+
+/**
+ * Optional locale arg shared by every resource read path. Defaults to `en`
+ * when omitted. Spanish variants fall back to English when a row hasn't
+ * been translated yet.
+ */
+const localeValidator = v.optional(v.union(v.literal('en'), v.literal('es')));
+
+function resolveLocale(locale: ResourceLocale | undefined): ResourceLocale {
+  return locale ?? 'en';
+}
 
 function projectReco(
   rows: Array<{
@@ -64,22 +76,26 @@ export const search = query({
   args: {
     query: v.string(),
     limit: v.number(),
+    locale: localeValidator,
   },
-  handler: async (ctx, { query: q, limit }) => {
+  handler: async (ctx, { query: q, limit, locale }) => {
     const lim = Math.min(Math.max(limit, 1), 25);
     if (!q.trim()) {
       return [];
     }
-    return await ctx.db
+    const loc = resolveLocale(locale);
+    const hits = await ctx.db
       .query('resources')
       .withSearchIndex('search_resources', (s) => s.search('searchText', q).eq('status', 'published'))
       .take(lim);
+    return hits.map((r) => ({ ...r, ...pickLocalizedResourceText(r, loc) }));
   },
 });
 
 export const listPublishedPage = query({
-  args: { paginationOpts: paginationOptsValidator },
-  handler: async (ctx, { paginationOpts }) => {
+  args: { paginationOpts: paginationOptsValidator, locale: localeValidator },
+  handler: async (ctx, { paginationOpts, locale }) => {
+    const loc = resolveLocale(locale);
     const page = await ctx.db
       .query('resources')
       .withIndex('by_status', (q) => q.eq('status', 'published'))
@@ -88,32 +104,37 @@ export const listPublishedPage = query({
 
     return {
       ...page,
-      page: page.page.map((r) => ({
-        _id: r._id,
-        title: r.title,
-        slug: r.slug,
-        description: r.description,
-        url: r.url,
-        category: r.category,
-        tags: r.tags ?? [],
-        stageTags: r.stageTags,
-        industries: r.industries,
-        communities: r.communities,
-      })),
+      page: page.page.map((r) => {
+        const localized = pickLocalizedResourceText(r, loc);
+        return {
+          _id: r._id,
+          title: localized.title,
+          slug: r.slug,
+          description: localized.description,
+          url: r.url,
+          category: r.category,
+          tags: r.tags ?? [],
+          stageTags: r.stageTags,
+          industries: r.industries,
+          communities: r.communities,
+        };
+      }),
     };
   },
 });
 
 export const bySlug = query({
-  args: { slug: v.string() },
-  handler: async (ctx, { slug }) => {
+  args: { slug: v.string(), locale: localeValidator },
+  handler: async (ctx, { slug, locale }) => {
+    const loc = resolveLocale(locale);
     const rows = await ctx.db
       .query('resources')
       .withIndex('by_slug', (q) => q.eq('slug', slug))
       .take(32);
     const published = rows.filter((r) => r.status === 'published');
     const row = published[0];
-    return row ?? null;
+    if (!row) return null;
+    return { ...row, ...pickLocalizedResourceText(row, loc) };
   },
 });
 
@@ -122,9 +143,11 @@ export const listByFacet = query({
     facetType: facetTypeValidator,
     value: v.string(),
     limit: v.number(),
+    locale: localeValidator,
   },
-  handler: async (ctx, { facetType, value, limit }) => {
+  handler: async (ctx, { facetType, value, limit, locale }) => {
     const lim = Math.min(Math.max(limit, 1), 60);
+    const loc = resolveLocale(locale);
     const facetRows = await ctx.db
       .query('resourceFacets')
       .withIndex('by_facetType_and_value_and_status', (q) =>
@@ -150,11 +173,12 @@ export const listByFacet = query({
     for (let i = 0; i < facetRows.length; i++) {
       const r = docs[i];
       if (r && r.status === 'published') {
+        const localized = pickLocalizedResourceText(r, loc);
         out.push({
           _id: r._id,
-          title: r.title,
+          title: localized.title,
           slug: r.slug,
-          description: r.description,
+          description: localized.description,
           url: r.url,
           category: r.category,
           tags: r.tags ?? [],
@@ -210,12 +234,13 @@ type GroupedItem = {
 type GroupedCategory = { items: GroupedItem[]; total: number };
 
 export const listGroupedByCategory = query({
-  args: { limitPerCategory: v.optional(v.number()) },
-  handler: async (ctx, { limitPerCategory }) => {
+  args: { limitPerCategory: v.optional(v.number()), locale: localeValidator },
+  handler: async (ctx, { limitPerCategory, locale }) => {
     // Default 50 keeps SSR payloads small. Hard cap at 500 gives headroom
     // before a category's full slice doesn't fit in one payload — a
     // paginated endpoint is the next step beyond that.
     const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 500);
+    const loc = resolveLocale(locale);
     const results = Object.fromEntries(
       RESOURCE_CATEGORY_KEYS.map((k) => [k, { items: [], total: 0 } as GroupedCategory]),
     ) as Record<ResourceCategoryKey, GroupedCategory>;
@@ -228,19 +253,22 @@ export const listGroupedByCategory = query({
         .query('resources')
         .withIndex('by_category', (q) => q.eq('category', key).eq('status', 'published'))
         .take(1000);
-      const items = all.slice(0, lim).map((r) => ({
-        _id: r._id,
-        title: r.title,
-        slug: r.slug,
-        description: r.description,
-        url: r.url,
-        category: key,
-        tags: r.tags ?? [],
-        stageTags: r.stageTags,
-        communities: r.communities,
-        industries: r.industries,
-        locations: r.locations,
-      }));
+      const items = all.slice(0, lim).map((r) => {
+        const localized = pickLocalizedResourceText(r, loc);
+        return {
+          _id: r._id,
+          title: localized.title,
+          slug: r.slug,
+          description: localized.description,
+          url: r.url,
+          category: key,
+          tags: r.tags ?? [],
+          stageTags: r.stageTags,
+          communities: r.communities,
+          industries: r.industries,
+          locations: r.locations,
+        };
+      });
       results[key] = { items, total: all.length };
     }
     return results;
@@ -283,10 +311,12 @@ export const recommendForProfile = query({
   args: {
     founderProfile: founderProfileValidator,
     limit: v.number(),
+    locale: localeValidator,
   },
-  handler: async (ctx, { founderProfile, limit }) => {
+  handler: async (ctx, { founderProfile, limit, locale }) => {
     const clampedProfile = clampFounderProfileForConvex(founderProfile);
     const lim = Math.min(Math.max(limit, 1), 36);
+    const loc = resolveLocale(locale);
     // Upper bound avoids unbounded collects as the catalog grows; raise or paginate later.
     const published = await ctx.db
       .query('resources')
@@ -294,10 +324,13 @@ export const recommendForProfile = query({
       .take(3000);
 
     const scored = published
-      .map((r) => ({
-        doc: r,
-        score: scoreResourceForProfile(r, clampedProfile),
-      }))
+      .map((r) => {
+        const localized = pickLocalizedResourceText(r, loc);
+        return {
+          doc: { ...r, title: localized.title, description: localized.description },
+          score: scoreResourceForProfile(r, clampedProfile),
+        };
+      })
       .sort((a, b) => b.score - a.score);
 
     const positives = scored.filter((x) => x.score > 0);

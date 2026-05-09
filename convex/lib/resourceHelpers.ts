@@ -38,6 +38,10 @@ export function splitPipeList(raw: string | undefined): string[] {
 export function buildSearchText(parts: {
   title: string;
   description: string;
+  /** Optional ES variants — appended to `searchText` so the single search
+   *  index matches Spanish queries against the same row as English. */
+  title_es?: string;
+  description_es?: string;
   url: string;
   contactEmail?: string;
   category?: ResourceCategoryKey;
@@ -51,6 +55,8 @@ export function buildSearchText(parts: {
   const chunks = [
     parts.title,
     parts.description,
+    parts.title_es,
+    parts.description_es,
     parts.url,
     parts.contactEmail,
     parts.category ? categoryLabel(parts.category) : undefined,
@@ -62,6 +68,30 @@ export function buildSearchText(parts: {
     parts.body,
   ];
   return chunks.filter(Boolean).join(' | ');
+}
+
+/**
+ * Locale code understood by the resource read paths. `en` is canonical;
+ * `es` falls back to the English fields when a row has no Spanish variant.
+ */
+export type ResourceLocale = 'en' | 'es';
+
+/**
+ * Pick the locale-appropriate `title` / `description` from a resource doc,
+ * falling back to English when the requested locale's variant is missing.
+ * Other fields (slug, url, tags, …) are locale-invariant.
+ */
+export function pickLocalizedResourceText(
+  doc: { title: string; description: string; title_es?: string; description_es?: string },
+  locale: ResourceLocale,
+): { title: string; description: string } {
+  if (locale === 'es') {
+    return {
+      title: doc.title_es?.trim() ? doc.title_es : doc.title,
+      description: doc.description_es?.trim() ? doc.description_es : doc.description,
+    };
+  }
+  return { title: doc.title, description: doc.description };
 }
 
 export type FacetRowInput = {

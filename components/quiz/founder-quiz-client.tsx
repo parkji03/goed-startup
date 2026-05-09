@@ -2,6 +2,7 @@
 
 import { SparklesIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
@@ -17,8 +18,6 @@ import { Input } from "@/components/ui/input";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
 import { useRouter } from "@/i18n/navigation";
-
-const KICKSTART_PROMPT = "What are some resources you'd recommend for me?";
 
 type FounderQuizClientProps = {
   /** Called on skip or when finished — closes modal instead of navigating. */
@@ -79,6 +78,12 @@ function toggle(arr: string[], value: string) {
 }
 
 export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
+  const t = useTranslations("Quiz");
+  const tStages = useTranslations("Quiz.options.stages");
+  const tCounties = useTranslations("Quiz.options.counties");
+  const tIndustries = useTranslations("Quiz.options.industries");
+  const tGoals = useTranslations("Quiz.options.goals");
+  const tAudiences = useTranslations("Quiz.options.audiences");
   const router = useRouter();
   const sidebar = useSidebar();
   const { setPendingPrompt } = useQuiz();
@@ -105,7 +110,7 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
     setStep(COMPLETION_STEP);
   };
   const startChatting = () => {
-    setPendingPrompt(KICKSTART_PROMPT);
+    setPendingPrompt(t("kickstartPrompt"));
     sidebar.setOpen(true);
     close();
   };
@@ -116,6 +121,7 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
       QuizAnswers,
       "stages" | "counties" | "industries" | "goals" | "audiences"
     >,
+    translateLabel: (key: string) => string,
   ) => (
     <div className="flex flex-wrap gap-2">
       {items.map((s) => (
@@ -128,7 +134,7 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
             setValue(field, next, { shouldDirty: true, shouldValidate: true });
           }}
         >
-          {s}
+          {translateLabel(s)}
         </Button>
       ))}
     </div>
@@ -139,49 +145,49 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
       case 0:
         return (
           <div className="space-y-3">
-            <Text className="text-muted-fg">Where are you in the journey?</Text>
-            {pills(STAGES, "stages")}
+            <Text className="text-muted-fg">{t("steps.stage")}</Text>
+            {pills(STAGES, "stages", tStages)}
           </div>
         );
       case 1:
         return (
           <div className="space-y-3">
-            <Text className="text-muted-fg">Where are you building from?</Text>
-            {pills(COUNTIES_SAMPLE, "counties")}
+            <Text className="text-muted-fg">{t("steps.location")}</Text>
+            {pills(COUNTIES_SAMPLE, "counties", tCounties)}
           </div>
         );
       case 2:
         return (
           <div className="space-y-3">
-            <Text className="text-muted-fg">Industry focus</Text>
-            {pills(INDUSTRIES_SAMPLE, "industries")}
+            <Text className="text-muted-fg">{t("steps.industry")}</Text>
+            {pills(INDUSTRIES_SAMPLE, "industries", tIndustries)}
           </div>
         );
       case 3:
         return (
           <div className="space-y-3">
-            <Text className="text-muted-fg">What outcome matters most?</Text>
-            {pills(GOALS_SAMPLE, "goals")}
+            <Text className="text-muted-fg">{t("steps.goal")}</Text>
+            {pills(GOALS_SAMPLE, "goals", tGoals)}
           </div>
         );
       case 4:
         return (
           <div className="space-y-3">
-            <Text className="text-muted-fg">Communities / special focus</Text>
-            {pills(AUDIENCE_SAMPLE, "audiences")}
+            <Text className="text-muted-fg">{t("steps.communities")}</Text>
+            {pills(AUDIENCE_SAMPLE, "audiences", tAudiences)}
           </div>
         );
       case 5:
         return (
           <div className="space-y-3">
             <label htmlFor="quiz-free" className="font-medium text-fg text-sm">
-              Free text (optional)
+              {t("steps.freeText")}
             </label>
             <Controller
               name="freeText"
               control={control}
               render={({ field }) => (
-                <Input {...field} value={field.value ?? ""} id="quiz-free" placeholder="Tell us what you’re trying to do..." />
+                <Input {...field} value={field.value ?? ""} id="quiz-free" placeholder={t("freeTextPlaceholder")} />
               )}
             />
             {form.formState.errors.freeText?.message ? (
@@ -203,17 +209,17 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
       <Heading level={1} className="text-3xl tracking-tight">
-        {isCompletion ? "You’re set" : "Founder questionnaire"}
+        {isCompletion ? t("headingCompletion") : t("headingDefault")}
       </Heading>
       {!isCompletion ? (
         <Text className="mt-3 text-muted-fg">
-          A few quick questions so the AI guide can tailor recommendations to your situation. Skippable any time.
+          {t("intro")}
         </Text>
       ) : null}
       <div className="mt-10 space-y-6">
         {!isCompletion ? (
           <Text className="text-muted-fg text-xs font-semibold uppercase tracking-wide">
-            Step {step + 1} / {TOTAL_STEPS}
+            {t("stepCounter", { step: step + 1, total: TOTAL_STEPS })}
           </Text>
         ) : null}
         {renderBody()}
@@ -222,22 +228,19 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
         <div className="mt-8 flex flex-wrap gap-3">
           {step > 0 ? (
             <Button intent="outline" size="sm" onPress={() => setStep((s) => Math.max(0, s - 1))}>
-              Back
+              {t("buttons.back")}
             </Button>
           ) : null}
           {step < 5 ? (
-            <Button intent="primary" size="sm" onPress={() => setStep((s) => s + 1)}>
-              Continue
+            <Button intent="primary" size="sm" className="ms-auto" onPress={() => setStep((s) => s + 1)}>
+              {t("buttons.continue")}
             </Button>
           ) : null}
           {step === 5 ? (
-            <Button intent="primary" size="sm" onPress={finish}>
-              Finish
+            <Button intent="primary" size="sm" className="ms-auto" onPress={finish}>
+              {t("buttons.finish")}
             </Button>
           ) : null}
-          <Button intent="outline" size="sm" className="ms-auto" onPress={close}>
-            {onComplete ? "Close" : "Skip questionnaire"}
-          </Button>
         </div>
       ) : null}
     </div>
@@ -245,6 +248,7 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
 }
 
 function CompletionScreen({ onStartChatting }: { onStartChatting: () => void }) {
+  const t = useTranslations("Quiz.completion");
   return (
     <div className="space-y-5">
       <div className="flex items-center gap-3">
@@ -252,18 +256,16 @@ function CompletionScreen({ onStartChatting }: { onStartChatting: () => void }) 
           <SparklesIcon className="size-5" />
         </span>
         <Heading level={2} className="text-xl">
-          AI guide is now personalized
+          {t("heading")}
         </Heading>
       </div>
       <Text className="text-muted-fg">
-        Your answers are saved on this device. The AI guide will weight its
-        recommendations toward your industry, stage, location, and goals — and
-        can still answer anything about Utah’s startup ecosystem.
+        {t("body")}
       </Text>
       <div className="pt-2">
         <Button intent="primary" size="md" onPress={onStartChatting}>
           <SparklesIcon />
-          Start chatting
+          {t("startChatting")}
         </Button>
       </div>
     </div>

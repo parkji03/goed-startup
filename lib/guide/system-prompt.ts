@@ -156,19 +156,23 @@ No matching resources or guides were found.`;
   return sections.join('\n\n');
 }
 
+const LOCALE_BLOCK_ES = `Reply in Spanish (Latin American or peninsular — match the user's register). Translate any English-language resource titles and snippets in the context to natural Spanish in your prose, but keep the markdown link slugs and URLs exactly as given (e.g. \`/resources/<slug>\` and \`/guides/<slug>\`). The section headers at the bottom of your reply should also be in Spanish: use "Recursos:" for the Resources section and "Lecturas adicionales:" for the Further reading section.`;
+
 export function buildSystemPrompt(args: {
   context: GuideContextItem[];
   guides?: GuideRagItem[];
   profile: FounderProfileConvex;
   locale: string;
 }): string {
-  const { context, guides = [], profile } = args;
+  const { context, guides = [], profile, locale } = args;
   const personalization = buildPersonalizationBlock(profile);
+  const localeBlock = locale === 'es' ? LOCALE_BLOCK_ES : null;
   const blocks = [
     IDENTITY_BLOCK,
     GUARDRAIL_BLOCK,
     CITATION_BLOCK,
     JOURNEY_BLOCK,
+    localeBlock,
     personalization,
     buildContextBlock(context, guides),
   ].filter(Boolean) as string[];

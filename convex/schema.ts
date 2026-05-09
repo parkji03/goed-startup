@@ -164,6 +164,16 @@ export default defineSchema({
     url: v.string(),
     contactEmail: v.optional(v.string()),
     sourceId: v.optional(v.string()),
+    /**
+     * Per-locale variants of `title` and `description`. Populated by the
+     * DeepL translation pipeline (`scripts/translate-resources.ts`); empty
+     * until that runs. Read paths fall back to the English `title` /
+     * `description` when a locale's variant is missing. `searchText`
+     * concatenates EN + ES content so the single search index serves
+     * either locale's queries.
+     */
+    title_es: v.optional(v.string()),
+    description_es: v.optional(v.string()),
     /** Denormalized tags from CSV/API for display — facet rows power indexed filters. */
     communities: v.array(v.string()),
     industries: v.array(v.string()),

@@ -15,7 +15,14 @@ import {
   synthesizeQueryFromProfile,
   validateRetrievalInput,
 } from './lib/guideQuery';
+import { pickLocalizedResourceText, type ResourceLocale } from './lib/resourceHelpers';
 import { resourceCategoryValidator } from './resourceValidators';
+
+const localeValidator = v.optional(v.union(v.literal('en'), v.literal('es')));
+
+function resolveLocale(locale: ResourceLocale | undefined): ResourceLocale {
+  return locale ?? 'en';
+}
 
 /**
  * AI guide retrieval — full-text only (no embeddings in v1). Public action so
@@ -93,32 +100,39 @@ function bodyExcerpt(body: string | undefined, max: number = BODY_EXCERPT_CHARS)
 }
 
 export const searchPublishedResourcesForGuide = internalQuery({
-  args: { query: v.string(), limit: v.number() },
+  args: { query: v.string(), limit: v.number(), locale: localeValidator },
   returns: v.array(guideContextItemValidator),
-  handler: async (ctx, { query, limit }): Promise<GuideContextItem[]> => {
+  handler: async (ctx, { query, limit, locale }): Promise<GuideContextItem[]> => {
     const trimmed = query.trim();
     if (!trimmed) return [];
     const lim = Math.min(Math.max(limit, 1), RAW_LIMIT);
+    const loc = resolveLocale(locale);
     const hits = await ctx.db
       .query('resources')
       .withSearchIndex('search_resources', (s) =>
         s.search('searchText', trimmed).eq('status', 'published'),
       )
       .take(lim);
-    return hits.map((r) => ({
-      resourceId: r._id,
-      title: r.title,
-      slug: r.slug,
-      url: r.url,
-      description: r.description,
-      category: r.category,
-      tags: r.tags,
-      industries: r.industries,
-      communities: r.communities,
-      locations: r.locations,
-      stageTags: r.stageTags,
-      bodyExcerpt: bodyExcerpt(r.body),
-    }));
+    return hits.map((r) => {
+      const localized = pickLocalizedResourceText(r, loc);
+      return {
+        resourceId: r._id,
+        title: localized.title,
+        slug: r.slug,
+        url: r.url,
+        description: localized.description,
+        category: r.category,
+        tags: r.tags,
+        industries: r.industries,
+        communities: r.communities,
+        locations: r.locations,
+        stageTags: r.stageTags,
+        // Body has no per-locale variant yet — Spanish chats see the
+        // English excerpt; the system prompt asks the model to translate
+        // it inline when responding in Spanish.
+        bodyExcerpt: bodyExcerpt(r.body),
+      };
+    });
   },
 });
 
@@ -126,16 +140,18 @@ export const retrieve = action({
   args: {
     query: v.string(),
     founderProfile: v.optional(founderProfileValidator),
+    locale: localeValidator,
   },
   returns: v.object({
     context: v.array(guideContextItemValidator),
     guides: v.array(guideRagItemValidator),
   }),
-  handler: async (ctx, { query, founderProfile }) => {
+  handler: async (ctx, { query, founderProfile, locale }) => {
     const validation = validateRetrievalInput(query);
     if (!validation.ok) return { context: [], guides: [] };
 
     const profile = clampFounderProfileForConvex(founderProfile ?? emptyFounderProfile());
+    const loc = resolveLocale(locale);
 
     const expanded = expandQuery(validation.query, profile);
 
@@ -144,6 +160,7 @@ export const retrieve = action({
       ? await ctx.runQuery(internal.guide.searchPublishedResourcesForGuide, {
           query: expanded,
           limit: RAW_LIMIT,
+          locale: loc,
         })
       : [];
 
@@ -154,7 +171,7 @@ export const retrieve = action({
       if (synth) {
         const fallback: GuideContextItem[] = await ctx.runQuery(
           internal.guide.searchPublishedResourcesForGuide,
-          { query: synth, limit: RAW_LIMIT },
+          { query: synth, limit: RAW_LIMIT, locale: loc },
         );
         const seen = new Set(lexical.map((h) => h.slug));
         for (const f of fallback) if (!seen.has(f.slug)) merged.push(f);

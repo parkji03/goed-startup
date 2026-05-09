@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { buttonStyles } from "@/components/ui/button";
 import {
@@ -13,6 +14,7 @@ import { Link as UiLink } from "@/components/ui/link";
 import type { ResourceRowData } from "./resource-row";
 
 export function ResourceCard({ resource }: { resource: ResourceRowData }) {
+  const t = useTranslations("Resources.card");
   return (
     <Card className="bg-overlay">
       <CardHeader className="pb-3">
@@ -26,7 +28,7 @@ export function ResourceCard({ resource }: { resource: ResourceRowData }) {
           href={`/resources/${resource.slug}`}
           className={buttonStyles({ intent: "outline", size: "sm" })}
         >
-          View details
+          {t("viewDetails")}
         </Link>
         <UiLink
           href={resource.url}
@@ -34,7 +36,7 @@ export function ResourceCard({ resource }: { resource: ResourceRowData }) {
           rel="noopener noreferrer"
           target="_blank"
         >
-          Official site
+          {t("officialSite")}
         </UiLink>
       </CardFooter>
     </Card>

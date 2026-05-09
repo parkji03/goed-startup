@@ -44,11 +44,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ResourcesPage({ params }: Readonly<Props>) {
-  await params; // ensures setRequestLocale boundary is consistent
+  const { locale } = await params;
+  const convexLocale: "en" | "es" = locale === "es" ? "es" : "en";
   // Preload up to 200/category — covers expected catalog growth without
   // bloating the SSR payload. Anything bigger needs pagination.
   const preloadedGrouped = await preloadQuery(api.resources.listGroupedByCategory, {
     limitPerCategory: 200,
+    locale: convexLocale,
   });
 
   return (

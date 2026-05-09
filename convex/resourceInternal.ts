@@ -84,12 +84,19 @@ export const upsertResource = internalMutation({
       .query('resources')
       .withIndex('by_sourceId', (q) => q.eq('sourceId', row.sourceId))
       .unique();
+    // Preserve any previously-saved ES translation across re-seeds so the
+    // searchText concat keeps including ES text and the translation pipeline
+    // doesn't have to re-run after every CSV refresh.
+    const title_es = existing?.title_es;
+    const description_es = existing?.description_es;
     // Preserve any existing body when re-importing — body is populated out of
     // band by patchBody (P2.3) and shouldn't be wiped by a CSV refresh.
     const body = existing?.body;
     const searchText = buildSearchText({
       title: row.title,
       description: row.description,
+      title_es,
+      description_es,
       url: row.url,
       contactEmail,
       category,
