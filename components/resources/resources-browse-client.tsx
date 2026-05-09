@@ -161,7 +161,7 @@ export function ResourcesBrowseClient() {
                         <DisclosureTrigger triggerIndicator={false}>
                           <ChevronDownIcon
                             aria-hidden
-                            className="size-4 shrink-0 -rotate-90 transition-transform duration-200 group-expanded/disclosure-item:rotate-0"
+                            className="size-4 shrink-0 -rotate-90 transition-all duration-200 group-expanded/disclosure-item:rotate-0 group-expanded:rotate-0"
                           />
                           <span className="font-medium">{c.label}</span>
                           <span className="ml-auto text-muted-fg text-sm tabular-nums">
