@@ -13,7 +13,9 @@
     "seed:resources": "node --env-file=.env.local --import tsx scripts/seed-resources.ts",
     "enrich:new-resources": "node --env-file=.env.local --import tsx scripts/enrich-new-resources.ts",
     "import:content-resources": "node --env-file=.env.local --import tsx scripts/import-content-resources.ts",
-    "enrich:resource-bodies": "node --env-file=.env.local --import tsx scripts/enrich-resource-bodies.ts"
+    "enrich:resource-bodies": "node --env-file=.env.local --import tsx scripts/enrich-resource-bodies.ts",
+    "enrich:new-guides": "node --env-file=.env.local --import tsx scripts/enrich-new-guides.ts",
+    "import:content-guides": "node --env-file=.env.local --import tsx scripts/import-content-guides.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.63",
