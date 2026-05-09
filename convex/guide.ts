@@ -27,6 +27,14 @@ const RAW_LIMIT = 12;
 const FALLBACK_THRESHOLD = 4;
 const TOP_K = 6;
 
+/**
+ * Char cap for the body excerpt threaded into the model's context. With
+ * TOP_K=6 hits this adds up to ~9000 chars (~2.2k tokens) per turn, in
+ * exchange for letting the model cite specific eligibility, dollar amounts,
+ * and program details that aren't in the 600-char description.
+ */
+const BODY_EXCERPT_CHARS = 1500;
+
 const guideContextItemValidator = v.object({
   resourceId: v.id('resources'),
   title: v.string(),
@@ -39,6 +47,8 @@ const guideContextItemValidator = v.object({
   communities: v.array(v.string()),
   locations: v.array(v.string()),
   stageTags: v.array(v.string()),
+  /** Trimmed prose excerpt of the long-form body (P2.3). Optional. */
+  bodyExcerpt: v.optional(v.string()),
 });
 
 export type GuideContextItem = {
@@ -53,7 +63,32 @@ export type GuideContextItem = {
   communities: string[];
   locations: string[];
   stageTags: string[];
+  bodyExcerpt?: string;
 };
+
+/**
+ * Trim a markdown body to ~max chars at the last sentence boundary. Leaves
+ * markdown formatting intact — the model handles it fine and stripping
+ * markdown loses meaningful structure (lists, links).
+ */
+function bodyExcerpt(body: string | undefined, max: number = BODY_EXCERPT_CHARS): string | undefined {
+  if (!body) return undefined;
+  if (body.length <= max) return body.trim();
+  const window = body.slice(0, max);
+  // Walk back to the last sentence-ending punctuation followed by whitespace.
+  for (let i = window.length - 1; i >= 0; i--) {
+    const ch = window[i];
+    if (ch === '.' || ch === '!' || ch === '?') {
+      const next = window[i + 1];
+      if (next === undefined || /\s/.test(next)) {
+        return window.slice(0, i + 1).trim();
+      }
+    }
+  }
+  // Fall back to the last whitespace boundary.
+  const lastSpace = window.lastIndexOf(' ');
+  return (lastSpace > 0 ? window.slice(0, lastSpace) : window).trim();
+}
 
 export const searchPublishedResourcesForGuide = internalQuery({
   args: { query: v.string(), limit: v.number() },
@@ -80,6 +115,7 @@ export const searchPublishedResourcesForGuide = internalQuery({
       communities: r.communities,
       locations: r.locations,
       stageTags: r.stageTags,
+      bodyExcerpt: bodyExcerpt(r.body),
     }));
   },
 });

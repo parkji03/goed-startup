@@ -2,11 +2,12 @@ import type { GuideContextItem } from '@/convex/guide';
 import type { FounderProfileConvex } from '@/convex/founderProfile';
 
 const MAX_DESCRIPTION_CHARS = 600;
+const MAX_BODY_EXCERPT_CHARS = 1500;
 
-export function sanitizeResourceText(input: string): string {
+export function sanitizeResourceText(input: string, maxChars: number = MAX_DESCRIPTION_CHARS): string {
   const stripped = input.replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, '');
   const fenced = stripped.replace(/```/g, '` ` `');
-  return fenced.length > MAX_DESCRIPTION_CHARS ? fenced.slice(0, MAX_DESCRIPTION_CHARS) : fenced;
+  return fenced.length > maxChars ? fenced.slice(0, maxChars) : fenced;
 }
 
 const REFUSAL_PHRASE =
@@ -62,11 +63,14 @@ No matching resources were found in the catalog.`;
         .filter(Boolean)
         .slice(0, 8)
         .join(', ');
+      const detailsLine = c.bodyExcerpt
+        ? `\nDetails: ${sanitizeResourceText(c.bodyExcerpt, MAX_BODY_EXCERPT_CHARS)}`
+        : '';
       return `<resource id="${i + 1}" slug="${c.slug}" category="${c.category}">
 Title: ${c.title}
 URL: ${c.url}
 Tags: ${tags}
-Description: ${sanitizeResourceText(c.description)}
+Description: ${sanitizeResourceText(c.description)}${detailsLine}
 </resource>`;
     })
     .join('\n\n');
