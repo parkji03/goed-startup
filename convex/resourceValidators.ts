@@ -49,6 +49,8 @@ export const resourceSubmissionDocValidator = v.object({
   suggestedIndustries: v.array(v.string()),
   suggestedLocations: v.array(v.string()),
   suggestedTopics: v.array(v.string()),
+  suggestedTags: v.optional(v.array(v.string())),
+  suggestedCategory: v.optional(resourceCategoryValidator),
   notes: v.optional(v.string()),
   status: submissionStatusValidator,
   moderatorNote: v.optional(v.string()),
