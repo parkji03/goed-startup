@@ -18,22 +18,6 @@
   "AdminHeader": {
     "publicSite": "Public site"
   },
-  "HomePage": {
-    "heading": "To get started, edit the page.tsx file.",
-    "introLead": "Looking for a starting point or more instructions? Head over to",
-    "introTemplates": "Templates",
-    "introOr": "or the",
-    "introLearning": "Learning",
-    "introTrail": "center.",
-    "deployNow": "Deploy Now",
-    "documentation": "Documentation",
-    "templatesHref": "https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
-    "learnHref": "https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
-    "deployHref": "https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
-    "docsHref": "https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app",
-    "nextLogoAlt": "Next.js logo",
-    "vercelLogoAlt": "Vercel logomark"
-  },
   "NotFoundPage": {
     "title": "Page not found",
     "body": "The page you are looking for does not exist.",
@@ -45,7 +29,7 @@
     "tagline": "Authenticated GOED surface · not the public site",
     "heading": "You’re on the admin home",
     "sessionLabel": "Signed in as",
-    "blurb": "This amber panel only appears under /admin after Clerk lets you through; the public locale home stays the default Next starter look.",
+    "blurb": "This amber panel only appears under /admin after Clerk lets you through; the public locale home now opens the resource library.",
     "bulletResources": "Resources CMS (CRUD + locale tabs)",
     "bulletCompanies": "Company moderation queue",
     "bulletChat": "Chat session review (read-only)",

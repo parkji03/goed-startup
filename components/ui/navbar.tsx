@@ -2,10 +2,9 @@
 
 import { Bars2Icon } from "@heroicons/react/20/solid"
 import { LayoutGroup, motion } from "motion/react"
-import { createContext, use, useCallback, useId, useMemo, useState } from "react"
+import { createContext, use, useCallback, useId, useMemo, useState, useSyncExternalStore } from "react"
 import { twJoin, twMerge } from "tailwind-merge"
 import { Link, type LinkProps } from "@/components/ui/link"
-import { useIsMobile } from "@/hooks/use-mobile"
 import { cx } from "@/lib/primitive"
 import { Button, type ButtonProps } from "./button"
 import { Separator } from "./separator"
@@ -29,16 +28,42 @@ const useNavbar = () => {
   return context
 }
 
+/** Default matches `useIsMobile()` / Tailwind `md` breakpoint (768px). */
+const DEFAULT_NAVBAR_MOBILE_MEDIA = "(max-width: 767px)"
+
+function subscribeNavbarMobileMedia(query: string, onChange: () => void) {
+  if (typeof window === "undefined") return () => {}
+  const mq = window.matchMedia(query)
+  mq.addEventListener("change", onChange)
+  return () => mq.removeEventListener("change", onChange)
+}
+
+function useNavbarMobileMedia(query: string) {
+  const subscribe = useCallback((cb: () => void) => subscribeNavbarMobileMedia(query, cb), [query])
+  const getSnapshot = useCallback(() => {
+    if (typeof window === "undefined") return false
+    return window.matchMedia(query).matches
+  }, [query])
+  const getServerSnapshot = useCallback(() => false, [])
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
+}
+
 interface NavbarProviderProps extends React.ComponentProps<"div"> {
   defaultOpen?: boolean
   isOpen?: boolean
   onOpenChange?: (open: boolean) => void
+  /**
+   * When this query matches, the navbar uses a sheet + `NavbarMobile` strip
+   * (see [Intent UI — Navbar](https://intentui.com/docs/components/layouts/navbar)).
+   */
+  mobileMediaQuery?: string
 }
 
 const NavbarProvider = ({
   isOpen: openProp,
   onOpenChange: setOpenProp,
   defaultOpen = false,
+  mobileMediaQuery = DEFAULT_NAVBAR_MOBILE_MEDIA,
   className,
   ...props
 }: NavbarProviderProps) => {
@@ -60,21 +85,17 @@ const NavbarProvider = ({
     setOpen((open) => !open)
   }, [setOpen])
 
-  const isMobile = useIsMobile()
+  const isMobile = useNavbarMobileMedia(mobileMediaQuery)
 
   const contextValue = useMemo<NavbarContextProps>(
     () => ({
       open,
       setOpen,
-      isMobile: isMobile ?? false,
+      isMobile,
       toggleNavbar,
     }),
     [open, setOpen, isMobile, toggleNavbar],
   )
-
-  if (isMobile === undefined) {
-    return null
-  }
 
   return (
     <NavbarContext value={contextValue}>
@@ -108,7 +129,10 @@ interface NonStickyWithoutPlacement extends React.ComponentProps<"div"> {
   intent?: Intent
 }
 
-type NavbarProps = StickyWithPlacement | NonStickyWithoutPlacement
+type NavbarProps = (StickyWithPlacement | NonStickyWithoutPlacement) & {
+  /** When true, the desktop chrome is omitted so you can render a custom header (sheet/mobile still run). */
+  suppressDesktopChrome?: boolean
+}
 
 const Navbar = ({
   children,
@@ -116,6 +140,7 @@ const Navbar = ({
   placement = "top",
   intent = "default",
   side = "left",
+  suppressDesktopChrome = false,
   className,
   ref,
   ...props
@@ -146,6 +171,10 @@ const Navbar = ({
     )
   }
 
+  if (suppressDesktopChrome) {
+    return null
+  }
+
   return (
     <div
       data-navbar={intent}
@@ -163,7 +192,7 @@ const Navbar = ({
     >
       <div
         className={twMerge(
-          "relative isolate hidden py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)] md:block",
+          "relative isolate block py-(--navbar-gutter) [--navbar-gutter:--spacing(2.5)]",
           intent === "float" &&
             "rounded-xl bg-bg py-0 *:data-[navbar=content]:max-w-7xl *:data-[navbar=content]:rounded-xl *:data-[navbar=content]:border *:data-[navbar=content]:bg-navbar *:data-[navbar=content]:px-4 *:data-[navbar=content]:py-(--navbar-gutter) *:data-[navbar=content]:shadow-xs",
           ["default", "inset"].includes(intent) && "px-4",
@@ -267,12 +296,15 @@ const NavbarSeparator = ({ className, ...props }: React.ComponentProps<typeof Se
 }
 
 const NavbarMobile = ({ className, ref, ...props }: React.ComponentProps<"div">) => {
+  const { isMobile } = useNavbar()
+  if (!isMobile) return null
+
   return (
     <div
       ref={ref}
       data-slot="navbar-mobile"
       className={twMerge(
-        "group/navbar-mobile flex items-center gap-x-3 px-4 py-2.5 md:hidden",
+        "group/navbar-mobile flex min-h-14 items-center gap-x-2 px-3 py-2 sm:min-h-16 sm:gap-x-3 sm:px-4",
         "group-has-data-navbar-sticky/navbar:sticky group-has-data-navbar-sticky/navbar:bg-navbar",
         // top
         "group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:top-0 group-has-data-navbar-sticky/navbar:group-has-placement-top/navbar:border-b",
@@ -305,7 +337,9 @@ interface NavbarTriggerProps extends ButtonProps {
 }
 
 const NavbarTrigger = ({ className, onPress, ref, ...props }: NavbarTriggerProps) => {
-  const { toggleNavbar } = useNavbar()
+  const { toggleNavbar, isMobile } = useNavbar()
+  if (!isMobile) return null
+
   return (
     <Button
       ref={ref}
@@ -313,7 +347,7 @@ const NavbarTrigger = ({ className, onPress, ref, ...props }: NavbarTriggerProps
       intent="plain"
       aria-label={props["aria-label"] || "Toggle Navbar"}
       size="sq-sm"
-      className={cx("-ms-2 lg:hidden", className)}
+      className={cx("-me-1 shrink-0 sm:-me-2", className)}
       onPress={(event) => {
         onPress?.(event)
         toggleNavbar()

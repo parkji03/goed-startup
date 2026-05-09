@@ -1,136 +1,145 @@
-import { openai } from '@ai-sdk/openai';
-import { Agent, getThreadMetadata } from '@convex-dev/agent';
 import { v } from 'convex/values';
-import { components, internal } from './_generated/api';
-import type { Doc, Id } from './_generated/dataModel';
-import { action, internalQuery, mutation } from './_generated/server';
+import { internal } from './_generated/api';
+import type { Id } from './_generated/dataModel';
+import { action, internalQuery } from './_generated/server';
 import {
   clampFounderProfileForConvex,
-  founderProfileValidator,
   emptyFounderProfile,
+  founderProfileValidator,
   type FounderProfileConvex,
 } from './founderProfile';
-import { scoreResourceForProfile } from './lib/matchResources';
 
-const guideAgent = new Agent(components.agent, {
-  name: 'Utah Founder Guide',
-  languageModel: openai.chat('gpt-4o-mini'),
-  embeddingModel: openai.embedding('text-embedding-3-small'),
+/**
+ * Hackathon-mode guide:
+ * - No persistence. Each `ask` call is independent — refreshing the chat
+ *   wipes it. Matches the Cursor-docs UX target.
+ * - No language model wired in yet. We answer with a deterministic stub
+ *   that searches the resource catalog. Swap `buildStubReply` for a real
+ *   `streamText` call (likely from an `httpAction`) once we're ready to
+ *   spend tokens. The action's args + return shape are designed so the
+ *   client doesn't have to change when streaming lands.
+ * - No rate limiting yet. Add a `@convex-dev/rate-limiter` component (or
+ *   IP-based throttling at the HTTP layer) before opening this up.
+ */
+
+const MAX_PROMPT_LENGTH = 6000;
+const MAX_CONTEXT_HITS = 4;
+
+const guideContextItemValidator = v.object({
+  resourceId: v.id('resources'),
+  title: v.string(),
+  slug: v.string(),
+  url: v.string(),
+  description: v.string(),
+  topics: v.array(v.string()),
+  industries: v.array(v.string()),
+  communities: v.array(v.string()),
 });
 
-/** Actions must delegate thread ownership checks here (runs with the user's auth context). */
-export const assertGuideThreadOwnership = internalQuery({
-  args: { threadId: v.string() },
-  handler: async (ctx, { threadId }) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const tokenId = identity?.tokenIdentifier;
-    if (!tokenId) {
-      throw new Error('Sign in required to use the founder guide.');
-    }
-    const meta = await getThreadMetadata(ctx, components.agent, { threadId });
-    if (!meta.userId) {
-      throw new Error('This thread cannot be resumed. Reset and start a new guide chat.');
-    }
-    if (meta.userId !== tokenId) {
-      throw new Error('Unauthorized — this guide thread belongs to another account.');
-    }
+export type GuideContextItem = {
+  resourceId: Id<'resources'>;
+  title: string;
+  slug: string;
+  url: string;
+  description: string;
+  topics: string[];
+  industries: string[];
+  communities: string[];
+};
+
+export const searchPublishedResourcesForGuide = internalQuery({
+  args: { query: v.string(), limit: v.number() },
+  returns: v.array(guideContextItemValidator),
+  handler: async (ctx, { query, limit }): Promise<GuideContextItem[]> => {
+    const trimmed = query.trim();
+    if (!trimmed) return [];
+    const lim = Math.min(Math.max(limit, 1), MAX_CONTEXT_HITS);
+    const hits = await ctx.db
+      .query('resources')
+      .withSearchIndex('search_resources', (s) =>
+        s.search('searchText', trimmed).eq('status', 'published'),
+      )
+      .take(lim);
+    return hits.map((r) => ({
+      resourceId: r._id,
+      title: r.title,
+      slug: r.slug,
+      url: r.url,
+      description: r.description,
+      topics: r.topics,
+      industries: r.industries,
+      communities: r.communities,
+    }));
   },
 });
 
-export const createThread = mutation({
-  args: {},
-  handler: async (ctx) => {
-    const identity = await ctx.auth.getUserIdentity();
-    const userId = identity?.tokenIdentifier;
-    if (!userId) {
-      throw new Error('Sign in required to use the founder guide.');
-    }
-    const { threadId } = await guideAgent.createThread(ctx, { userId });
-    return { threadId };
-  },
-});
+function profileSummary(profile: FounderProfileConvex): string | null {
+  const bits = [
+    profile.industries.length ? `industries: ${profile.industries.join(', ')}` : null,
+    profile.stages.length ? `stages: ${profile.stages.join(', ')}` : null,
+    profile.goals.length ? `goals: ${profile.goals.join(', ')}` : null,
+    profile.audiences.length ? `audiences: ${profile.audiences.join(', ')}` : null,
+  ].filter(Boolean);
+  return bits.length ? bits.join(' · ') : null;
+}
 
-export const sendMessage = action({
+function buildStubReply(
+  prompt: string,
+  profile: FounderProfileConvex,
+  hits: GuideContextItem[],
+): string {
+  if (hits.length === 0) {
+    return [
+      `Thanks for asking about "${prompt}".`,
+      "I couldn't find a published Utah resource matching that yet. Try the founder quiz or browse the resource library — and the AI guide will get smarter once we wire it to a live model.",
+    ].join('\n\n');
+  }
+
+  const lines = hits.map((h, i) => {
+    const tags = [...h.topics, ...h.industries, ...h.communities].slice(0, 4).join(', ');
+    return [
+      `[#${i + 1}] ${h.title}`,
+      `Link: /resources/${h.slug} · ${h.url}`,
+      tags ? `Tags: ${tags}` : null,
+      h.description.slice(0, 240),
+    ]
+      .filter(Boolean)
+      .join('\n');
+  });
+
+  const summary = profileSummary(profile);
+  return [
+    `Here ${hits.length === 1 ? 'is a starting point' : `are ${hits.length} starting points`} that match "${prompt}":`,
+    summary ? `_Personalized hint from your quiz — ${summary}._` : null,
+    lines.join('\n\n'),
+    '_(Hackathon stub: deterministic resource lookup. Live, streamed model responses land next.)_',
+  ]
+    .filter(Boolean)
+    .join('\n\n');
+}
+
+export const ask = action({
   args: {
-    threadId: v.string(),
     prompt: v.string(),
     founderProfile: v.optional(founderProfileValidator),
   },
-  handler: async (ctx, args) => {
-    await ctx.runQuery(internal.guide.assertGuideThreadOwnership, {
-      threadId: args.threadId,
-    });
-
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity?.tokenIdentifier) {
-      throw new Error('Sign in required to send guide messages.');
+  returns: v.object({
+    reply: v.string(),
+    context: v.array(guideContextItemValidator),
+  }),
+  handler: async (ctx, { prompt, founderProfile }) => {
+    const trimmed = prompt.trim().slice(0, MAX_PROMPT_LENGTH);
+    if (!trimmed) {
+      return { reply: '', context: [] };
     }
-    const userId = identity.tokenIdentifier;
 
-    const prompt = args.prompt.trim().slice(0, 6000);
-
-    const profile: FounderProfileConvex = clampFounderProfileForConvex(
-      args.founderProfile ?? emptyFounderProfile(),
+    const profile = clampFounderProfileForConvex(founderProfile ?? emptyFounderProfile());
+    const context: GuideContextItem[] = await ctx.runQuery(
+      internal.guide.searchPublishedResourcesForGuide,
+      { query: trimmed, limit: MAX_CONTEXT_HITS },
     );
 
-    const embedInput = [
-      prompt,
-      profile.freeText ?? '',
-      ...profile.goals,
-      ...profile.industries,
-      ...profile.stages,
-      ...profile.audiences,
-    ].join('\n');
-
-    const vector = await ctx.runAction(internal.resourceEmbeddingsNode.embedText, {
-      text: embedInput.slice(0, 8000),
-    });
-
-    const hits = (await ctx.runAction(internal.resourceEmbeddingsNode.vectorSearchPublished, {
-      vector,
-      limit: 40,
-    })) as Array<{ resourceId: Id<'resources'>; score: number }>;
-
-    const resources = (await ctx.runQuery(internal.resourceInternal.loadResourcesByIds, {
-      ids: hits.map((h) => h.resourceId),
-    })) as Doc<'resources'>[];
-
-    const ranked = resources
-      .map((r) => ({
-        r,
-        vec: hits.find((h) => h.resourceId === r._id)?.score ?? 0,
-        overlap: scoreResourceForProfile(r, profile),
-      }))
-      .sort((a, b) => b.overlap * 3 + b.vec - (a.overlap * 3 + a.vec))
-      .slice(0, 8);
-
-    const retrievalContext = ranked
-      .map(
-        ({ r }, i) =>
-          `[#${i + 1}] ${r.title}\nslug: ${r.slug}\n${r.description.slice(0, 600)}\nLink: ${r.url}\nTopics: ${r.topics.join(', ')}`,
-      )
-      .join('\n\n---\n');
-
-    const { thread } = await guideAgent.continueThread(ctx, {
-      threadId: args.threadId,
-      userId,
-    });
-
-    const result = await thread.streamText(
-      {
-        system:
-          'You are an expert Utah founder navigator. Recommend concrete next steps.\n' +
-          'Use ONLY the numbered resources below when suggesting programs and always cite them like [#1], [#2].\n' +
-          'If none apply, say what is missing briefly and ask one clarifying question.\n\n' +
-          'RESOURCES CONTEXT:\n' +
-          retrievalContext,
-        prompt,
-      },
-      { saveStreamDeltas: true },
-    );
-
-    await result.consumeStream();
-
-    return { ok: true };
+    const reply = buildStubReply(trimmed, profile, context);
+    return { reply, context };
   },
 });

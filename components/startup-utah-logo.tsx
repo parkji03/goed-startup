@@ -14,7 +14,7 @@ export function StartupUtahLogo({ className }: Props) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 235.51 55.21"
-      className={twMerge("h-8 w-auto shrink-0 text-fg sm:h-9", className)}
+      className={twMerge("h-5 w-auto shrink-0 text-fg sm:h-6", className)}
       aria-hidden
     >
       <defs>

@@ -13,7 +13,9 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
+import { Link as UiLink } from "@/components/ui/link";
 import { Text } from "@/components/ui/text";
+
 export function ResourcesBrowseClient() {
   const topics = useQuery(api.resources.facetValues, { facetType: "topic", limit: 40 });
   const [topicFilter, setTopicFilter] = useState<string | null>(null);
@@ -30,12 +32,52 @@ export function ResourcesBrowseClient() {
   const loadingCards = topicFilter ? filtered === undefined : all.status === "LoadingFirstPage";
 
   return (
-    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 lg:flex-row">
-      <aside className="lg:w-60 lg:shrink-0">
-        <Heading level={2} className="mb-3 text-lg">
+    <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
+      <section className="space-y-6">
+        <div className="max-w-3xl">
+          <Text className="text-muted-fg">Resource Library</Text>
+          <Heading level={1} className="mt-2 text-4xl tracking-tight sm:text-5xl">
+            Utah founder resources
+          </Heading>
+          <Text className="mt-4 max-w-2xl text-lg text-muted-fg">
+            Curated partners and programs sourced from Startup Utah Builder Day. Search from
+            the top bar, filter by topic, or ask the AI guide for a recommended path.
+          </Text>
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-3">
+          <Card className="bg-overlay">
+            <CardHeader title="Get matched" description="Take the founder quiz to tune recommendations." />
+            <CardFooter>
+              <Link href="/quiz" className={buttonStyles({ intent: "outline", size: "sm" })}>
+                Start quiz
+              </Link>
+            </CardFooter>
+          </Card>
+          <Card className="bg-overlay">
+            <CardHeader title="Ask the guide" description="Open the AI chat for funding and program questions." />
+            <CardFooter>
+              <Link href="/guide" className={buttonStyles({ intent: "outline", size: "sm" })}>
+                Open guide
+              </Link>
+            </CardFooter>
+          </Card>
+          <Card className="bg-overlay">
+            <CardHeader title="Add a resource" description="Submit a partner or program for review." />
+            <CardFooter>
+              <Link href="/resources/submit" className={buttonStyles({ intent: "outline", size: "sm" })}>
+                Submit
+              </Link>
+            </CardFooter>
+          </Card>
+        </div>
+      </section>
+
+      <section className="space-y-3">
+        <Heading level={2} className="text-lg">
           Topics
         </Heading>
-        <div className="flex flex-wrap gap-2 lg:flex-col lg:items-stretch">
+        <div className="flex flex-wrap gap-2">
           <Button
             size="sm"
             intent={topicFilter === null ? "primary" : "secondary"}
@@ -48,30 +90,21 @@ export function ResourcesBrowseClient() {
               key={t}
               size="sm"
               intent={topicFilter === t ? "primary" : "secondary"}
-              className="justify-start"
               onPress={() => setTopicFilter(t)}
             >
               {t}
             </Button>
-          )) ?? <Text className="text-muted-fg text-sm">Loading topics…</Text>}
+          )) ?? <Text className="text-muted-fg text-sm">Loading topics...</Text>}
         </div>
-      </aside>
+      </section>
+
       <section className="min-w-0 flex-1 space-y-4">
-        <div>
-          <Heading level={1} className="text-3xl tracking-tight sm:text-4xl">
-            Utah founder resources
-          </Heading>
-          <Text className="mt-2 max-w-2xl text-muted-fg">
-            Curated partners and programs sourced from Startup Utah Builder Day — searchable,
-            filtered, and personalizable via the quiz and AI guide.
-          </Text>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {loadingCards ? (
-            <Text className="text-muted-fg">Loading cards…</Text>
+            <Text className="text-muted-fg">Loading cards...</Text>
           ) : (
             cards?.map((r) => (
-              <Card key={String(r._id)}>
+              <Card key={String(r._id)} className="bg-overlay">
                 <CardHeader className="pb-3">
                   <CardTitle>{r.title}</CardTitle>
                   <CardDescription className="line-clamp-4">{r.description}</CardDescription>
@@ -83,14 +116,14 @@ export function ResourcesBrowseClient() {
                   >
                     View details
                   </Link>
-                  <a
+                  <UiLink
                     href={r.url}
                     className={buttonStyles({ intent: "outline", size: "sm" })}
                     rel="noopener noreferrer"
                     target="_blank"
                   >
-                    Official site ↗
-                  </a>
+                    Official site
+                  </UiLink>
                 </CardFooter>
               </Card>
             ))
