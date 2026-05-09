@@ -7,6 +7,7 @@ import {
   emptyFounderProfile,
   founderProfileValidator,
 } from './founderProfile';
+import { guideRagItemValidator, type GuideRagItem } from './guides';
 import {
   expandQuery,
   filterByProfileSignal,
@@ -26,6 +27,7 @@ import { resourceCategoryValidator } from './resourceValidators';
 const RAW_LIMIT = 12;
 const FALLBACK_THRESHOLD = 4;
 const TOP_K = 6;
+const TOP_K_GUIDES = 4;
 
 /**
  * Char cap for the body excerpt threaded into the model's context. With
@@ -127,14 +129,17 @@ export const retrieve = action({
   },
   returns: v.object({
     context: v.array(guideContextItemValidator),
+    guides: v.array(guideRagItemValidator),
   }),
   handler: async (ctx, { query, founderProfile }) => {
     const validation = validateRetrievalInput(query);
-    if (!validation.ok) return { context: [] };
+    if (!validation.ok) return { context: [], guides: [] };
 
     const profile = clampFounderProfileForConvex(founderProfile ?? emptyFounderProfile());
 
     const expanded = expandQuery(validation.query, profile);
+
+    // Resources branch — existing logic with profile-aware ranking.
     const lexical: GuideContextItem[] = expanded
       ? await ctx.runQuery(internal.guide.searchPublishedResourcesForGuide, {
           query: expanded,
@@ -158,6 +163,21 @@ export const retrieve = action({
 
     const ranked = rankWithProfile(merged, profile);
     const filtered = filterByProfileSignal(ranked, profile);
-    return { context: filtered.slice(0, TOP_K) };
+
+    // Guides branch — pure lexical, no profile ranking. Guides don't carry
+    // community/industry/location facets to score against, and the ranking
+    // helpers were designed for resources. Top-K straight from the search
+    // index keeps things simple.
+    const guides: GuideRagItem[] = expanded
+      ? await ctx.runQuery(internal.guides.searchPublishedGuidesForGuide, {
+          query: expanded,
+          limit: TOP_K_GUIDES,
+        })
+      : [];
+
+    return {
+      context: filtered.slice(0, TOP_K),
+      guides,
+    };
   },
 });

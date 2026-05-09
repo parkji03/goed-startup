@@ -121,7 +121,7 @@ export const listJourneySteps = query({
 const RAW_LIMIT = 12;
 const BODY_EXCERPT_CHARS = 1500;
 
-const guideContextItemValidator = v.object({
+export const guideRagItemValidator = v.object({
   guideId: v.id('guides'),
   title: v.string(),
   slug: v.string(),
@@ -165,7 +165,7 @@ function bodyExcerpt(body: string, max: number = BODY_EXCERPT_CHARS): string {
 
 export const searchPublishedGuidesForGuide = internalQuery({
   args: { query: v.string(), limit: v.number() },
-  returns: v.array(guideContextItemValidator),
+  returns: v.array(guideRagItemValidator),
   handler: async (ctx, { query, limit }): Promise<GuideRagItem[]> => {
     const trimmed = query.trim();
     if (!trimmed) return [];
