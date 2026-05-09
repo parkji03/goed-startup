@@ -42,6 +42,24 @@ function projectReco(
   }));
 }
 
+/**
+ * Lightweight projection for sitemap generation. Returns just slug + last
+ * sync time so SSG/sitemap builds avoid pulling the full document.
+ */
+export const sitemapEntries = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db
+      .query('resources')
+      .withIndex('by_status', (q) => q.eq('status', 'published'))
+      .take(5000);
+    return rows.map((r) => ({
+      slug: r.slug,
+      lastModified: r.lastSyncedAt ?? r._creationTime,
+    }));
+  },
+});
+
 export const search = query({
   args: {
     query: v.string(),
