@@ -68,6 +68,9 @@ const SKIP_STEMS = new Set([
   // competition at Walmart HQ in Bentonville. Belongs on an events surface
   // if anywhere — not in the resources catalog.
   'utah-startups-apply-now-for-walmarts-open-call-pitch-competition',
+  // Media (weekly GOEO podcast), not a program founders apply to or use.
+  // Slated for the guides collection in Phase 3 — see task #12 (P3.3).
+  'business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene',
 ]);
 
 /**

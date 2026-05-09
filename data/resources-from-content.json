@@ -96,19 +96,5 @@
     "_meta": {
       "sourcePath": "startup-utah-content/resources/sba-certifications-that-could-fast-track-your-startups-growth.md"
     }
-  },
-  {
-    "sourceId": "content:business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene",
-    "title": "Business Elevated Podcast Showcases Utah’s Thriving Entrepreneurial Scene",
-    "description": "Business Elevated Podcast, launched in 2019 by the Governor's Office of Economic Opportunity, provides a platform for Utah entrepreneurs, executives, and community leaders to share their experiences and stories. With over 200 episodes released weekly, the podcast highlights Utah's entrepreneurial ecosystem, addresses misconceptions about the state's business climate, and features notable figures including state officials and business founders. Episodes are syndicated across Apple Podcasts, Spotify, and other major platforms. Open to all audiences interested in Utah's business community.",
-    "url": "https://business.utah.gov/category/podcast/",
-    "category": "community-events",
-    "communitiesRaw": "Any",
-    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
-    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
-    "tagsRaw": "podcast|entrepreneurship|storytelling|business-leaders|utah-ecosystem|community-platform|weekly-episodes",
-    "_meta": {
-      "sourcePath": "startup-utah-content/resources/business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene.md"
-    }
   }
 ]
