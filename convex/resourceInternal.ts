@@ -2,7 +2,11 @@ import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { internalMutation, internalQuery } from './_generated/server';
-import { facetTypeValidator, resourceStatusValidator } from './resourceValidators';
+import {
+  facetTypeValidator,
+  resourceCategoryValidator,
+  resourceStatusValidator,
+} from './resourceValidators';
 import {
   buildSearchText,
   facetsFromResourceFields,
@@ -52,6 +56,8 @@ const upsertRowValidator = v.object({
   industriesRaw: v.optional(v.string()),
   locationsRaw: v.optional(v.string()),
   topicsRaw: v.optional(v.string()),
+  tagsRaw: v.optional(v.string()),
+  category: v.optional(resourceCategoryValidator),
   status: resourceStatusValidator,
   submissionId: v.optional(v.id('resourceSubmissions')),
 });
@@ -66,15 +72,19 @@ export const upsertResource = internalMutation({
     const industries = splitPipeList(row.industriesRaw);
     const locations = splitPipeList(row.locationsRaw);
     const topics = splitPipeList(row.topicsRaw);
-    const stageTags = inferStageTagsFromTopics(topics);
+    const tags = splitPipeList(row.tagsRaw);
+    const stageTags = inferStageTagsFromTopics([...topics, ...tags]);
+    const category = row.category;
     const searchText = buildSearchText({
       title: row.title,
       description: row.description,
       url: row.url,
       contactEmail,
+      category,
       communities,
       industries,
       locations,
+      tags,
       topics,
       stageTags,
     });
@@ -98,6 +108,8 @@ export const upsertResource = internalMutation({
         industries,
         locations,
         topics,
+        tags,
+        category,
         stageTags,
         searchText,
         status: row.status,
@@ -116,6 +128,8 @@ export const upsertResource = internalMutation({
         industries,
         locations,
         topics,
+        tags,
+        category,
         stageTags,
         searchText,
         status: row.status,
@@ -125,9 +139,11 @@ export const upsertResource = internalMutation({
     }
 
     const facetRows = facetsFromResourceFields({
+      category,
       communities,
       industries,
       locations,
+      tags,
       topics,
       stageTags,
     });

@@ -1,7 +1,7 @@
 import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import { internalMutation } from './_generated/server';
-import { resourceStatusValidator } from './resourceValidators';
+import { resourceCategoryValidator, resourceStatusValidator } from './resourceValidators';
 
 const importRow = v.object({
   sourceId: v.string(),
@@ -13,6 +13,8 @@ const importRow = v.object({
   industriesRaw: v.optional(v.string()),
   locationsRaw: v.optional(v.string()),
   topicsRaw: v.optional(v.string()),
+  tagsRaw: v.optional(v.string()),
+  category: v.optional(resourceCategoryValidator),
 });
 
 /**

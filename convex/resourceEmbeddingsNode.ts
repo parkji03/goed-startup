@@ -21,6 +21,8 @@ export const embedResource = internalAction({
     const text = embeddingSourceText({
       title: resource.title,
       description: resource.description,
+      category: resource.category,
+      tags: resource.tags ?? [],
       topics: resource.topics,
       industries: resource.industries,
       communities: resource.communities,
