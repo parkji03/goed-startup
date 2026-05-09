@@ -63,4 +63,5 @@ export const adminAccessDeniedReasonValidator = v.union(
   v.literal('missing_email_in_token'),
   v.literal('not_configured'),
   v.literal('not_in_allowlist'),
+  v.literal('domain_not_allowed'),
 );

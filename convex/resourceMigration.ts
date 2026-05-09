@@ -36,6 +36,7 @@ export const setCategoryById = internalMutation({
       locations: r.locations,
       tags,
       stageTags,
+      body: r.body,
     });
     await ctx.db.patch(resourceId, {
       category,
@@ -74,7 +75,7 @@ export const setTranslationBySourceId = internalMutation({
     title: v.string(),
     description: v.string(),
   },
-  handler: async (ctx, { sourceId, locale: _locale, title, description }) => {
+  handler: async (ctx, { sourceId, title, description }) => {
     const rows = await ctx.db
       .query('resources')
       .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
@@ -143,6 +144,7 @@ export const setTitleBySourceId = internalMutation({
       locations: r.locations,
       tags: r.tags,
       stageTags: r.stageTags,
+      body: r.body,
     });
     await ctx.db.patch(r._id, {
       title: cleanTitle,

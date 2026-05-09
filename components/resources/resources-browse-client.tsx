@@ -1,11 +1,11 @@
 "use client";
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import { useQuery } from "convex/react";
-import { useLocale, useTranslations } from "next-intl";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { useTranslations } from "next-intl";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
-import { api } from "@/convex/_generated/api";
+import type { api } from "@/convex/_generated/api";
 import { useQuiz } from "@/components/quiz/quiz-provider";
 import { ResourceCard } from "@/components/resources/resource-card";
 import { ResourceRow } from "@/components/resources/resource-row";
@@ -30,6 +30,10 @@ import {
   parseResourceFiltersFromParams,
 } from "@/lib/resources/filters";
 
+type Props = {
+  preloadedGrouped: Preloaded<typeof api.resources.listGroupedByCategory>;
+};
+
 const ALL_CATEGORY_KEYS = RESOURCE_CATEGORIES.map((c) => c.key);
 
 function sectionDomId(key: ResourceCategoryKey): string {
@@ -42,12 +46,14 @@ function scrollToCategory(key: ResourceCategoryKey) {
   el.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
-export function ResourcesBrowseClient() {
+export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
   const t = useTranslations("Resources");
   const tCat = useTranslations("Taxonomy.resourceCategories");
-  const rawLocale = useLocale();
-  const locale: "en" | "es" = rawLocale === "es" ? "es" : "en";
-  const grouped = useQuery(api.resources.listGroupedByCategory, { limitPerCategory: 50, locale });
+  // usePreloadedQuery returns server-fetched data synchronously on first
+  // render and reactively updates when the underlying data changes — no
+  // loading flash on navigation, and the page is SEO-visible. Locale is
+  // baked into the preloaded args by the server page wrapper.
+  const grouped = usePreloadedQuery(preloadedGrouped);
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
   const quiz = useQuiz();
@@ -65,7 +71,6 @@ export function ResourcesBrowseClient() {
   // and `total` reflects the filtered count — that way "Jump to" buttons,
   // section headers, and the visible list all agree.
   const filteredGrouped = useMemo(() => {
-    if (!grouped) return undefined;
     if (!filtersActive) return grouped;
     const out: typeof grouped = {} as typeof grouped;
     for (const c of RESOURCE_CATEGORIES) {
@@ -82,9 +87,9 @@ export function ResourcesBrowseClient() {
 
   // Only show jump buttons for categories that have at least one resource —
   // otherwise the button scrolls to a section that isn't rendered.
-  const visibleCategories = filteredGrouped
-    ? RESOURCE_CATEGORIES.filter((c) => (filteredGrouped[c.key]?.total ?? 0) > 0)
-    : RESOURCE_CATEGORIES;
+  const visibleCategories = RESOURCE_CATEGORIES.filter(
+    (c) => (filteredGrouped[c.key]?.total ?? 0) > 0,
+  );
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
@@ -172,9 +177,7 @@ export function ResourcesBrowseClient() {
       </section>
 
       <section className="min-w-0 flex-1 space-y-4">
-        {filteredGrouped === undefined ? (
-          <Text className="text-muted-fg">{t("browse.loading")}</Text>
-        ) : visibleCategories.length === 0 && filtersActive ? (
+        {visibleCategories.length === 0 && filtersActive ? (
           <Text className="text-muted-fg">{t("browse.noMatches")}</Text>
         ) : (
           <>
@@ -211,6 +214,12 @@ export function ResourcesBrowseClient() {
                                 <ResourceRow key={String(r._id)} resource={r} />
                               ))}
                             </div>
+                            {total > items.length ? (
+                              <Text className="mt-2 text-xs text-muted-fg">
+                                Showing {items.length} of {total} — refine the
+                                filters to narrow this list.
+                              </Text>
+                            ) : null}
                           </DisclosurePanel>
                         </div>
                       )}
@@ -240,6 +249,12 @@ export function ResourcesBrowseClient() {
                         <ResourceCard key={String(r._id)} resource={r} />
                       ))}
                     </div>
+                    {total > items.length ? (
+                      <Text className="text-xs text-muted-fg">
+                        Showing {items.length} of {total} — refine the filters
+                        to narrow this list.
+                      </Text>
+                    ) : null}
                   </div>
                 );
               })}

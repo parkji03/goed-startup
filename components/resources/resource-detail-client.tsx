@@ -1,17 +1,18 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { useLocale, useTranslations } from "next-intl";
-import { api } from "@/convex/_generated/api";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import { useTranslations } from "next-intl";
+import type { api } from "@/convex/_generated/api";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { ResourceBody } from "@/components/resources/resource-body";
 import type { ResourceCategoryKey } from "@/lib/resources/categories";
 
 type Props = {
-  slug: string;
+  preloaded: Preloaded<typeof api.resources.bySlug>;
 };
 
 function ChipRow({ label, values }: { label: string; values: string[] }) {
@@ -30,17 +31,12 @@ function ChipRow({ label, values }: { label: string; values: string[] }) {
   );
 }
 
-export function ResourceDetailClient({ slug }: Props) {
+export function ResourceDetailClient({ preloaded }: Props) {
   const t = useTranslations("Resources.detail");
   const tChips = useTranslations("Resources.detail.chips");
   const tCat = useTranslations("Taxonomy.resourceCategories");
-  const rawLocale = useLocale();
-  const locale: "en" | "es" = rawLocale === "es" ? "es" : "en";
-  const resource = useQuery(api.resources.bySlug, { slug, locale });
+  const resource = usePreloadedQuery(preloaded);
 
-  if (resource === undefined) {
-    return <Text className="px-4 py-10 text-center text-muted-fg">{t("loading")}</Text>;
-  }
   if (resource === null) {
     return (
       <div className="mx-auto max-w-lg px-4 py-16">
@@ -88,6 +84,14 @@ export function ResourceDetailClient({ slug }: Props) {
           </Link>
         </div>
       </div>
+      {resource.body ? (
+        <section aria-label={t("backgroundHeading")}>
+          <Heading level={2} className="mb-3 text-xl font-semibold tracking-tight">
+            {t("backgroundHeading")}
+          </Heading>
+          <ResourceBody body={resource.body} />
+        </section>
+      ) : null}
       <div className="rounded-xl border border-border bg-muted/30 p-4">
         <ChipRow label={tChips("tags")} values={resource.tags} />
         <ChipRow label={tChips("communities")} values={resource.communities} />

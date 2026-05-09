@@ -14,7 +14,7 @@ import {
 } from '@/lib/guide/abuse-guards';
 import { logHallucinatedSlugs } from '@/lib/guide/output-validator';
 import { buildSystemPrompt } from '@/lib/guide/system-prompt';
-import type { GuideContextItem } from '@/lib/guide/types';
+import type { GuideContextItem, GuideRagItem } from '@/lib/guide/types';
 import {
   clampFounderProfileForConvex,
   emptyFounderProfile,
@@ -96,7 +96,7 @@ export async function POST(req: Request): Promise<Response> {
     return Response.json({ error: 'Server misconfigured: NEXT_PUBLIC_CONVEX_URL missing.' }, { status: 500 });
   }
   const convex = new ConvexHttpClient(convexUrl);
-  let retrieval: { context: GuideContextItem[] };
+  let retrieval: { context: GuideContextItem[]; guides: GuideRagItem[] };
   try {
     retrieval = await convex.action(api.guide.retrieve, { query, founderProfile, locale });
   } catch (err) {
@@ -120,7 +120,12 @@ export async function POST(req: Request): Promise<Response> {
     founderProfile ?? emptyFounderProfile(),
   );
 
-  const system = buildSystemPrompt({ context: retrieval.context, profile, locale });
+  const system = buildSystemPrompt({
+    context: retrieval.context,
+    guides: retrieval.guides,
+    profile,
+    locale,
+  });
 
   // Cap history sent to the model. Preserve the first user message for opening context per spec §6.
   const recent = messages.slice(-HISTORY_TURN_CAP * 2);
@@ -142,14 +147,16 @@ export async function POST(req: Request): Promise<Response> {
     onFinish: (event) => {
       logHallucinatedSlugs({
         modelText: event.text,
-        contextSlugs: retrieval.context.map((c) => c.slug),
+        contextResourceSlugs: retrieval.context.map((c) => c.slug),
+        contextGuideSlugs: retrieval.guides.map((g) => g.slug),
         hashedIp,
       });
       // Per-request audit line - spec section 7-C, hackathon-grade observability.
       console.log('[guide] turn', {
         ip: hashedIp,
         inputChars: query.length,
-        hits: retrieval.context.length,
+        resourceHits: retrieval.context.length,
+        guideHits: retrieval.guides.length,
         model: MODEL_ID,
         promptTokens: event.totalUsage?.inputTokens,
         completionTokens: event.totalUsage?.outputTokens,
@@ -164,7 +171,7 @@ export async function POST(req: Request): Promise<Response> {
   return result.toUIMessageStreamResponse({
     messageMetadata: ({ part }) => {
       if (part.type === 'start') {
-        return { sources: retrieval.context };
+        return { sources: retrieval.context, guides: retrieval.guides };
       }
       return undefined;
     },

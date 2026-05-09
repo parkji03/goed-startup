@@ -1,16 +1,11 @@
-import { CheckIcon } from "@heroicons/react/24/outline";
 import type { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
-import { Code, Text } from "@/components/ui/text";
-import { Link } from "@/i18n/navigation";
+import { Text } from "@/components/ui/text";
+import { AdminAllowlistCard } from "@/components/admin/admin-allowlist-card";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -25,71 +20,87 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AdminHomePage({ params }: Readonly<Props>) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [t, user] = await Promise.all([
-    getTranslations({ locale, namespace: "AdminHome" }),
-    currentUser(),
-  ]);
+  const user = await currentUser();
 
-  const displayName =
+  const fullName =
     user?.firstName && user?.lastName
       ? `${user.firstName} ${user.lastName}`
-      : user?.username ??
-        user?.primaryEmailAddress?.emailAddress ??
-        user?.id;
-
-  const bullets = [
-    t("bulletResources"),
-    t("bulletCompanies"),
-    t("bulletChat"),
-    t("bulletDistinct"),
-  ] as const;
+      : user?.firstName ?? user?.username ?? null;
+  const email = user?.primaryEmailAddress?.emailAddress ?? null;
+  // Initials fallback when Clerk hasn't issued an avatar URL — uses the
+  // first letter of the chosen display source so we always render
+  // *something* recognisable.
+  const initials = (fullName ?? email ?? "?")
+    .split(/\s+|@/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((s) => s[0]!.toUpperCase())
+    .join("");
+  // Greeting prefers a first name, then the email local-part, then a
+  // generic fallback. Keeps the heading short and personal.
+  const greetingName =
+    user?.firstName ?? (email ? email.split("@")[0] : null) ?? "admin";
 
   return (
-    <Card className="gap-0 overflow-hidden py-0">
-      <CardHeader className="border-b border-border bg-muted/40 pb-4 pt-(--gutter)">
-        <div className="flex flex-wrap items-center gap-3">
-          <Badge intent="warning" isCircle={false}>
-            {t("badge")}
-          </Badge>
-          <Text className="text-sm font-medium text-muted-fg">{t("tagline")}</Text>
-        </div>
-        <Heading level={1} className="mt-3 sm:text-2xl/8">
-          {t("heading")}
-        </Heading>
-      </CardHeader>
+    <div className="space-y-6">
+      <Card className="overflow-hidden">
+        <CardContent className="flex items-center gap-4 sm:gap-5">
+          <Avatar
+            src={user?.imageUrl ?? null}
+            initials={initials}
+            alt={fullName ?? email ?? "Admin avatar"}
+          />
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <Heading level={1} className="text-xl/tight font-semibold sm:text-2xl/tight">
+                Welcome back, {greetingName}
+              </Heading>
+              <Badge intent="primary" isCircle={false}>
+                Admin
+              </Badge>
+            </div>
+            {email && (
+              <Text className="mt-1 truncate text-sm text-muted-fg">
+                {email}
+              </Text>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-      <CardContent className="space-y-6 pb-(--gutter) pt-(--gutter)">
-        <div className="rounded-lg border border-dashed border-border bg-muted/60 px-4 py-3">
-          <Text className="text-xs font-semibold tracking-wide uppercase text-muted-fg">
-            {t("sessionLabel")}
-          </Text>
-          <Code className="mt-1 block font-mono text-sm text-fg">{displayName}</Code>
-        </div>
+      <AdminAllowlistCard />
+    </div>
+  );
+}
 
-        <Text className="max-w-prose">{t("blurb")}</Text>
-
-        <Link
-          href="/admin/resources"
-          className="inline-flex rounded-lg border border-primary/30 bg-primary/5 px-4 py-2 text-sm font-medium text-primary hover:bg-primary/15"
-        >
-          Open resource import / queue →
-        </Link>
-
-        <ul className="grid gap-2 text-sm text-muted-fg sm:grid-cols-2">
-          {bullets.map((label) => (
-            <li
-              key={label}
-              className="flex gap-2 rounded-md bg-muted px-3 py-2"
-            >
-              <CheckIcon
-                aria-hidden
-                className="size-4 shrink-0 text-primary-subtle-fg"
-              />
-              {label}
-            </li>
-          ))}
-        </ul>
-      </CardContent>
-    </Card>
+/**
+ * Round, gradient-bordered avatar. Renders Clerk's hosted image when
+ * available; falls back to the user's initials on a soft tinted disc so
+ * the card never has an empty hole.
+ */
+function Avatar({
+  src,
+  initials,
+  alt,
+}: {
+  src: string | null;
+  initials: string;
+  alt: string;
+}) {
+  return (
+    <div className="relative size-14 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-primary/20 to-primary/5 ring-1 ring-border sm:size-16">
+      {src ? (
+        // eslint-disable-next-line @next/next/no-img-element -- Clerk-hosted, dynamic per session
+        <img
+          src={src}
+          alt={alt}
+          className="size-full object-cover"
+        />
+      ) : (
+        <span className="grid size-full place-items-center text-base font-semibold text-fg/80 sm:text-lg">
+          {initials}
+        </span>
+      )}
+    </div>
   );
 }

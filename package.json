@@ -11,7 +11,13 @@
     "seed:companies": "node --env-file=.env.local --import tsx scripts/seed-companies.ts",
     "seed:investors": "node --env-file=.env.local --import tsx scripts/seed-investors.ts",
     "seed:resources": "node --env-file=.env.local --import tsx scripts/seed-resources.ts",
-    "translate:resources": "node --env-file=.env.local --import tsx scripts/translate-resources.ts"
+    "translate:resources": "node --env-file=.env.local --import tsx scripts/translate-resources.ts",
+    "enrich:new-resources": "node --env-file=.env.local --import tsx scripts/enrich-new-resources.ts",
+    "import:content-resources": "node --env-file=.env.local --import tsx scripts/import-content-resources.ts",
+    "enrich:resource-bodies": "node --env-file=.env.local --import tsx scripts/enrich-resource-bodies.ts",
+    "enrich:new-guides": "node --env-file=.env.local --import tsx scripts/enrich-new-guides.ts",
+    "import:content-guides": "node --env-file=.env.local --import tsx scripts/import-content-guides.ts",
+    "import:journey-steps": "node --env-file=.env.local --import tsx scripts/import-journey-steps.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.63",

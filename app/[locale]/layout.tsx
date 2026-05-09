@@ -2,6 +2,7 @@ import { Providers } from "@/components/providers";
 import { PublicSiteShell } from "@/components/public-site-shell";
 import { routing } from "@/i18n/routing";
 import { appTimeZone } from "@/i18n/time-zone";
+import { SITE_NAME, SITE_URL } from "@/lib/seo";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { getMessages, getTranslations, setRequestLocale } from "next-intl/server";
@@ -31,12 +32,53 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "LocaleLayout" });
+  const title = t("title");
+  const description = t("description");
+
+  // Locale-prefixed canonical so /en, /es each have their own canonical
+  // page and the alternates map points crawlers at the other variant.
+  const localePath = locale === routing.defaultLocale ? "" : `/${locale}`;
+  const localeAlternates = Object.fromEntries(
+    routing.locales.map((l) => [
+      l,
+      `${SITE_URL}${l === routing.defaultLocale ? "" : `/${l}`}`,
+    ]),
+  );
 
   return {
-    title: t("title"),
-    description: t("description"),
+    metadataBase: new URL(SITE_URL),
+    title: {
+      default: title,
+      template: `%s · ${SITE_NAME}`,
+    },
+    description,
+    applicationName: SITE_NAME,
+    alternates: {
+      canonical: `${localePath}/`,
+      languages: {
+        ...localeAlternates,
+        "x-default": SITE_URL,
+      },
+    },
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      title,
+      description,
+      url: `${SITE_URL}${localePath}/`,
+      locale,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
     icons: {
       icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    },
+    robots: {
+      index: true,
+      follow: true,
     },
   };
 }
