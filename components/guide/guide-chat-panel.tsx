@@ -1,9 +1,11 @@
 "use client";
 
 import { useChat } from '@ai-sdk/react';
-import { ArrowDownTrayIcon, ArrowUpIcon, ClipboardDocumentIcon, StopIcon } from "@heroicons/react/20/solid";
+import { ArrowDownTrayIcon, ArrowUpIcon, ClipboardDocumentIcon, SparklesIcon, StopIcon } from "@heroicons/react/20/solid";
 import { DefaultChatTransport } from 'ai';
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { AssistantMarkdown } from "@/components/guide/assistant-markdown";
+import { useQuiz } from "@/components/quiz/quiz-provider";
 import { Button } from "@/components/ui/button";
 import { Link as UiLink } from "@/components/ui/link";
 import { Text } from "@/components/ui/text";
@@ -27,6 +29,22 @@ const SUGGESTED_PROMPTS = [
   "How do I connect with Utah angel investors?",
 ];
 
+/**
+ * Render a friendly message for `useChat` errors. The server can return HTML
+ * error pages (e.g. Next.js 404) and we don't want that bleeding into the UI.
+ * If the error message looks like HTML or is suspiciously long, fall back to
+ * a generic line.
+ */
+function friendlyErrorText(error: Error | undefined): string | null {
+  const raw = error?.message;
+  if (!raw) return null;
+  const looksLikeHtml = /<\/?[a-z][\s\S]*?>/i.test(raw);
+  if (looksLikeHtml || raw.length > 200) {
+    return "Couldn't reach the guide. Try again in a moment.";
+  }
+  return raw;
+}
+
 function exportToMarkdown(messages: GuideUIMessage[]): string {
   const date = new Date().toLocaleString();
   const lines: string[] = ["# Utah founder guide chat", "", `Exported ${date}`, ""];
@@ -38,9 +56,7 @@ function exportToMarkdown(messages: GuideUIMessage[]): string {
     if (m.role === "user") {
       lines.push("## You", "", text, "");
     } else if (m.role === "assistant") {
-      const sources = m.parts
-        .filter((p): p is { type: 'data-source'; id: string; data: GuideContextItem } => p.type === 'data-source')
-        .map((p) => p.data);
+      const sources = m.metadata?.sources ?? [];
       lines.push("## Guide", "", text, "");
       if (sources.length > 0) {
         lines.push("**Sources used**", "");
@@ -68,6 +84,7 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
   const { messages, sendMessage, status, stop, error } = useChat<GuideUIMessage>({
     transport: new DefaultChatTransport({ api: '/api/chat' }),
   });
+  const { pendingPrompt, setPendingPrompt } = useQuiz();
 
   const [input, setInput] = useState(initialQuery);
   const isStreaming = status === 'submitted' || status === 'streaming';
@@ -78,6 +95,23 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
     if (!node) return;
     node.scrollTop = node.scrollHeight;
   }, [messages]);
+
+  // Auto-send a kickstart prompt set by the questionnaire's "Start chatting"
+  // action, but only into an empty thread. If the user already has messages,
+  // discard the queued prompt so we don't disrupt an in-progress conversation.
+  useEffect(() => {
+    if (!pendingPrompt || isStreaming) return;
+    if (messages.length > 0) {
+      setPendingPrompt(null);
+      return;
+    }
+    const text = pendingPrompt;
+    setPendingPrompt(null);
+    sendMessage(
+      { text },
+      { body: { founderProfile: loadQuizAnswers() ?? undefined } },
+    );
+  }, [pendingPrompt, messages.length, isStreaming, sendMessage, setPendingPrompt]);
 
   const onSend = (overrideText?: string) => {
     if (isStreaming) return;
@@ -95,7 +129,7 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
     downloadMarkdown(`utah-founder-guide-chat-${stamp}.md`, exportToMarkdown(messages));
   };
 
-  const errorText = error?.message ?? null;
+  const errorText = friendlyErrorText(error);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -189,21 +223,56 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
   );
 }
 
+/** No-op subscribe — getSnapshot is re-evaluated on each render, which is
+ *  enough for our needs since EmptyState re-renders when the questionnaire
+ *  modal opens/closes (it consumes that state via useQuiz). */
+const NOOP_SUBSCRIBE = () => () => {};
+
 function EmptyState({ onChipClick }: { onChipClick: (prompt: string) => void }) {
+  const quiz = useQuiz();
+  // `loadQuizAnswers` reads localStorage, which only exists on the client.
+  // useSyncExternalStore lets us return `false` on the server (matching what
+  // SSR will paint) and the real value on the client without triggering a
+  // hydration mismatch.
+  const hasProfile = useSyncExternalStore(
+    NOOP_SUBSCRIBE,
+    () => loadQuizAnswers() !== null,
+    () => false,
+  );
+
   return (
-    <div className="flex h-full flex-col justify-end gap-3 pb-2 pt-6">
-      <p className="text-center text-xs text-muted-fg">Try a question to get started</p>
-      <div className="flex flex-col gap-1.5">
-        {SUGGESTED_PROMPTS.map((prompt) => (
-          <button
-            key={prompt}
-            type="button"
-            onClick={() => onChipClick(prompt)}
-            className="rounded-lg border border-border bg-muted/20 px-3 py-2.5 text-left text-xs text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+    <div className="flex h-full flex-col gap-4 pb-2 pt-6">
+      {!hasProfile ? (
+        <div className="rounded-xl border border-border bg-muted/20 px-3.5 py-3">
+          <p className="text-xs font-medium text-fg">Tailor responses to what you’re looking for</p>
+          <p className="mt-0.5 text-xs text-muted-fg">
+            Take our short questionnaire so the guide can weight recommendations to your stage, industry, and goals.
+          </p>
+          <Button
+            intent="primary"
+            size="xs"
+            onPress={quiz.open}
+            className="mt-2.5"
           >
-            {prompt}
-          </button>
-        ))}
+            <SparklesIcon />
+            Take questionnaire
+          </Button>
+        </div>
+      ) : null}
+      <div className="mt-auto flex flex-col gap-3">
+        <p className="text-center text-xs text-muted-fg">Try a question to get started</p>
+        <div className="flex flex-col gap-1.5">
+          {SUGGESTED_PROMPTS.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              onClick={() => onChipClick(prompt)}
+              className="rounded-lg border border-border bg-muted/20 px-3 py-2.5 text-left text-xs text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -233,9 +302,7 @@ function ChatBubble({
     .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
     .map((p) => p.text)
     .join('');
-  const sources = message.parts.filter(
-    (p): p is { type: 'data-source'; id: string; data: GuideContextItem } => p.type === 'data-source',
-  );
+  const sources = message.metadata?.sources ?? [];
   const text = useSmoothText(rawText);
 
   const showThinking = !isUser && streaming && rawText.length === 0;
@@ -252,10 +319,14 @@ function ChatBubble({
       </p>
       {showThinking ? (
         <ThinkingDots />
+      ) : isUser ? (
+        <p className="whitespace-pre-wrap text-sm leading-relaxed">{rawText}</p>
       ) : (
-        <p className="whitespace-pre-wrap text-sm leading-relaxed">{isUser ? rawText : text}</p>
+        <AssistantMarkdown text={text} sources={sources} />
       )}
-      {!isUser && sources.length > 0 ? <ContextDisclosure items={sources.map((s) => s.data)} /> : null}
+      {!isUser && !streaming && sources.length > 0 ? (
+        <ContextDisclosure items={sources} />
+      ) : null}
       {isCompleted ? (
         <div className="mt-2 flex items-center gap-0.5">
           <Tooltip>

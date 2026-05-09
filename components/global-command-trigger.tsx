@@ -138,7 +138,7 @@ function GlobalCommandMenu({
           label="Go to"
           items={[
             { id: "res", title: "Resource library", href: "/resources" },
-            { id: "quiz", title: "Founder quiz", href: "/quiz" },
+            { id: "quiz", title: "Founder questionnaire", href: "/quiz" },
             { id: "guide", title: "AI guide", href: "/guide" },
             { id: "sub", title: "Submit a resource", href: "/resources/submit" },
           ]}

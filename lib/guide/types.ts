@@ -4,10 +4,13 @@ import type { GuideContextItem } from '@/convex/guide';
 export type { GuideContextItem };
 
 /**
- * UIMessage variant our route emits. The server writes one `data-source`
- * part per retrieved resource before the model's text deltas.
+ * UIMessage variant our route emits. Sources are attached at message-level
+ * via `metadata` (not as data parts) so they live on the same bubble as the
+ * model's text — ai-sdk would otherwise create a separate empty assistant
+ * message for any data parts written before the model's first text delta.
  */
-export type GuideUIMessage = UIMessage<
-  never, // metadata
-  { source: GuideContextItem } // data parts: { 'data-source': GuideContextItem }
->;
+export type GuideUIMessageMetadata = {
+  sources?: GuideContextItem[];
+};
+
+export type GuideUIMessage = UIMessage<GuideUIMessageMetadata>;

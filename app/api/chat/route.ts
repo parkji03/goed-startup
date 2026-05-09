@@ -2,8 +2,6 @@ import { ConvexHttpClient } from 'convex/browser';
 import { createOpenRouter } from '@openrouter/ai-sdk-provider';
 import {
   convertToModelMessages,
-  createUIMessageStream,
-  createUIMessageStreamResponse,
   streamText,
   type UIMessage,
 } from 'ai';
@@ -16,7 +14,7 @@ import {
 } from '@/lib/guide/abuse-guards';
 import { logHallucinatedSlugs } from '@/lib/guide/output-validator';
 import { buildSystemPrompt } from '@/lib/guide/system-prompt';
-import type { GuideContextItem, GuideUIMessage } from '@/lib/guide/types';
+import type { GuideContextItem } from '@/lib/guide/types';
 import {
   clampFounderProfileForConvex,
   emptyFounderProfile,
@@ -128,43 +126,42 @@ export async function POST(req: Request): Promise<Response> {
       : recent;
   const modelMessages = await convertToModelMessages(cappedMessages);
 
-  const stream = createUIMessageStream<GuideUIMessage>({
-    execute: ({ writer }) => {
-      // Emit sources first so the client renders them as soon as the bubble appears.
-      for (const c of retrieval.context) {
-        writer.write({ type: 'data-source', id: c.slug, data: c });
-      }
-
-      const startedAt = Date.now();
-      const result = streamText({
-        model: openrouter.chat(MODEL_ID),
-        system,
-        messages: modelMessages,
-        maxOutputTokens: MAX_OUTPUT_TOKENS,
-        temperature: TEMPERATURE,
-        abortSignal: req.signal,
-        onFinish: (event) => {
-          logHallucinatedSlugs({
-            modelText: event.text,
-            contextSlugs: retrieval.context.map((c) => c.slug),
-            hashedIp,
-          });
-          // Per-request audit line - spec section 7-C, hackathon-grade observability.
-          console.log('[guide] turn', {
-            ip: hashedIp,
-            inputChars: query.length,
-            hits: retrieval.context.length,
-            model: MODEL_ID,
-            promptTokens: event.totalUsage?.inputTokens,
-            completionTokens: event.totalUsage?.outputTokens,
-            latencyMs: Date.now() - startedAt,
-          });
-        },
+  const startedAt = Date.now();
+  const result = streamText({
+    model: openrouter.chat(MODEL_ID),
+    system,
+    messages: modelMessages,
+    maxOutputTokens: MAX_OUTPUT_TOKENS,
+    temperature: TEMPERATURE,
+    abortSignal: req.signal,
+    onFinish: (event) => {
+      logHallucinatedSlugs({
+        modelText: event.text,
+        contextSlugs: retrieval.context.map((c) => c.slug),
+        hashedIp,
       });
-
-      writer.merge(result.toUIMessageStream());
+      // Per-request audit line - spec section 7-C, hackathon-grade observability.
+      console.log('[guide] turn', {
+        ip: hashedIp,
+        inputChars: query.length,
+        hits: retrieval.context.length,
+        model: MODEL_ID,
+        promptTokens: event.totalUsage?.inputTokens,
+        completionTokens: event.totalUsage?.outputTokens,
+        latencyMs: Date.now() - startedAt,
+      });
     },
   });
 
-  return createUIMessageStreamResponse({ stream });
+  // Attach sources via message metadata at the start event so they live on
+  // the same assistant bubble as the streamed text. Data parts written before
+  // the merged stream would otherwise create a separate empty message.
+  return result.toUIMessageStreamResponse({
+    messageMetadata: ({ part }) => {
+      if (part.type === 'start') {
+        return { sources: retrieval.context };
+      }
+      return undefined;
+    },
+  });
 }

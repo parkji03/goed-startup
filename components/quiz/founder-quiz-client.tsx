@@ -1,21 +1,24 @@
 "use client";
 
+import { SparklesIcon } from "@heroicons/react/20/solid";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "convex/react";
 import { useEffect, useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
-import { api } from "@/convex/_generated/api";
 import { emptyFounderProfile } from "@/convex/founderProfile";
 import { coalesceQuizForm, founderQuizSchema } from "@/lib/forms/founder-quiz-schema";
 import type { QuizAnswers } from "@/lib/founder-quiz";
 import { loadQuizAnswers, saveQuizAnswers } from "@/lib/founder-quiz";
 
+import { useQuiz } from "@/components/quiz/quiz-provider";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import { useSidebar } from "@/components/ui/sidebar";
 import { Text } from "@/components/ui/text";
-import { Link, useRouter } from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
+
+const KICKSTART_PROMPT = "What are some resources you'd recommend for me?";
 
 type FounderQuizClientProps = {
   /** Called on skip or when finished — closes modal instead of navigating. */
@@ -65,6 +68,9 @@ const AUDIENCE_SAMPLE = [
   "None of these",
 ] as const;
 
+const TOTAL_STEPS = 7;
+const COMPLETION_STEP = 6;
+
 function toggle(arr: string[], value: string) {
   const set = new Set(arr);
   if (set.has(value)) set.delete(value);
@@ -74,6 +80,8 @@ function toggle(arr: string[], value: string) {
 
 export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
   const router = useRouter();
+  const sidebar = useSidebar();
+  const { setPendingPrompt } = useQuiz();
   const [step, setStep] = useState(0);
 
   const form = useForm<QuizAnswers>({
@@ -91,16 +99,16 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
   const rawWatch = useWatch({ control });
   const profile = coalesceQuizForm(rawWatch ?? undefined);
 
-  const recos = useQuery(
-    api.resources.recommendForProfile,
-    step >= 6 ? { founderProfile: profile, limit: 24 } : "skip",
-  );
-
-  useEffect(() => {
-    if (step >= 6) {
-      saveQuizAnswers(profile);
-    }
-  }, [step, profile]);
+  const close = () => (onComplete ? onComplete() : router.push("/resources"));
+  const finish = () => {
+    saveQuizAnswers(profile);
+    setStep(COMPLETION_STEP);
+  };
+  const startChatting = () => {
+    setPendingPrompt(KICKSTART_PROMPT);
+    sidebar.setOpen(true);
+    close();
+  };
 
   const pills = (
     items: readonly string[],
@@ -183,92 +191,82 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
             ) : null}
           </div>
         );
-      case 6:
-        return (
-          <div className="space-y-4">
-            <Text className="text-muted-fg">
-              Personalized recommendations grounded in Convex + your taxonomy answers.
-            </Text>
-            {recos === undefined ? (
-              <Text>Computing matches…</Text>
-            ) : (
-              <>
-                <RecoBlock title="Start here" rows={recos.startHere} />
-                <RecoBlock title="Useful next" rows={recos.next} />
-                <RecoBlock title="Explore deeper" rows={recos.explore} />
-              </>
-            )}
-            <Text className="text-muted-fg text-xs">
-              Profile saved locally — the AI guide in the sidebar will use your answers.
-            </Text>
-          </div>
-        );
+      case COMPLETION_STEP:
+        return <CompletionScreen onStartChatting={startChatting} />;
       default:
         return null;
     }
   }
 
+  const isCompletion = step === COMPLETION_STEP;
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-10">
       <Heading level={1} className="text-3xl tracking-tight">
-        Founder intake
+        {isCompletion ? "You’re set" : "Founder questionnaire"}
       </Heading>
-      <Text className="mt-3 text-muted-fg">
-        Short quiz → deterministic matches. Skippable — power users can ⌘K search instantly.
-      </Text>
-      <div className="mt-10 space-y-6">
-        <Text className="text-muted-fg text-xs font-semibold uppercase tracking-wide">
-          Step {step + 1} / 7
+      {!isCompletion ? (
+        <Text className="mt-3 text-muted-fg">
+          A few quick questions so the AI guide can tailor recommendations to your situation. Skippable any time.
         </Text>
+      ) : null}
+      <div className="mt-10 space-y-6">
+        {!isCompletion ? (
+          <Text className="text-muted-fg text-xs font-semibold uppercase tracking-wide">
+            Step {step + 1} / {TOTAL_STEPS}
+          </Text>
+        ) : null}
         {renderBody()}
       </div>
-      <div className="mt-8 flex flex-wrap gap-3">
-        {step > 0 && step <= 6 ? (
-          <Button intent="outline" size="sm" onPress={() => setStep((s) => Math.max(0, s - 1))}>
-            Back
+      {!isCompletion ? (
+        <div className="mt-8 flex flex-wrap gap-3">
+          {step > 0 ? (
+            <Button intent="outline" size="sm" onPress={() => setStep((s) => Math.max(0, s - 1))}>
+              Back
+            </Button>
+          ) : null}
+          {step < 5 ? (
+            <Button intent="primary" size="sm" onPress={() => setStep((s) => s + 1)}>
+              Continue
+            </Button>
+          ) : null}
+          {step === 5 ? (
+            <Button intent="primary" size="sm" onPress={finish}>
+              Finish
+            </Button>
+          ) : null}
+          <Button intent="outline" size="sm" className="ms-auto" onPress={close}>
+            {onComplete ? "Close" : "Skip questionnaire"}
           </Button>
-        ) : null}
-        {step < 5 ? (
-          <Button intent="primary" size="sm" onPress={() => setStep((s) => s + 1)}>
-            Continue
-          </Button>
-        ) : null}
-        {step === 5 ? (
-          <Button intent="primary" size="sm" onPress={() => setStep(6)}>
-            See recommendations
-          </Button>
-        ) : null}
-        <Button intent="outline" size="sm" className="ms-auto" onPress={() => onComplete ? onComplete() : router.push("/resources")}>
-          {onComplete ? "Close" : "Skip quiz"}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function CompletionScreen({ onStartChatting }: { onStartChatting: () => void }) {
+  return (
+    <div className="space-y-5">
+      <div className="flex items-center gap-3">
+        <span className="grid size-10 place-items-center rounded-full bg-primary/10 text-primary">
+          <SparklesIcon className="size-5" />
+        </span>
+        <Heading level={2} className="text-xl">
+          AI guide is now personalized
+        </Heading>
+      </div>
+      <Text className="text-muted-fg">
+        Your answers are saved on this device. The AI guide will weight its
+        recommendations toward your industry, stage, location, and goals — and
+        can still answer anything about Utah’s startup ecosystem.
+      </Text>
+      <div className="pt-2">
+        <Button intent="primary" size="md" onPress={onStartChatting}>
+          <SparklesIcon />
+          Start chatting
         </Button>
       </div>
     </div>
   );
 }
 
-function RecoBlock({
-  title,
-  rows,
-}: {
-  title: string;
-  rows: Array<{ title: string; slug: string; reason?: string }>;
-}) {
-  if (!rows?.length) return null;
-  return (
-    <div>
-      <Heading level={3} className="text-lg">
-        {title}
-      </Heading>
-      <ul className="mt-3 list-disc space-y-2 ps-6">
-        {rows.map((r) => (
-          <li key={r.slug}>
-            <Link href={`/resources/${r.slug}`} className="font-medium text-primary underline">
-              {r.title}
-            </Link>
-            {r.reason ? <Text className="text-muted-fg mt-1 block text-xs">{r.reason}</Text> : null}
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-}

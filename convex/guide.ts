@@ -9,6 +9,7 @@ import {
 } from './founderProfile';
 import {
   expandQuery,
+  filterByProfileSignal,
   rankWithProfile,
   synthesizeQueryFromProfile,
   validateRetrievalInput,
@@ -120,6 +121,7 @@ export const retrieve = action({
     }
 
     const ranked = rankWithProfile(merged, profile);
-    return { context: ranked.slice(0, TOP_K) };
+    const filtered = filterByProfileSignal(ranked, profile);
+    return { context: filtered.slice(0, TOP_K) };
   },
 });

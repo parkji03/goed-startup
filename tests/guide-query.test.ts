@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   expandQuery,
+  filterByProfileSignal,
   rankWithProfile,
   synthesizeQueryFromProfile,
   validateRetrievalInput,
@@ -51,35 +52,19 @@ describe('expandQuery', () => {
     expect(expandQuery('Pre-Seed FUNDING!?', emptyProfile)).toBe('pre-seed funding');
   });
 
-  it('appends profile-derived terms when query is short', () => {
+  it('collapses runs of whitespace', () => {
+    expect(expandQuery('  hello   world  ', emptyProfile)).toBe('hello world');
+  });
+
+  it('does not inject profile terms (profile influence lives in rank/filter, not retrieval)', () => {
     const profile: FounderProfileConvex = {
       ...emptyProfile,
       industries: ['agtech'],
       stages: ['pre-seed'],
       counties: ['davis'],
-    };
-    const expanded = expandQuery('funding', profile);
-    expect(expanded).toContain('funding');
-    expect(expanded).toContain('agtech');
-    expect(expanded).toContain('pre-seed');
-    expect(expanded).toContain('davis');
-  });
-
-  it('appends audiences as profile-derived terms', () => {
-    const profile: FounderProfileConvex = {
-      ...emptyProfile,
       audiences: ['rural'],
     };
-    const expanded = expandQuery('funding', profile);
-    expect(expanded).toContain('funding');
-    expect(expanded).toContain('rural');
-  });
-
-  it('does not duplicate terms already in the query', () => {
-    const profile: FounderProfileConvex = { ...emptyProfile, industries: ['agtech'] };
-    const expanded = expandQuery('agtech funding', profile);
-    const occurrences = expanded.split('agtech').length - 1;
-    expect(occurrences).toBe(1);
+    expect(expandQuery('funding', profile)).toBe('funding');
   });
 });
 
@@ -135,5 +120,52 @@ describe('rankWithProfile', () => {
     const b = { ...baseHit, slug: 'b' };
     const ranked = rankWithProfile([a, b], emptyProfile);
     expect(ranked.map((r) => r.slug)).toEqual(['a', 'b']);
+  });
+});
+
+describe('filterByProfileSignal', () => {
+  const baseHit = {
+    resourceId: 'r1' as never,
+    title: 'X',
+    slug: 'x',
+    url: 'https://x',
+    description: '',
+    category: 'capital-funding' as const,
+    tags: ['pre-seed'],
+    industries: ['agtech'],
+    communities: [],
+    locations: ['davis'],
+    stageTags: ['pre-seed'],
+  };
+
+  it('keeps every hit when the profile is empty (no scoring signal)', () => {
+    const hits = [
+      { ...baseHit, slug: 'a' },
+      { ...baseHit, slug: 'b', industries: ['fintech'] },
+      { ...baseHit, slug: 'c', industries: ['bio'] },
+    ];
+    expect(filterByProfileSignal(hits, emptyProfile).map((h) => h.slug)).toEqual(['a', 'b', 'c']);
+  });
+
+  it('drops zero-score hits when at least one hit matches the profile', () => {
+    const profile: FounderProfileConvex = {
+      ...emptyProfile,
+      industries: ['agtech'],
+    };
+    const matching = { ...baseHit, slug: 'a' };
+    const nonMatching = { ...baseHit, slug: 'b', industries: ['fintech'] };
+    const filtered = filterByProfileSignal([matching, nonMatching], profile);
+    expect(filtered.map((h) => h.slug)).toEqual(['a']);
+  });
+
+  it('falls back to all hits when none match the profile', () => {
+    const profile: FounderProfileConvex = {
+      ...emptyProfile,
+      industries: ['bio'],
+    };
+    const a = { ...baseHit, slug: 'a' };
+    const b = { ...baseHit, slug: 'b' };
+    const filtered = filterByProfileSignal([a, b], profile);
+    expect(filtered.map((h) => h.slug)).toEqual(['a', 'b']);
   });
 });

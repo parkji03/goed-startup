@@ -15,15 +15,20 @@ export function validateRetrievalInput(raw: string): ValidatedQuery {
   return { ok: true, query: stripped.trim() };
 }
 
-/** Lowercase, strip punctuation, append a few profile-derived terms when missing. */
-export function expandQuery(query: string, profile: FounderProfileConvex): string {
-  const base = query.toLowerCase().replace(/[^\w\s-]/g, ' ').replace(/\s+/g, ' ').trim();
-  const adds: string[] = [];
-  for (const i of profile.industries) if (!base.includes(i.toLowerCase())) adds.push(i.toLowerCase());
-  for (const s of profile.stages) if (!base.includes(s.toLowerCase())) adds.push(s.toLowerCase());
-  for (const c of profile.counties) if (!base.includes(c.toLowerCase())) adds.push(c.toLowerCase());
-  for (const a of profile.audiences) if (!base.includes(a.toLowerCase())) adds.push(a.toLowerCase());
-  return adds.length ? `${base} ${adds.join(' ')}` : base;
+/**
+ * Normalize the user's typed query for full-text search: lowercase, strip
+ * punctuation, collapse whitespace.
+ *
+ * Earlier versions also injected profile-derived terms (industries, stages,
+ * counties, audiences) into the query string. That made lexical retrieval
+ * already profile-biased, which made the downstream `rankWithProfile` +
+ * `filterByProfileSignal` steps redundant — every retrieved hit "matched"
+ * the profile because we'd asked the index for profile-matching hits in the
+ * first place. Profile influence now lives entirely in the rank/filter
+ * layer, where it can actually create variance in the result set.
+ */
+export function expandQuery(query: string, _profile: FounderProfileConvex): string {
+  return query.toLowerCase().replace(/[^\w\s-]/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 /** Build a query string from profile alone — used as fallback when input is empty/weak. */
@@ -42,4 +47,26 @@ export function rankWithProfile<T extends RankableHit>(hits: T[], profile: Found
     .map((hit, index) => ({ hit, index, score: scoreResourceForProfile(hit, profile) }))
     .sort((a, b) => b.score - a.score || a.index - b.index)
     .map((entry) => entry.hit);
+}
+
+/**
+ * Drop padding when there's a real personalization signal.
+ *
+ * If at least one hit has a profile-match score > 0, we keep only those —
+ * the zero-score stragglers were pulled in by lexical relevance alone and
+ * tend to feel like padding once the user has a meaningful profile match.
+ *
+ * If no hit has any profile signal (e.g., the founder hasn't filled out the
+ * quiz, or none of their profile fields overlap), we keep everything and
+ * fall back to pure lexical ordering — the alternative is showing zero
+ * results, which is worse.
+ */
+export function filterByProfileSignal<T extends RankableHit>(
+  hits: T[],
+  profile: FounderProfileConvex,
+): T[] {
+  const scored = hits.map((hit) => ({ hit, score: scoreResourceForProfile(hit, profile) }));
+  const hasSignal = scored.some((s) => s.score > 0);
+  if (!hasSignal) return hits;
+  return scored.filter((s) => s.score > 0).map((s) => s.hit);
 }

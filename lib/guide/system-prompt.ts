@@ -27,7 +27,9 @@ Never browse the internet, run code, or claim capabilities beyond answering from
 const CITATION_BLOCK = `Every substantive answer must end with a "Resources" section listing the relevant items from the context, formatted as:
 
   Resources:
-  • <Title> — /resources/<slug>
+  - [<Title>](/resources/<slug>)
+
+Use markdown link syntax exactly as shown — square brackets around the title, the path in parentheses with no extra characters. The renderer turns these into clickable links; raw paths without the [Title](/path) syntax will not be clickable.
 
 Only cite resources from the context block. If none of them fit the question, say so plainly and suggest browsing the resource library or trying a different angle. Do not pad the list with marginally relevant resources.`;
 
@@ -41,7 +43,7 @@ function buildPersonalizationBlock(profile: FounderProfileConvex): string | null
   if (profile.audiences.length) bullets.push(`• Communities: ${profile.audiences.join(', ')}`);
   if (profile.counties.length) bullets.push(`• Counties: ${profile.counties.join(', ')}`);
   if (!bullets.length) return null;
-  return `About the founder you're talking with (from their quiz):
+  return `About the founder you're talking with (from their questionnaire):
 ${bullets.join('\n')}
 
 Weight your suggestions toward this profile, but don't restate it back at them. They already know who they are.`;

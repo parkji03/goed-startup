@@ -5,7 +5,7 @@ import { useQuery } from "convex/react";
 import { useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { api } from "@/convex/_generated/api";
-import { FounderQuizClient } from "@/components/quiz/founder-quiz-client";
+import { useQuiz } from "@/components/quiz/quiz-provider";
 import { ResourceCard } from "@/components/resources/resource-card";
 import { ResourceRow } from "@/components/resources/resource-row";
 import { ResourceSubmitForm } from "@/components/resources/resource-submit-form";
@@ -43,9 +43,9 @@ function scrollToCategory(key: ResourceCategoryKey) {
 
 export function ResourcesBrowseClient() {
   const grouped = useQuery(api.resources.listGroupedByCategory, { limitPerCategory: 50 });
-  const [quizOpen, setQuizOpen] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
+  const quiz = useQuiz();
 
   const searchParams = useSearchParams();
   const filtersKey = searchParams.toString();
@@ -94,11 +94,11 @@ export function ResourcesBrowseClient() {
           <Card className="bg-overlay">
             <CardHeader
               title="Not sure where to start?"
-              description="Take the founder quiz to tune recommendations."
+              description="Take the founder questionnaire to tune recommendations."
             />
             <CardFooter>
-              <Button intent="primary" size="sm" onPress={() => setQuizOpen(true)}>
-                Start quiz
+              <Button intent="primary" size="sm" onPress={quiz.open}>
+                Start questionnaire
               </Button>
             </CardFooter>
           </Card>
@@ -125,20 +125,6 @@ export function ResourcesBrowseClient() {
             </CardFooter>
           </Card>
         </div>
-
-        <ModalContent
-          isOpen={quizOpen}
-          onOpenChange={setQuizOpen}
-          size="2xl"
-          aria-label="Founder quiz"
-        >
-          <ModalHeader>
-            <ModalTitle>Founder quiz</ModalTitle>
-          </ModalHeader>
-          <ModalBody className="pb-6">
-            <FounderQuizClient onComplete={() => setQuizOpen(false)} />
-          </ModalBody>
-        </ModalContent>
 
         <ModalContent
           isOpen={submitOpen}
