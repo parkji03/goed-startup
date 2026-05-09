@@ -9,7 +9,7 @@
  */
 
 const ENDPOINT = "https://newsdata.io/api/1/latest";
-const QUERY = 'Utah AND (startup OR "funding round" OR "venture capital" OR investor)';
+const QUERY = 'Utah AND (startup OR "funding round" OR "venture capital" OR investor OR "silicon slopes")';
 const DEDUPE_JACCARD_THRESHOLD = 0.6;
 
 export type NewsArticle = {
