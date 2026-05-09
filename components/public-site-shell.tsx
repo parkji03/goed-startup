@@ -41,6 +41,7 @@ type Props = {
 
 const navItems = [
   { href: "/" as const, label: "Resources" },
+  { href: "/news" as const, label: "News" },
 ];
 
 const mapMenuItems = [
