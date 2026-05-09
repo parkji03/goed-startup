@@ -59,7 +59,11 @@ export async function POST(req: Request): Promise<Response> {
   }
   const { hashedIp } = limit;
 
-  let payload: { messages: UIMessage[]; founderProfile?: FounderProfileConvex };
+  let payload: {
+    messages: UIMessage[];
+    founderProfile?: FounderProfileConvex;
+    locale?: 'en' | 'es';
+  };
   try {
     payload = await req.json();
   } catch {
@@ -67,6 +71,7 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const { messages = [], founderProfile } = payload;
+  const locale: 'en' | 'es' = payload.locale === 'es' ? 'es' : 'en';
 
   if (exceedsPerMessageCap(messages, MAX_INPUT_CHARS)) {
     return Response.json(
@@ -93,7 +98,7 @@ export async function POST(req: Request): Promise<Response> {
   const convex = new ConvexHttpClient(convexUrl);
   let retrieval: { context: GuideContextItem[] };
   try {
-    retrieval = await convex.action(api.guide.retrieve, { query, founderProfile });
+    retrieval = await convex.action(api.guide.retrieve, { query, founderProfile, locale });
   } catch (err) {
     console.error('[guide] retrieve failed', { ip: hashedIp, err: err instanceof Error ? err.message : String(err) });
     return Response.json({ error: 'Resource lookup failed. Please try again.' }, { status: 502 });
@@ -115,7 +120,7 @@ export async function POST(req: Request): Promise<Response> {
     founderProfile ?? emptyFounderProfile(),
   );
 
-  const system = buildSystemPrompt({ context: retrieval.context, profile, locale: 'en' });
+  const system = buildSystemPrompt({ context: retrieval.context, profile, locale });
 
   // Cap history sent to the model. Preserve the first user message for opening context per spec §6.
   const recent = messages.slice(-HISTORY_TURN_CAP * 2);

@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "convex/react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -24,6 +25,9 @@ import {
 import { RESOURCE_CATEGORIES } from "@/lib/resources/categories";
 
 export function ResourceSubmitForm() {
+  const t = useTranslations("Resources.submitForm");
+  const tFields = useTranslations("Resources.submitForm.fields");
+  const tCat = useTranslations("Taxonomy.resourceCategories");
   const submit = useMutation(api.resourceSubmissions.submit);
   const [done, setDone] = useState(false);
   const [submitError, setSubmitError] = useState<string>("");
@@ -78,23 +82,23 @@ export function ResourceSubmitForm() {
   return (
     <div className="mx-auto max-w-xl px-4 py-10">
       <Heading level={1} className="text-3xl tracking-tight">
-        Submit a resource
+        {t("heading")}
       </Heading>
       <Text className="mt-3 text-muted-fg">
-        Community partners can suggest programs. Admins review before anything goes live.
+        {t("intro")}
       </Text>
       {submitError ? (
         <Text className="text-danger-subtle-fg mt-6 text-sm">{submitError}</Text>
       ) : null}
       {done ? (
         <Text className="mt-8 rounded-lg border border-border bg-muted/40 p-4 text-sm">
-          Thanks! Your submission is pending review.
+          {t("thanks")}
         </Text>
       ) : (
         <form className="mt-8 space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <div>
             <label htmlFor="title" className="font-medium text-fg text-sm">
-              Title *
+              {tFields("title")}
             </label>
             <Controller
               name="title"
@@ -107,7 +111,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="description" className="font-medium text-fg text-sm">
-              Description *
+              {tFields("description")}
             </label>
             <Controller
               name="description"
@@ -126,7 +130,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="url" className="font-medium text-fg text-sm">
-              URL *
+              {tFields("url")}
             </label>
             <Controller
               name="url"
@@ -139,7 +143,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="submitterName" className="font-medium text-fg text-sm">
-              Your name *
+              {tFields("submitterName")}
             </label>
             <Controller
               name="submitterName"
@@ -152,7 +156,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="submitterEmail" className="font-medium text-fg text-sm">
-              Email *
+              {tFields("submitterEmail")}
             </label>
             <Controller
               name="submitterEmail"
@@ -167,7 +171,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="organization" className="font-medium text-fg text-sm">
-              Organization
+              {tFields("organization")}
             </label>
             <Controller
               name="organization"
@@ -180,7 +184,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="category" className="font-medium text-fg text-sm">
-              Category *
+              {tFields("category")}
             </label>
             <Controller
               name="category"
@@ -188,17 +192,20 @@ export function ResourceSubmitForm() {
               render={({ field }) => (
                 <Select
                   className="mt-1"
-                  placeholder="Pick a category"
+                  placeholder={tFields("categoryPlaceholder")}
                   selectedKey={field.value ?? null}
                   onSelectionChange={(key) => field.onChange(key)}
                 >
                   <SelectTrigger />
                   <SelectContent items={RESOURCE_CATEGORIES}>
-                    {(c) => (
-                      <SelectItem id={c.key} textValue={c.label}>
-                        {c.label}
-                      </SelectItem>
-                    )}
+                    {(c) => {
+                      const label = tCat(`${c.key}.label`);
+                      return (
+                        <SelectItem id={c.key} textValue={label}>
+                          {label}
+                        </SelectItem>
+                      );
+                    }}
                   </SelectContent>
                 </Select>
               )}
@@ -209,7 +216,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="tags" className="font-medium text-fg text-sm">
-              Suggested tags
+              {tFields("tags")}
             </label>
             <Controller
               name="tags"
@@ -219,7 +226,7 @@ export function ResourceSubmitForm() {
                   {...field}
                   id="tags"
                   className="mt-1"
-                  placeholder="AI, women-led, climate (comma-separated)"
+                  placeholder={tFields("tagsPlaceholder")}
                 />
               )}
             />
@@ -229,7 +236,7 @@ export function ResourceSubmitForm() {
           </div>
           <div>
             <label htmlFor="notes" className="font-medium text-fg text-sm">
-              Notes to reviewers
+              {tFields("notes")}
             </label>
             <Controller
               name="notes"
@@ -247,7 +254,7 @@ export function ResourceSubmitForm() {
             ) : null}
           </div>
           <Button type="submit" intent="primary" isDisabled={busy}>
-            {busy ? "Submitting…" : "Submit for review"}
+            {busy ? t("submitting") : t("submit")}
           </Button>
         </form>
       )}

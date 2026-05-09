@@ -3,6 +3,7 @@
 import { useChat } from '@ai-sdk/react';
 import { ArrowDownTrayIcon, ArrowUpIcon, ClipboardDocumentIcon, SparklesIcon, StopIcon } from "@heroicons/react/20/solid";
 import { DefaultChatTransport } from 'ai';
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { AssistantMarkdown } from "@/components/guide/assistant-markdown";
 import { useQuiz } from "@/components/quiz/quiz-provider";
@@ -22,12 +23,15 @@ type Props = {
   onCollapse?: () => void;
 };
 
-const SUGGESTED_PROMPTS = [
-  "What funding is available for early-stage founders?",
-  "Find accelerators and incubators in Utah",
-  "Programs for rural or underrepresented founders",
-  "How do I connect with Utah angel investors?",
-];
+const SUGGESTED_PROMPT_KEYS = ["funding", "accelerators", "underrepresented", "angels"] as const;
+
+type ExportLabels = {
+  title: string;
+  exportedAt: (date: string) => string;
+  you: string;
+  guide: string;
+  sourcesUsed: string;
+};
 
 /**
  * Render a friendly message for `useChat` errors. The server can return HTML
@@ -35,31 +39,31 @@ const SUGGESTED_PROMPTS = [
  * If the error message looks like HTML or is suspiciously long, fall back to
  * a generic line.
  */
-function friendlyErrorText(error: Error | undefined): string | null {
+function friendlyErrorText(error: Error | undefined, fallback: string): string | null {
   const raw = error?.message;
   if (!raw) return null;
   const looksLikeHtml = /<\/?[a-z][\s\S]*?>/i.test(raw);
   if (looksLikeHtml || raw.length > 200) {
-    return "Couldn't reach the guide. Try again in a moment.";
+    return fallback;
   }
   return raw;
 }
 
-function exportToMarkdown(messages: GuideUIMessage[]): string {
+function exportToMarkdown(messages: GuideUIMessage[], labels: ExportLabels): string {
   const date = new Date().toLocaleString();
-  const lines: string[] = ["# Utah founder guide chat", "", `Exported ${date}`, ""];
+  const lines: string[] = [`# ${labels.title}`, "", labels.exportedAt(date), ""];
   for (const m of messages) {
     const text = m.parts
       .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
       .map((p) => p.text)
       .join('');
     if (m.role === "user") {
-      lines.push("## You", "", text, "");
+      lines.push(`## ${labels.you}`, "", text, "");
     } else if (m.role === "assistant") {
       const sources = m.metadata?.sources ?? [];
-      lines.push("## Guide", "", text, "");
+      lines.push(`## ${labels.guide}`, "", text, "");
       if (sources.length > 0) {
-        lines.push("**Sources used**", "");
+        lines.push(`**${labels.sourcesUsed}**`, "");
         for (const c of sources) lines.push(`- [${c.title}](${c.url}) — \`/resources/${c.slug}\``);
         lines.push("");
       }
@@ -81,6 +85,9 @@ function downloadMarkdown(filename: string, body: string) {
 }
 
 export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
+  const t = useTranslations("Guide");
+  const rawLocale = useLocale();
+  const locale: 'en' | 'es' = rawLocale === 'es' ? 'es' : 'en';
   const { messages, sendMessage, status, stop, error } = useChat<GuideUIMessage>({
     transport: new DefaultChatTransport({ api: '/api/chat' }),
   });
@@ -109,7 +116,7 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
     setPendingPrompt(null);
     sendMessage(
       { text },
-      { body: { founderProfile: loadQuizAnswers() ?? undefined } },
+      { body: { founderProfile: loadQuizAnswers() ?? undefined, locale } },
     );
   }, [pendingPrompt, messages.length, isStreaming, sendMessage, setPendingPrompt]);
 
@@ -120,16 +127,25 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
     setInput("");
     sendMessage(
       { text: value },
-      { body: { founderProfile: loadQuizAnswers() ?? undefined } },
+      { body: { founderProfile: loadQuizAnswers() ?? undefined, locale } },
     );
   };
 
   const exportAll = () => {
     const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
-    downloadMarkdown(`utah-founder-guide-chat-${stamp}.md`, exportToMarkdown(messages));
+    downloadMarkdown(
+      `utah-founder-guide-chat-${stamp}.md`,
+      exportToMarkdown(messages, {
+        title: t("exportTitle"),
+        exportedAt: (date) => t("exportedAt", { date }),
+        you: t("exportYou"),
+        guide: t("exportGuide"),
+        sourcesUsed: t("exportSourcesUsed"),
+      }),
+    );
   };
 
-  const errorText = friendlyErrorText(error);
+  const errorText = friendlyErrorText(error, t("errorGeneric"));
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -137,12 +153,12 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
       <div className="flex shrink-0 items-center px-2 py-1.5">
         {onCollapse ? (
           <Tooltip>
-            <Button intent="plain" size="sq-xs" onPress={onCollapse} aria-label="Collapse AI guide">
+            <Button intent="plain" size="sq-xs" onPress={onCollapse} aria-label={t("collapse")}>
               <svg className="size-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" aria-hidden>
                 <path d="M13.25 2.5c.69 0 1.25.56 1.25 1.25v8.5c0 .69-.56 1.25-1.25 1.25H7.5V15h5.75A2.75 2.75 0 0 0 16 12.25v-8.5A2.75 2.75 0 0 0 13.25 1H7.5v1.5zM5.75 1a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-3A2.75 2.75 0 0 1 0 12.25v-8.5A2.75 2.75 0 0 1 2.75 1z" />
               </svg>
             </Button>
-            <TooltipContent>Collapse</TooltipContent>
+            <TooltipContent>{t("collapseTooltip")}</TooltipContent>
           </Tooltip>
         ) : null}
       </div>
@@ -168,7 +184,7 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
       {/* Error */}
       {errorText ? (
         <div role="alert" className="mx-4 mb-2 rounded-lg border border-danger/30 bg-danger-subtle/40 px-3 py-2">
-          <Text className="text-danger-subtle-fg text-xs font-medium">Guide hiccup</Text>
+          <Text className="text-danger-subtle-fg text-xs font-medium">{t("errorTitle")}</Text>
           <Text className="mt-0.5 text-muted-fg text-xs">{errorText}</Text>
         </div>
       ) : null}
@@ -178,7 +194,7 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
         <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2 focus-within:ring-2 focus-within:ring-ring/40">
           <input
             value={input}
-            placeholder="Ask about Utah programs..."
+            placeholder={t("inputPlaceholder")}
             disabled={isStreaming}
             className="min-w-0 flex-1 bg-transparent text-sm text-fg placeholder:text-muted-fg outline-none disabled:opacity-50"
             onChange={(e) => setInput(e.target.value)}
@@ -196,11 +212,11 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
                 size="sq-xs"
                 isCircle
                 onPress={() => stop()}
-                aria-label="Stop generating"
+                aria-label={t("stop")}
               >
                 <StopIcon />
               </Button>
-              <TooltipContent>Stop</TooltipContent>
+              <TooltipContent>{t("stopTooltip")}</TooltipContent>
             </Tooltip>
           ) : (
             <Tooltip>
@@ -210,11 +226,11 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
                 isCircle
                 isDisabled={!input.trim()}
                 onPress={() => onSend()}
-                aria-label="Send message"
+                aria-label={t("send")}
               >
                 <ArrowUpIcon />
               </Button>
-              <TooltipContent>Send</TooltipContent>
+              <TooltipContent>{t("sendTooltip")}</TooltipContent>
             </Tooltip>
           )}
         </div>
@@ -229,6 +245,8 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
 const NOOP_SUBSCRIBE = () => () => {};
 
 function EmptyState({ onChipClick }: { onChipClick: (prompt: string) => void }) {
+  const t = useTranslations("Guide");
+  const tPrompts = useTranslations("Guide.suggestedPrompts");
   const quiz = useQuiz();
   // `loadQuizAnswers` reads localStorage, which only exists on the client.
   // useSyncExternalStore lets us return `false` on the server (matching what
@@ -244,9 +262,9 @@ function EmptyState({ onChipClick }: { onChipClick: (prompt: string) => void }) 
     <div className="flex h-full flex-col gap-4 pb-2 pt-6">
       {!hasProfile ? (
         <div className="rounded-xl border border-border bg-muted/20 px-3.5 py-3">
-          <p className="text-xs font-medium text-fg">Tailor responses to what you’re looking for</p>
+          <p className="text-xs font-medium text-fg">{t("tailorTitle")}</p>
           <p className="mt-0.5 text-xs text-muted-fg">
-            Take our short questionnaire so the guide can weight recommendations to your stage, industry, and goals.
+            {t("tailorBody")}
           </p>
           <Button
             intent="primary"
@@ -255,23 +273,26 @@ function EmptyState({ onChipClick }: { onChipClick: (prompt: string) => void }) 
             className="mt-2.5"
           >
             <SparklesIcon />
-            Take questionnaire
+            {t("takeQuestionnaire")}
           </Button>
         </div>
       ) : null}
       <div className="mt-auto flex flex-col gap-3">
-        <p className="text-center text-xs text-muted-fg">Try a question to get started</p>
+        <p className="text-center text-xs text-muted-fg">{t("tryAQuestion")}</p>
         <div className="flex flex-col gap-1.5">
-          {SUGGESTED_PROMPTS.map((prompt) => (
-            <button
-              key={prompt}
-              type="button"
-              onClick={() => onChipClick(prompt)}
-              className="rounded-lg border border-border bg-muted/20 px-3 py-2.5 text-left text-xs text-muted-fg transition-colors hover:bg-muted hover:text-fg"
-            >
-              {prompt}
-            </button>
-          ))}
+          {SUGGESTED_PROMPT_KEYS.map((key) => {
+            const prompt = tPrompts(key);
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => onChipClick(prompt)}
+                className="rounded-lg border border-border bg-muted/20 px-3 py-2.5 text-left text-xs text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+              >
+                {prompt}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -297,6 +318,7 @@ function ChatBubble({
   streaming: boolean;
   onExport: () => void;
 }) {
+  const t = useTranslations("Guide");
   const isUser = message.role === "user";
   const rawText = message.parts
     .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
@@ -315,7 +337,7 @@ function ChatBubble({
   return (
     <div>
       <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-fg">
-        {isUser ? "You" : "Guide"}
+        {isUser ? t("youLabel") : t("guideLabel")}
       </p>
       {showThinking ? (
         <ThinkingDots />
@@ -330,16 +352,16 @@ function ChatBubble({
       {isCompleted ? (
         <div className="mt-2 flex items-center gap-0.5">
           <Tooltip>
-            <Button intent="plain" size="sq-xs" onPress={copyMessage} aria-label="Copy response">
+            <Button intent="plain" size="sq-xs" onPress={copyMessage} aria-label={t("copy")}>
               <ClipboardDocumentIcon />
             </Button>
-            <TooltipContent>Copy response</TooltipContent>
+            <TooltipContent>{t("copy")}</TooltipContent>
           </Tooltip>
           <Tooltip>
-            <Button intent="plain" size="sq-xs" onPress={onExport} aria-label="Download chat as Markdown">
+            <Button intent="plain" size="sq-xs" onPress={onExport} aria-label={t("export")}>
               <ArrowDownTrayIcon />
             </Button>
-            <TooltipContent>Export chat</TooltipContent>
+            <TooltipContent>{t("exportTooltip")}</TooltipContent>
           </Tooltip>
         </div>
       ) : null}
@@ -348,12 +370,13 @@ function ChatBubble({
 }
 
 function ContextDisclosure({ items }: { items: GuideContextItem[] }) {
+  const t = useTranslations("Guide");
   return (
     <details className="group mt-3 rounded-lg border border-border bg-muted/20">
       <summary className="cursor-pointer list-none px-3 py-2 text-xs font-medium text-muted-fg outline-0 outline-offset-2 hover:text-fg focus-visible:outline-2 focus-visible:outline-ring">
         <span className="inline-flex items-center gap-1">
           <span className="transition group-open:rotate-90" aria-hidden>▸</span>
-          {items.length} {items.length === 1 ? "source" : "sources"} used
+          {t("sourcesUsed", { count: items.length })}
         </span>
       </summary>
       <ul className="space-y-1.5 px-3 pb-3">
@@ -364,7 +387,7 @@ function ContextDisclosure({ items }: { items: GuideContextItem[] }) {
             </Link>
             {" · "}
             <UiLink href={c.url} className="text-muted-fg hover:underline" rel="noopener noreferrer" target="_blank">
-              Official site
+              {t("officialSite")}
             </UiLink>
           </li>
         ))}

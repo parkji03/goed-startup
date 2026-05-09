@@ -2,6 +2,7 @@
 
 import { FunnelIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "convex/react";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useMemo } from "react";
 import { Button as RACButton } from "react-aria-components/Button";
@@ -49,6 +50,7 @@ interface FacetSectionProps {
  * popover off-screen.
  */
 function FacetSection({ label, options, value, onChange, divider }: FacetSectionProps) {
+  const t = useTranslations("Resources.filters");
   const selectedCount = value.length;
   return (
     <div className={twMerge("px-1 py-2", divider && "border-t border-border")}>
@@ -60,12 +62,12 @@ function FacetSection({ label, options, value, onChange, divider }: FacetSection
             onClick={() => onChange([])}
             className="text-muted-fg hover:text-fg text-xs"
           >
-            Clear
+            {t("clear")}
           </button>
         ) : null}
       </div>
       {options.length === 0 ? (
-        <p className="px-2 py-1 text-muted-fg text-xs">No options</p>
+        <p className="px-2 py-1 text-muted-fg text-xs">{t("noOptions")}</p>
       ) : (
         <ListBox
           aria-label={label}
@@ -97,6 +99,7 @@ function FacetSection({ label, options, value, onChange, divider }: FacetSection
  * mirrored to URL search params so views are shareable.
  */
 export function ResourcesFilterBar() {
+  const t = useTranslations("Resources.filters");
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -139,7 +142,7 @@ export function ResourcesFilterBar() {
   return (
     <DialogTrigger>
       <RACButton
-        aria-label={isActive ? `Filters (${activeCount} active)` : "Filters"}
+        aria-label={isActive ? t("labelWithCount", { count: activeCount }) : t("label")}
         className={twMerge(
           "inline-flex shrink-0 items-center gap-1.5 rounded-full border border-border bg-bg shadow-sm transition-colors",
           "pressed:bg-muted hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
@@ -170,27 +173,27 @@ export function ResourcesFilterBar() {
         <Dialog className="outline-none">
           <div className="max-h-[70vh] overflow-y-auto">
             <FacetSection
-              label="Stage"
+              label={t("stage")}
               options={stageOptions}
               value={filters.stages}
               onChange={(stages) => updateFilters({ ...filters, stages })}
             />
             <FacetSection
-              label="Industry"
+              label={t("industry")}
               options={industryOptions}
               value={filters.industries}
               onChange={(industries) => updateFilters({ ...filters, industries })}
               divider
             />
             <FacetSection
-              label="Community"
+              label={t("community")}
               options={communityOptions}
               value={filters.communities}
               onChange={(communities) => updateFilters({ ...filters, communities })}
               divider
             />
             <FacetSection
-              label="Location"
+              label={t("location")}
               options={locationOptions}
               value={filters.locations}
               onChange={(locations) => updateFilters({ ...filters, locations })}
@@ -200,14 +203,14 @@ export function ResourcesFilterBar() {
           {isActive ? (
             <div className="flex items-center justify-between border-t border-border px-3 py-2">
               <span className="text-muted-fg text-xs">
-                {activeCount} {activeCount === 1 ? "filter" : "filters"} active
+                {t("activeCount", { count: activeCount })}
               </span>
               <Button
                 size="xs"
                 intent="plain"
                 onPress={() => updateFilters(EMPTY_RESOURCE_FILTERS)}
               >
-                Clear all
+                {t("clearAll")}
               </Button>
             </div>
           ) : null}

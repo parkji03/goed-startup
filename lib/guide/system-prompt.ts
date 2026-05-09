@@ -77,17 +77,21 @@ ${INJECTION_DIRECTIVE}
 ${items}`;
 }
 
+const LOCALE_BLOCK_ES = `Reply in Spanish (Latin American or peninsular — match the user's register). Translate any English-language resource titles and snippets in the context to natural Spanish in your prose, but keep the markdown link slugs and URLs exactly as given (e.g. \`/resources/<slug>\`). The "Resources:" section header at the bottom of your reply should also be in Spanish: "Recursos:".`;
+
 export function buildSystemPrompt(args: {
   context: GuideContextItem[];
   profile: FounderProfileConvex;
   locale: string;
 }): string {
-  const { context, profile } = args;
+  const { context, profile, locale } = args;
   const personalization = buildPersonalizationBlock(profile);
+  const localeBlock = locale === 'es' ? LOCALE_BLOCK_ES : null;
   const blocks = [
     IDENTITY_BLOCK,
     GUARDRAIL_BLOCK,
     CITATION_BLOCK,
+    localeBlock,
     personalization,
     buildContextBlock(context),
   ].filter(Boolean) as string[];
