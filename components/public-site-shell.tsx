@@ -493,10 +493,10 @@ function AiGuideSidebar({ chatScope }: { chatScope: 'map' | 'main' }) {
 
 function AiGuideSidebarBody({ chatScope }: { chatScope: 'map' | 'main' }) {
   const { toggleSidebar } = useSidebar();
-  // Remount across the map/non-map boundary so `useChat` history starts
-  // fresh — the chat speaks to two different agents (`/api/chat` for
-  // resources, `/api/map-recommend` for the map quiz) and bubbles from one
-  // shouldn't leak into the other surface.
+  // The `key` resets `useChat` history across the map/non-map boundary —
+  // the chat speaks to two different agents (`/api/chat` for resources,
+  // `/api/map-recommend` for the map quiz) and bubbles from one shouldn't
+  // leak into the other.
   return <GuideChatPanel key={chatScope} compact onCollapse={toggleSidebar} />;
 }
 
@@ -554,14 +554,6 @@ export function PublicSiteShell({ children, locale }: Props) {
   const isMapRoute = pathname.startsWith("/map");
   const chatScope: 'map' | 'main' = isMapRoute ? 'map' : 'main';
   const toggleAiOpen = useCallback(() => setAiOpen((open) => !open), []);
-
-  // Force-close the sidebar when the user crosses the map boundary in
-  // either direction. We're remounting `GuideChatPanel` via `chatScope` to
-  // clear its `useChat` history; leaving the sidebar open would briefly
-  // flash an empty panel mid-transition.
-  useEffect(() => {
-    setAiOpen(false);
-  }, [isMapRoute]);
 
   useGlobalMetaCtrlKeyToggle({
     enabled: !usesOwnChrome && !isMapRoute,
