@@ -17,7 +17,9 @@ export function ResourceCard({ resource }: { resource: ResourceRowData }) {
     <Card className="bg-overlay">
       <CardHeader className="pb-3">
         <CardTitle>{resource.title}</CardTitle>
-        <CardDescription className="line-clamp-4">{resource.description}</CardDescription>
+        <CardDescription className="line-clamp-4 text-fg/80">
+          {resource.description}
+        </CardDescription>
       </CardHeader>
       <CardFooter className="flex flex-wrap gap-2">
         <Link

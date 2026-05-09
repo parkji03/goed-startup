@@ -25,29 +25,29 @@ export function ResourceRow({ resource }: { resource: ResourceRowData }) {
   const featuredTag = resource.tags[0];
 
   return (
-    <div className="group grid grid-cols-[1fr_auto] items-start gap-3 border-b border-border px-4 py-3 last:border-b-0 hover:bg-muted/40">
+    <div className="group grid grid-cols-[1fr_auto] items-start gap-3 border-b border-border px-4 py-3.5 last:border-b-0 hover:bg-secondary">
       <div className="min-w-0">
         <Link
           href={`/resources/${resource.slug}`}
-          className="block text-base font-medium text-fg hover:underline"
+          className="block text-base font-semibold text-fg hover:underline"
         >
           {resource.title}
         </Link>
-        <Text className="text-muted-fg mt-1 line-clamp-1 text-sm">{resource.description}</Text>
+        <Text className="mt-1 line-clamp-1 text-sm text-fg/80">{resource.description}</Text>
         {community || stage || featuredTag ? (
           <div className="mt-2 flex flex-wrap gap-1.5">
             {community ? (
-              <Badge intent="outline" className="text-xs">
+              <Badge intent="outline" className="text-xs text-fg/85">
                 {community}
               </Badge>
             ) : null}
             {stage ? (
-              <Badge intent="outline" className="text-xs">
+              <Badge intent="outline" className="text-xs text-fg/85">
                 {stage}
               </Badge>
             ) : null}
             {featuredTag ? (
-              <Badge intent="outline" className="text-xs">
+              <Badge intent="outline" className="text-xs text-fg/85">
                 {featuredTag}
               </Badge>
             ) : null}
@@ -61,7 +61,7 @@ export function ResourceRow({ resource }: { resource: ResourceRowData }) {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={`Open ${resource.title} in a new tab`}
-            className="text-muted-fg hover:text-fg p-1"
+            className="p-1 text-base font-semibold text-fg/70 hover:text-fg"
           >
             ↗
           </UiLink>
