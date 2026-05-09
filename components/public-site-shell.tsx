@@ -553,6 +553,23 @@ export function PublicSiteShell({ children, locale }: Props) {
   // apply to a map of companies/investors.
   const isMapRoute = pathname.startsWith("/map");
   const chatScope: 'map' | 'main' = isMapRoute ? 'map' : 'main';
+
+  // Close the sidebar whenever the user crosses the map/non-map boundary
+  // in either direction. The chat panel itself is being remounted via
+  // `key={chatScope}`, so leaving the sidebar open would just show a
+  // freshly-empty panel against the wrong page context.
+  //
+  // Pattern: store the previous route flag in state and adjust `aiOpen`
+  // during render. This is React's recommended alternative to a
+  // `useEffect(() => setAiOpen(false), [isMapRoute])` — no extra commit,
+  // no stale-render flash, no effect.
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevIsMapRoute, setPrevIsMapRoute] = useState(isMapRoute);
+  if (prevIsMapRoute !== isMapRoute) {
+    setPrevIsMapRoute(isMapRoute);
+    setAiOpen(false);
+  }
+
   const toggleAiOpen = useCallback(() => setAiOpen((open) => !open), []);
 
   useGlobalMetaCtrlKeyToggle({
