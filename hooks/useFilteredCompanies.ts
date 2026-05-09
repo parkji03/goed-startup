@@ -9,6 +9,7 @@ import type {
   SectorId,
   StageId,
 } from '@/lib/companies/taxonomy';
+import type { InvestorBrief } from '@/lib/companies/investor-brief';
 import { EMPTY_FILTERS, type MapFilters } from '@/lib/companies/filters';
 
 /**
@@ -45,6 +46,7 @@ export type CompanyForList = {
   };
   lng: number;
   lat: number;
+  investorBrief?: InvestorBrief;
 };
 
 export type FilteredCompanies = {

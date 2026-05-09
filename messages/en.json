@@ -88,6 +88,42 @@
         "employees": "Employees",
         "founded": "Founded",
         "sector": "Sector"
+      },
+      "brief": {
+        "eyebrow": "AI-extracted brief",
+        "aiTooltip": "These fields were extracted by AI from this company's website. They may not be 100% accurate — see the Sources section at the bottom of this profile to verify.",
+        "stats": {
+          "funding": "Funding",
+          "founders": "Founders",
+          "hiring": "Open roles",
+          "model": "Model"
+        },
+        "sections": {
+          "metrics": "Key metrics",
+          "edge": "Edge",
+          "team": "Founding team",
+          "customers": "Notable customers",
+          "integrations": "Integrations"
+        },
+        "founderTitleFallback": "Founder",
+        "priorAt": "Prior: {companies}",
+        "fundingAmount": "{round} · ${amount}",
+        "fundingRoundOnly": "{round}",
+        "fundingAmountOnly": "${amount} raised",
+        "fundingLed": "Led by {investor}",
+        "openRoles": "{count, plural, one {# open role} other {# open roles}}",
+        "modelLine": "{market} · {model}",
+        "extractedOn": "Extracted {date}"
+      },
+      "sources": {
+        "eyebrow": "Sources",
+        "fields": {
+          "funding": "Funding",
+          "edge": "Edge",
+          "founder": "Founder",
+          "metric": "Metric"
+        },
+        "crawledPages": "Crawled pages"
       }
     },
     "card": {
@@ -133,6 +169,23 @@
       "201-500": "201–500",
       "501-1k": "501–1K",
       "1k-5k": "1K–5K"
+    },
+    "targetMarkets": {
+      "enterprise": "Enterprise",
+      "mid-market": "Mid-market",
+      "smb": "SMB",
+      "consumer": "Consumer",
+      "developer": "Developer",
+      "prosumer": "Prosumer"
+    },
+    "monetizationModels": {
+      "subscription": "Subscription",
+      "usage-based": "Usage-based",
+      "marketplace": "Marketplace",
+      "transactional": "Transactional",
+      "freemium": "Freemium",
+      "contact-sales": "Contact sales",
+      "ads": "Ads"
     }
   }
 }

@@ -91,10 +91,9 @@ export function FloatingFilterBar({
         // at the FilterBar's collapsed height, but its 9999px value
         // gets clamped to half-min-dimension per frame — animating
         // the height while the corners interpolate produced a giant
-        // bulging arc mid-transition. `rounded-3xl` (24px) sits in
-        // the sweet spot: at ~50px tall it visually looks like a
-        // pill, and at expanded heights it looks like a soft card.
-        'rounded-3xl',
+        // bulging arc mid-transition. `rounded-2xl` (16px) reads as
+        // a soft card at every height without that artifact.
+        'rounded-2xl',
         // Animate the auto width when chip badges add or drop. Only
         // takes effect in browsers that honor `interpolate-size`
         // (set on :root in globals.css); elsewhere this is a no-op

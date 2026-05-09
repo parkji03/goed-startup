@@ -88,6 +88,42 @@
         "employees": "Empleados",
         "founded": "Fundada",
         "sector": "Sector"
+      },
+      "brief": {
+        "eyebrow": "Resumen extraído por IA",
+        "aiTooltip": "Estos campos fueron extraídos por IA del sitio web de la empresa. Pueden no ser 100% precisos — consulta la sección Fuentes al final del perfil para verificarlos.",
+        "stats": {
+          "funding": "Financiación",
+          "founders": "Fundadores",
+          "hiring": "Vacantes",
+          "model": "Modelo"
+        },
+        "sections": {
+          "metrics": "Métricas clave",
+          "edge": "Diferencial",
+          "team": "Equipo fundador",
+          "customers": "Clientes destacados",
+          "integrations": "Integraciones"
+        },
+        "founderTitleFallback": "Fundador",
+        "priorAt": "Antes: {companies}",
+        "fundingAmount": "{round} · ${amount}",
+        "fundingRoundOnly": "{round}",
+        "fundingAmountOnly": "${amount} recaudados",
+        "fundingLed": "Liderada por {investor}",
+        "openRoles": "{count, plural, one {# vacante} other {# vacantes}}",
+        "modelLine": "{market} · {model}",
+        "extractedOn": "Extraído {date}"
+      },
+      "sources": {
+        "eyebrow": "Fuentes",
+        "fields": {
+          "funding": "Financiación",
+          "edge": "Diferencial",
+          "founder": "Fundador",
+          "metric": "Métrica"
+        },
+        "crawledPages": "Páginas rastreadas"
       }
     },
     "card": {
@@ -133,6 +169,23 @@
       "201-500": "201–500",
       "501-1k": "501–1K",
       "1k-5k": "1K–5K"
+    },
+    "targetMarkets": {
+      "enterprise": "Enterprise",
+      "mid-market": "Mid-market",
+      "smb": "Pymes",
+      "consumer": "Consumo",
+      "developer": "Desarrolladores",
+      "prosumer": "Prosumidor"
+    },
+    "monetizationModels": {
+      "subscription": "Suscripción",
+      "usage-based": "Por uso",
+      "marketplace": "Marketplace",
+      "transactional": "Transaccional",
+      "freemium": "Freemium",
+      "contact-sales": "Contactar ventas",
+      "ads": "Anuncios"
     }
   }
 }

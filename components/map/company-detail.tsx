@@ -12,6 +12,8 @@ import { Button } from 'react-aria-components/Button';
 import type { CompanyForList } from '@/hooks/useFilteredCompanies';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { SECTOR_TINTS } from '@/lib/companies/sector-styling';
+import { InvestorBrief } from '@/components/map/investor-brief';
+import { InvestorSources } from '@/components/map/investor-sources';
 
 // Hero banner removed — sector identity now lives entirely in the small
 // pill next to the logo, and the domain lives in the Links chip.
@@ -83,10 +85,10 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
       {/* Scrollable body — bottom padding leaves room for the sticky CTA bar. */}
       <div className="flex-1 px-4 pb-28 pt-4">
         {/* Identity row — logo on the left, title + sector pill stacked
-            on the right. Logo fills its square edge-to-edge (no inner
-            padding). */}
+            in the middle, quick-access icon links anchored top-right.
+            Logo fills its square edge-to-edge (no inner padding). */}
         <div className={enterClass} style={enterStyle(0)}>
-          <div className="flex items-center gap-4">
+          <div className="flex items-start gap-4">
             <div className="size-16 shrink-0 overflow-hidden rounded-2xl border border-border bg-bg shadow-sm">
               {logoSmall ? (
                 // eslint-disable-next-line @next/next/no-img-element -- per-domain dynamic image, can't use next/image
@@ -116,6 +118,27 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
                 {tTax(`sectors.${company.sector}`)}
               </span>
             </div>
+            {(company.website || company.linkedin) && (
+              <div
+                className="-me-1 flex shrink-0 items-center gap-0.5"
+                aria-label={tDetail('sections.links')}
+              >
+                {company.website && (
+                  <IconLink
+                    href={company.website}
+                    label={domain ?? tCard('website')}
+                    icon={<GlobeAltIcon className="size-4" />}
+                  />
+                )}
+                {company.linkedin && (
+                  <IconLink
+                    href={company.linkedin}
+                    label="LinkedIn"
+                    icon={<LinkedInGlyph className="size-4" />}
+                  />
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -141,7 +164,8 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
         )}
 
         {/* Information block — editorial divider then a 2x2 mono stat grid.
-            The mono numerals + uppercase labels code "data" instantly. */}
+            The mono numerals + uppercase labels code "data" instantly.
+            Lives above the AI brief because these are curated, trusted facts. */}
         {stats.some((s) => s.value) && (
           <div className={`${enterClass} mt-7`} style={enterStyle(180)}>
             <SectionLabel>{tDetail('sections.information')}</SectionLabel>
@@ -162,28 +186,23 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
           </div>
         )}
 
-        {/* Links section — chip-style links with favicons. */}
-        {(company.website || company.linkedin) && (
-          <div className={`${enterClass} mt-7`} style={enterStyle(240)}>
-            <SectionLabel>{tDetail('sections.links')}</SectionLabel>
-            <div className="mt-3 flex flex-wrap gap-2">
-              {company.website && (
-                <LinkChip
-                  href={company.website}
-                  label={domain ?? tCard('website')}
-                  icon={<GlobeAltIcon className="size-3.5" />}
-                />
-              )}
-              {company.linkedin && (
-                <LinkChip
-                  href={company.linkedin}
-                  label="LinkedIn"
-                  icon={<LinkedInGlyph className="size-3.5" />}
-                />
-              )}
-            </div>
-          </div>
-        )}
+        {/* AI-extracted investor brief — sits below the curated info so the
+            trusted facts render first. The component self-suppresses when
+            empty, so no need to guard it here. */}
+        <InvestorBrief
+          brief={company.investorBrief}
+          className={`${enterClass} mt-7`}
+          style={enterStyle(240)}
+        />
+
+        {/* Bottom-of-profile audit trail — collected source quotes and the
+            crawl provenance for the AI brief. Self-suppresses when no
+            quotes/pages exist. */}
+        <InvestorSources
+          brief={company.investorBrief}
+          className={`${enterClass} mt-8`}
+          style={enterStyle(300)}
+        />
 
       </div>
 
@@ -231,7 +250,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
   );
 }
 
-function LinkChip({
+function IconLink({
   href,
   label,
   icon,
@@ -245,11 +264,11 @@ function LinkChip({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group inline-flex items-center gap-2 rounded-full border border-border bg-bg px-3 py-1.5 text-xs font-medium text-fg/80 transition-all hover:border-fg/40 hover:bg-muted/50 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+      aria-label={label}
+      title={label}
+      className="grid size-8 place-items-center rounded-full text-muted-fg transition-colors hover:bg-muted hover:text-fg focus-visible:bg-muted focus-visible:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
     >
-      <span className="text-muted-fg group-hover:text-fg/80">{icon}</span>
-      <span className="font-mono">{label}</span>
-      <ArrowTopRightOnSquareIcon className="size-3 opacity-0 transition-opacity group-hover:opacity-60" />
+      {icon}
     </a>
   );
 }

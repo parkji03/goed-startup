@@ -129,6 +129,7 @@ export const searchForMap = query({
         },
         lng: c.location.lng!,
         lat: c.location.lat!,
+        investorBrief: c.investorBrief,
       }));
   },
 });
@@ -250,6 +251,46 @@ export const clearLogoUrls = mutation({
       }
     }
     return { scanned: rows.length, cleared };
+  },
+});
+
+/**
+ * Curatorial override for `investorBrief.funding`. The brief is AI-extracted
+ * and sometimes wrong (mismatched round, missing follow-on rounds, wrong
+ * lead investor). Use this to replace the funding subfield for one company
+ * by slug without disturbing the rest of the brief.
+ *
+ * Pass `sourceQuote: undefined` (the default) to mark the override as
+ * curated — it then doesn't show up in the bottom Sources audit trail,
+ * which is correct since the data no longer traces back to a website crawl.
+ *
+ * Run with:
+ *   npx convex run companies:overrideInvestorFunding '{"slug":"jobnimbus","funding":{...}}'
+ */
+export const overrideInvestorFunding = mutation({
+  args: {
+    slug: v.string(),
+    funding: v.object({
+      round: v.optional(v.string()),
+      amountUsd: v.optional(v.number()),
+      leadInvestor: v.optional(v.string()),
+      sourceQuote: v.optional(v.string()),
+    }),
+  },
+  handler: async (ctx, { slug, funding }) => {
+    const row = await ctx.db
+      .query('companies')
+      .withIndex('by_slug', (q) => q.eq('slug', slug))
+      .unique();
+    if (!row) {
+      throw new Error(`No company found with slug "${slug}"`);
+    }
+    const nextBrief = { ...(row.investorBrief ?? {}), funding };
+    await ctx.db.patch(row._id, {
+      investorBrief: nextBrief,
+      lastEditedAt: Date.now(),
+    });
+    return { _id: row._id, slug, funding };
   },
 });
 
