@@ -13,9 +13,13 @@ export const backfillCategoriesAndTags = internalMutation({
   args: {
     /** When true, skip resources that already have a category. Default: true. */
     skipAlreadyCategorized: v.optional(v.boolean()),
+    /** Number of resources to process this run. Default: 40 — keeps facet reads under the 4096-per-mutation limit. */
+    batchSize: v.optional(v.number()),
   },
-  handler: async (ctx, { skipAlreadyCategorized = true }) => {
-    const resources = await ctx.db.query('resources').take(5000);
+  handler: async (ctx, { skipAlreadyCategorized = true, batchSize = 40 }) => {
+    const all = await ctx.db.query('resources').take(5000);
+    const candidates = skipAlreadyCategorized ? all.filter((r) => !r.category) : all;
+    const resources = candidates.slice(0, batchSize);
     let updated = 0;
     let lowConfidence = 0;
     for (const r of resources) {
@@ -73,7 +77,8 @@ export const backfillCategoriesAndTags = internalMutation({
       updated += 1;
       if (confidence === 'low') lowConfidence += 1;
     }
-    return { updated, lowConfidence, scanned: resources.length };
+    const remaining = candidates.length - resources.length;
+    return { updated, lowConfidence, scanned: resources.length, remaining };
   },
 });
 
