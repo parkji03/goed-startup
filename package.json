@@ -10,7 +10,8 @@
     "test:personas": "vitest run tests/hackathon-personas.test.ts",
     "seed:companies": "node --env-file=.env.local --import tsx scripts/seed-companies.ts",
     "seed:investors": "node --env-file=.env.local --import tsx scripts/seed-investors.ts",
-    "seed:resources": "node --env-file=.env.local --import tsx scripts/seed-resources.ts"
+    "seed:resources": "node --env-file=.env.local --import tsx scripts/seed-resources.ts",
+    "enrich:new-resources": "node --env-file=.env.local --import tsx scripts/enrich-new-resources.ts"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.63",

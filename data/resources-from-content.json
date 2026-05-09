@@ -1,0 +1,128 @@
+[
+  {
+    "sourceId": "content:the-nucleus-institute-helping-innovative-tech-flourish-in-utah",
+    "title": "The Nucleus Institute: Helping Innovative Tech Flourish in Utah",
+    "description": "The Nucleus Institute accelerates Utah's innovation economy by connecting universities, entrepreneurs, and leaders through five core pillars: connections, commercialization, funding, solutions, and spaces. It serves students, researchers, and founders via programs like Talent Hub (mentorship and workforce connections), ProLab (course credit for projects), Catalyst forums (expert networking), Nucleus Fund (deep-tech venture investment), and Nucleus Grow (SBIR/STTR proposal support). Eligibility focuses on university-affiliated innovators and early-stage deep-tech ventures.",
+    "url": "https://www.nucleusutah.org/",
+    "category": "programs-accelerators",
+    "communitiesRaw": "Student|Any",
+    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "deep-tech|university-commercialization|SBIR-STTR|mentorship|early-stage|venture-funding|innovation-hub",
+    "_meta": {
+      "sourcePath": "startup-utah-content/resources/the-nucleus-institute-helping-innovative-tech-flourish-in-utah.md"
+    }
+  },
+  {
+    "sourceId": "content:the-office-of-regulatory-relief-helping-utah-businesses-overcome-burdensome-regulations",
+    "title": "Office of Regulatory Relief: Helping Utahns Overcome Burdensome Regulations",
+    "description": "The Office of Regulatory Relief helps Utah businesses, entrepreneurs, nonprofits, and residents navigate and improve the state's regulatory landscape. It operates an industry-agnostic regulatory sandbox—the first of its kind nationally—allowing organizations to test new products, services, or business models in controlled environments with temporary regulatory waivers. Applicants submit proposals reviewed by ORR and state agencies, then an advisory committee. The office also accepts regulatory improvement suggestions via online form or email.",
+    "url": "https://business.utah.gov/regulatory-relief/",
+    "category": "legal-ip-operations",
+    "communitiesRaw": "Any",
+    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "regulatory-sandbox|innovation-waiver|regulatory-relief|compliance-guidance|business-regulation",
+    "_meta": {
+      "sourcePath": "startup-utah-content/state-programs/the-office-of-regulatory-relief-helping-utah-businesses-overcome-burdensome-regulations.md"
+    }
+  },
+  {
+    "sourceId": "content:economic-assistance-grant-makes-available-4-5m-for-industry-and-community-development",
+    "title": "Economic Assistance Grant Makes Available $4.5M for Industry and Community Development",
+    "description": "The Utah Economic Assistance Grant provides $4.5M in one-time funding for projects developing industry, education, community, and infrastructure. Three tiers: up to $50K, $50K–$100K, or $100K–$200K. Prioritizes Utah's targeted industries (advanced manufacturing, aerospace and defense, financial services, life sciences and healthcare, software and IT) and projects with clear metrics, matching funds, and 18-month completion timelines. Open to Utah businesses.",
+    "url": "https://business.utah.gov/grants/economic-assistance-grant/",
+    "category": "government-econdev",
+    "communitiesRaw": "Any",
+    "industriesRaw": "Aerospace and Defense|Financial Services|Life Sciences and Healthcare|Manufacturing|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "economic-development|$4.5M-grant|targeted-industries|infrastructure|job-creation",
+    "_meta": {
+      "sourcePath": "startup-utah-content/funding/economic-assistance-grant-makes-available-4-5m-for-industry-and-community-development.md"
+    }
+  },
+  {
+    "sourceId": "content:utah-supports-economic-growth-with-post-performance-tax-program",
+    "title": "Utah Supports Economic Growth with Post-Performance Tax Program",
+    "description": "Utah's Economic Development Tax Increment Financing (EDTIF) and Rural Economic Development Tax Increment Financing (REDTIF) programs provide post-performance state tax refunds to companies meeting job creation and other criteria. EDTIF targets advanced manufacturing, aerospace and defense, financial services, life sciences and healthcare, and software and IT companies, offering up to 30% refunds on new state taxes for up to 20 years. REDTIF serves rural companies across any industry with up to 50% tax refunds.",
+    "url": "https://business.utah.gov/business-recruitment/",
+    "category": "government-econdev",
+    "communitiesRaw": "Any",
+    "industriesRaw": "Aerospace and Defense|Financial Services|Life Sciences and Healthcare|Manufacturing|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "tax-incentive|post-performance|rural-development|job-creation|EDTIF|REDTIF",
+    "_meta": {
+      "sourcePath": "startup-utah-content/funding/utah-supports-economic-growth-with-post-performance-tax-program.md"
+    }
+  },
+  {
+    "sourceId": "content:utah-startups-apply-now-for-walmarts-open-call-pitch-competition",
+    "title": "Utah Startups: Apply Now for Walmart’s Open Call Pitch Competition",
+    "description": "Walmart's annual Open Call pitch competition invites U.S.-based entrepreneurs to pitch retail-ready products directly to Walmart and Sam's Club buyers. Applicants must have fully packaged, shelf-ready products with GTIN/UPC barcodes and demonstrated manufacturing capacity. Selected finalists pitch in person at Walmart headquarters in Bentonville, Arkansas in October. The program also welcomes innovative manufacturing solutions including sustainable packaging and supply-chain technologies. Deadline: July 25, 2025.",
+    "url": "https://corporate.walmart.com/suppliers/investing-in-american-jobs/events/annual-open-call",
+    "category": "programs-accelerators",
+    "communitiesRaw": "Any",
+    "industriesRaw": "Consumer Packaged Goods|Manufacturing|Other",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "retail-pitch|shelf-ready|national-distribution|manufacturing|consumer-goods|supply-chain",
+    "_meta": {
+      "sourcePath": "startup-utah-content/funding/utah-startups-apply-now-for-walmarts-open-call-pitch-competition.md"
+    }
+  },
+  {
+    "sourceId": "content:university-of-utah-supports-innovation-for-remote-and-austere-areas",
+    "title": "University of Utah Supports Innovation for Remote and Austere Areas",
+    "description": "University of Utah's Remote and Austere Conditions (RAC) Grand Challenge funds faculty research innovations addressing challenges in remote and underserved intermountain regions with limited access to clean water, electricity, medical facilities, and services. Topics include power generation, telemedicine, digital health, robotics, communication, resuscitation, and community interventions. Selected teams present in a pitch competition with awards up to $250,000 in direct costs.",
+    "url": "https://utah.infoready4.com/#freeformCompetitionDetail/1925709:~:text=Grand%20Challenge%20Format",
+    "category": "programs-accelerators",
+    "communitiesRaw": "Rural",
+    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "remote-austere|grand-challenge|research-funding|rural-innovation|telemedicine|pitch-competition",
+    "_meta": {
+      "sourcePath": "startup-utah-content/resources/university-of-utah-supports-innovation-for-remote-and-austere-areas.md"
+    }
+  },
+  {
+    "sourceId": "content:level-up-your-career-with-uvus-professional-education-courses",
+    "title": "Level Up Your Career with UVU’s Professional Education Courses",
+    "description": "Utah Valley University's Professional Education offers noncredit, high-impact learning courses for professionals seeking to advance leadership, business, and organizational skills. Started in 2019, the program serves career-changers, laid-off workers, and those seeking skill advancement through rotating courses like Career Essentials, AI for Professionals, and Certified Public Manager. Courses vary in format (cohort-based or fully online) and some offer CEU hours or national certifications. Check the website for current offerings, pricing, and enrollment deadlines.",
+    "url": "https://www.uvu.edu/ce/professional-education/index.html",
+    "category": "education-training",
+    "communitiesRaw": "Any",
+    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "professional-development|noncredit-courses|career-advancement|leadership-training|AI-skills|certifications|CEU-hours",
+    "_meta": {
+      "sourcePath": "startup-utah-content/resources/level-up-your-career-with-uvus-professional-education-courses.md"
+    }
+  },
+  {
+    "sourceId": "content:sba-certifications-that-could-fast-track-your-startups-growth",
+    "title": "SBA Certifications That Could Fast-Track Your Startup’s Growth",
+    "description": "SBA certification programs for small businesses seeking federal contracting opportunities and competitive advantages. Four key certifications: 8(a) Business Development (for socially/economically disadvantaged owners), HUBZone (for businesses in underutilized zones with 35%+ employees in zone), Women-Owned Small Business (51%+ women-owned), and Veteran-Owned Small Business (majority veteran-owned). Each provides access to set-aside contracts, technical assistance, mentorship, and pricing preferences. Eligibility varies by certification type.",
+    "url": "https://certifications.sba.gov/",
+    "category": "legal-ip-operations",
+    "communitiesRaw": "Women|Veteran|Multicultural",
+    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "federal-contracting|8a-certification|hubzone|women-owned|veteran-owned|sba-certification|government-contracts",
+    "_meta": {
+      "sourcePath": "startup-utah-content/resources/sba-certifications-that-could-fast-track-your-startups-growth.md"
+    }
+  },
+  {
+    "sourceId": "content:business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene",
+    "title": "Business Elevated Podcast Showcases Utah’s Thriving Entrepreneurial Scene",
+    "description": "Business Elevated Podcast, launched in 2019 by the Governor's Office of Economic Opportunity, provides a platform for Utah entrepreneurs, executives, and community leaders to share their experiences and stories. With over 200 episodes released weekly, the podcast highlights Utah's entrepreneurial ecosystem, addresses misconceptions about the state's business climate, and features notable figures including state officials and business founders. Episodes are syndicated across Apple Podcasts, Spotify, and other major platforms. Open to all audiences interested in Utah's business community.",
+    "url": "https://business.utah.gov/category/podcast/",
+    "category": "community-events",
+    "communitiesRaw": "Any",
+    "industriesRaw": "Aerospace and Defense|Agriculture|Arts and Entertainment and Recreation|Consumer Packaged Goods|Financial Services|Hospitality and Food Services|Life Sciences and Healthcare|Manufacturing|Other|Software and Information Technology",
+    "locationsRaw": "Beaver|Box Elder|Cache|Carbon|Daggett|Davis|Duchesne|Emery|Garfield|Grand|Iron|Juab|Kane|Millard|Morgan|Piute|Rich|Salt Lake|San Juan|Sanpete|Sevier|Summit|Tooele|Uintah|Utah|Wasatch|Washington|Wayne|Weber",
+    "tagsRaw": "podcast|entrepreneurship|storytelling|business-leaders|utah-ecosystem|community-platform|weekly-episodes",
+    "_meta": {
+      "sourcePath": "startup-utah-content/resources/business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene.md"
+    }
+  }
+]
