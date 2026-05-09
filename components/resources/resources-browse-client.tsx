@@ -1,42 +1,39 @@
 "use client";
 
-import { usePaginatedQuery, useQuery } from "convex/react";
+import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
-import { Link } from "@/i18n/navigation";
 import { FounderQuizClient } from "@/components/quiz/founder-quiz-client";
+import { ResourceCard } from "@/components/resources/resource-card";
+import { ResourceRow } from "@/components/resources/resource-row";
 import { ResourceSubmitForm } from "@/components/resources/resource-submit-form";
-import { Button, buttonStyles } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card";
 import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Disclosure,
+  DisclosureGroup,
+  DisclosurePanel,
+  DisclosureTrigger,
+} from "@/components/ui/disclosure-group";
 import { Heading } from "@/components/ui/heading";
-import { Link as UiLink } from "@/components/ui/link";
 import { ModalBody, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
 import { useSidebar } from "@/components/ui/sidebar";
+import {
+  RESOURCE_CATEGORIES,
+  type ResourceCategoryKey,
+} from "@/lib/resources/categories";
 
 export function ResourcesBrowseClient() {
-  const topics = useQuery(api.resources.facetValues, { facetType: "topic", limit: 40 });
-  const [topicFilter, setTopicFilter] = useState<string | null>(null);
+  const grouped = useQuery(api.resources.listGroupedByCategory, { limitPerCategory: 50 });
+  const [activeCategory, setActiveCategory] = useState<ResourceCategoryKey | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
 
-  const filtered = useQuery(
-    api.resources.listByFacet,
-    topicFilter ? { facetType: "topic" as const, value: topicFilter, limit: 40 } : "skip",
-  );
-
-  const all = usePaginatedQuery(api.resources.listPublishedPage, {}, { initialNumItems: 16 });
-
-  const cards = topicFilter ? filtered : all.results;
-
-  const loadingCards = topicFilter ? filtered === undefined : all.status === "LoadingFirstPage";
+  const visibleCategories = activeCategory
+    ? RESOURCE_CATEGORIES.filter((c) => c.key === activeCategory)
+    : RESOURCE_CATEGORIES;
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
@@ -47,14 +44,17 @@ export function ResourcesBrowseClient() {
             Utah founder resources
           </Heading>
           <Text className="mt-4 max-w-2xl text-lg text-muted-fg">
-            Curated partners and programs sourced from Startup Utah Builder Day. Search from
-            the top bar, filter by topic, or ask the AI guide for a recommended path.
+            Curated partners and programs sourced from Startup Utah Builder Day. Filter by
+            category, search from the top bar, or ask the AI guide for a recommended path.
           </Text>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="bg-overlay">
-            <CardHeader title="Get matched" description="Take the founder quiz to tune recommendations." />
+            <CardHeader
+              title="Get matched"
+              description="Take the founder quiz to tune recommendations."
+            />
             <CardFooter>
               <Button intent="outline" size="sm" onPress={() => setQuizOpen(true)}>
                 Start quiz
@@ -62,7 +62,10 @@ export function ResourcesBrowseClient() {
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
-            <CardHeader title="Ask the guide" description="Open the AI chat for funding and program questions." />
+            <CardHeader
+              title="Ask the guide"
+              description="Open the AI chat for funding and program questions."
+            />
             <CardFooter>
               <Button intent="outline" size="sm" onPress={toggleSidebar}>
                 Ask AI guide
@@ -70,7 +73,10 @@ export function ResourcesBrowseClient() {
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
-            <CardHeader title="Add a resource" description="Submit a partner or program for review." />
+            <CardHeader
+              title="Add a resource"
+              description="Submit a partner or program for review."
+            />
             <CardFooter>
               <Button intent="outline" size="sm" onPress={() => setSubmitOpen(true)}>
                 Submit
@@ -79,7 +85,12 @@ export function ResourcesBrowseClient() {
           </Card>
         </div>
 
-        <ModalContent isOpen={quizOpen} onOpenChange={setQuizOpen} size="2xl" aria-label="Founder quiz">
+        <ModalContent
+          isOpen={quizOpen}
+          onOpenChange={setQuizOpen}
+          size="2xl"
+          aria-label="Founder quiz"
+        >
           <ModalHeader>
             <ModalTitle>Founder quiz</ModalTitle>
           </ModalHeader>
@@ -88,7 +99,12 @@ export function ResourcesBrowseClient() {
           </ModalBody>
         </ModalContent>
 
-        <ModalContent isOpen={submitOpen} onOpenChange={setSubmitOpen} size="xl" aria-label="Submit a resource">
+        <ModalContent
+          isOpen={submitOpen}
+          onOpenChange={setSubmitOpen}
+          size="xl"
+          aria-label="Submit a resource"
+        >
           <ModalHeader>
             <ModalTitle>Submit a resource</ModalTitle>
           </ModalHeader>
@@ -100,65 +116,80 @@ export function ResourcesBrowseClient() {
 
       <section className="space-y-3">
         <Heading level={2} className="text-lg">
-          Topics
+          Categories
         </Heading>
         <div className="flex flex-wrap gap-2">
           <Button
             size="sm"
-            intent={topicFilter === null ? "primary" : "secondary"}
-            onPress={() => setTopicFilter(null)}
+            intent={activeCategory === null ? "primary" : "secondary"}
+            onPress={() => setActiveCategory(null)}
           >
             All resources
           </Button>
-          {topics?.map((t) => (
+          {RESOURCE_CATEGORIES.map((c) => (
             <Button
-              key={t}
+              key={c.key}
               size="sm"
-              intent={topicFilter === t ? "primary" : "secondary"}
-              onPress={() => setTopicFilter(t)}
+              intent={activeCategory === c.key ? "primary" : "secondary"}
+              onPress={() => setActiveCategory(c.key)}
             >
-              {t}
+              {c.label}
             </Button>
-          )) ?? <Text className="text-muted-fg text-sm">Loading topics...</Text>}
+          ))}
         </div>
       </section>
 
       <section className="min-w-0 flex-1 space-y-4">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {loadingCards ? (
-            <Text className="text-muted-fg">Loading cards...</Text>
-          ) : (
-            cards?.map((r) => (
-              <Card key={String(r._id)} className="bg-overlay">
-                <CardHeader className="pb-3">
-                  <CardTitle>{r.title}</CardTitle>
-                  <CardDescription className="line-clamp-4">{r.description}</CardDescription>
-                </CardHeader>
-                <CardFooter className="flex flex-wrap gap-2">
-                  <Link
-                    href={`/resources/${r.slug}`}
-                    className={buttonStyles({ intent: "outline", size: "sm" })}
-                  >
-                    View details
-                  </Link>
-                  <UiLink
-                    href={r.url}
-                    className={buttonStyles({ intent: "outline", size: "sm" })}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    Official site
-                  </UiLink>
-                </CardFooter>
-              </Card>
-            ))
-          )}
-        </div>
-        {!topicFilter && all.status === "CanLoadMore" ? (
-          <Button intent="outline" size="sm" className="w-full sm:w-auto" onPress={() => all.loadMore(16)}>
-            Load more
-          </Button>
-        ) : null}
+        {grouped === undefined ? (
+          <Text className="text-muted-fg">Loading resources…</Text>
+        ) : (
+          <>
+            {/* Desktop: grouped collapsible rows */}
+            <div className="hidden md:block">
+              <DisclosureGroup defaultExpandedKeys={visibleCategories.map((c) => c.key)}>
+                {visibleCategories.map((c) => {
+                  const list = grouped[c.key] ?? [];
+                  if (list.length === 0) return null;
+                  return (
+                    <Disclosure key={c.key} id={c.key}>
+                      <DisclosureTrigger>
+                        <span className="font-medium">{c.label}</span>
+                        <span className="text-muted-fg ml-2 text-sm">{list.length}</span>
+                      </DisclosureTrigger>
+                      <DisclosurePanel>
+                        <div className="rounded-lg border border-border bg-overlay">
+                          {list.map((r) => (
+                            <ResourceRow key={String(r._id)} resource={r} />
+                          ))}
+                        </div>
+                      </DisclosurePanel>
+                    </Disclosure>
+                  );
+                })}
+              </DisclosureGroup>
+            </div>
+
+            {/* Mobile: cards under category headings */}
+            <div className="md:hidden space-y-6">
+              {visibleCategories.map((c) => {
+                const list = grouped[c.key] ?? [];
+                if (list.length === 0) return null;
+                return (
+                  <div key={c.key} className="space-y-3">
+                    <Heading level={3} className="text-base">
+                      {c.label}
+                    </Heading>
+                    <div className="grid gap-4">
+                      {list.map((r) => (
+                        <ResourceCard key={String(r._id)} resource={r} />
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
       </section>
     </div>
   );

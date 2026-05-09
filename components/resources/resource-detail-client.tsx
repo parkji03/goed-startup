@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { categoryLabel, type ResourceCategoryKey } from "@/lib/resources/categories";
 
 type Props = {
   slug: string;
@@ -56,6 +57,11 @@ export function ResourceDetailClient({ slug }: Props) {
         <Heading level={1} className="mt-4 text-3xl tracking-tight sm:text-4xl">
           {resource.title}
         </Heading>
+        {resource.category ? (
+          <Badge intent="primary" className="mt-3 text-xs">
+            {categoryLabel(resource.category as ResourceCategoryKey)}
+          </Badge>
+        ) : null}
         <Text className="mt-4 text-lg text-muted-fg">{resource.description}</Text>
         <div className="mt-6 flex flex-wrap gap-3">
           <a
@@ -75,7 +81,7 @@ export function ResourceDetailClient({ slug }: Props) {
         </div>
       </div>
       <div className="rounded-xl border border-border bg-muted/30 p-4">
-        <ChipRow label="Topics" values={resource.topics} />
+        <ChipRow label="Tags" values={resource.tags ?? resource.topics} />
         <ChipRow label="Communities / audiences" values={resource.communities} />
         <ChipRow label="Industries" values={resource.industries} />
         <ChipRow label="Coverage" values={resource.locations} />
