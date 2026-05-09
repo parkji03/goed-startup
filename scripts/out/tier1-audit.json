@@ -1,0 +1,1384 @@
+[
+  {
+    "path": "startup-utah-content/resources/altitude-lab-the-accelerator-leading-utahs-biotech-investment.md",
+    "category": "resources",
+    "title": "Altitude Lab: The Accelerator Leading Utah\u2019s Biotech Investment",
+    "fm_url": "https://startup.utah.gov/altitude-lab-the-accelerator-leading-utahs-biotech-investment/",
+    "body_chars": 4090,
+    "primary_external_url": "https://www.altitudelab.org/",
+    "industries": [
+      "Arts and Entertainment and Recreation",
+      "Life Sciences and Healthcare"
+    ],
+    "communities": [
+      "Multicultural",
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": true,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/resources/baugh-family-donation-fuels-next-generation-of-entrepreneurs-at-uvu.md",
+    "category": "resources",
+    "title": "Baugh Family Donation Fuels Next Generation of Entrepreneurs at UVU",
+    "fm_url": "https://startup.utah.gov/baugh-family-donation-fuels-next-generation-of-entrepreneurs-at-uvu/",
+    "body_chars": 3698,
+    "primary_external_url": "https://www.uvu.edu/woodbury/entrepreneurship/about/index.html",
+    "industries": [
+      "Arts and Entertainment and Recreation",
+      "Financial Services"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/bolstering-your-business-with-intellectual-property.md",
+    "category": "resources",
+    "title": "Bolstering Your Business With Intellectual Property",
+    "fm_url": "https://startup.utah.gov/bolstering-your-business-with-intellectual-property/",
+    "body_chars": 4173,
+    "primary_external_url": "https://www.uspto.gov/trademarks/basics/trademark-patent-copyright",
+    "industries": [
+      "Arts and Entertainment and Recreation"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [
+      "Salt Lake"
+    ],
+    "stage_cues": [
+      "idea",
+      "international",
+      "ip"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/resources/business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene.md",
+    "category": "resources",
+    "title": "Business Elevated Podcast Showcases Utah\u2019s Thriving Entrepreneurial Scene",
+    "fm_url": "https://startup.utah.gov/business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene/",
+    "body_chars": 3547,
+    "primary_external_url": "https://business.utah.gov/category/podcast/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 1
+  },
+  {
+    "path": "startup-utah-content/resources/discover-the-best-workspace-to-maximize-growth-for-your-startup.md",
+    "category": "resources",
+    "title": "Discover the Best Workspace To Maximize Growth for Your Startup",
+    "fm_url": "https://startup.utah.gov/discover-the-best-workspace-to-maximize-growth-for-your-startup/",
+    "body_chars": 4351,
+    "primary_external_url": "https://workhiveslc.com/",
+    "industries": [
+      "Aerospace and Defense"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "early-stage"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/empowering-utah-entrepreneurs-with-sbdc-entrepreneur-academy.md",
+    "category": "resources",
+    "title": "Empowering Utah Entrepreneurs with SBDC Entrepreneur Academy",
+    "fm_url": "https://startup.utah.gov/empowering-utah-entrepreneurs-with-sbdc-entrepreneur-academy/",
+    "body_chars": 2978,
+    "primary_external_url": "https://online.utahsbdc.org/home",
+    "industries": [
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "validation"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/experience-equity-free-acceleration-with-convoi-ventures.md",
+    "category": "resources",
+    "title": "Experience Equity-Free Acceleration With Convoi Ventures",
+    "fm_url": "https://startup.utah.gov/experience-equity-free-acceleration-with-convoi-ventures/",
+    "body_chars": 3326,
+    "primary_external_url": "http://accelerator.convoiventures.com",
+    "industries": [
+      "Arts and Entertainment and Recreation",
+      "Financial Services",
+      "Life Sciences and Healthcare",
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/five-ways-to-build-a-strong-network-as-a-utah-entrepreneur.md",
+    "category": "resources",
+    "title": "Five Ways to Build a Strong Network as a Utah Entrepreneur",
+    "fm_url": "https://startup.utah.gov/five-ways-to-build-a-strong-network-as-a-utah-entrepreneur/",
+    "body_chars": 3532,
+    "primary_external_url": "https://utahassociationofchambers.com/directory/",
+    "industries": [
+      "Aerospace and Defense"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "early-stage"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/growing-utahs-next-generation-of-businesses-at-the-mill.md",
+    "category": "resources",
+    "title": "Growing Utah\u2019s Next Generation of Businesses at The Mill",
+    "fm_url": "https://startup.utah.gov/growing-utahs-next-generation-of-businesses-at-the-mill/",
+    "body_chars": 3171,
+    "primary_external_url": "https://themillatslcc.com/",
+    "industries": [
+      "Software and Information Technology"
+    ],
+    "communities": [
+      "Multicultural",
+      "Student",
+      "Veteran"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "growth"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/helping-utah-startups-thrive-the-power-of-incubators-and-accelerators.md",
+    "category": "resources",
+    "title": "Helping Utah Startups Thrive: The Power of Incubators and Accelerators",
+    "fm_url": "https://startup.utah.gov/helping-utah-startups-thrive-the-power-of-incubators-and-accelerators/",
+    "body_chars": 3338,
+    "primary_external_url": null,
+    "industries": [
+      "Arts and Entertainment and Recreation",
+      "Life Sciences and Healthcare"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "early-stage",
+      "growth",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 2
+  },
+  {
+    "path": "startup-utah-content/resources/how-a-statewide-coalition-is-fueling-entrepreneurship-in-rural-utah.md",
+    "category": "resources",
+    "title": "How a Statewide Coalition Is Fueling Entrepreneurship In Rural Utah",
+    "fm_url": "https://startup.utah.gov/how-a-statewide-coalition-is-fueling-entrepreneurship-in-rural-utah/",
+    "body_chars": 3563,
+    "primary_external_url": "https://www.ruralutahcc.org/",
+    "industries": [],
+    "communities": [
+      "Rural"
+    ],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "idea",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/how-local-chambers-help-small-businesses-thrive-in-utah.md",
+    "category": "resources",
+    "title": "How Local Chambers Help Small Businesses Thrive in Utah",
+    "fm_url": "https://startup.utah.gov/how-local-chambers-help-small-businesses-thrive-in-utah/",
+    "body_chars": 2863,
+    "primary_external_url": "https://www.uschamber.com/co/chambers/utah",
+    "industries": [
+      "Arts and Entertainment and Recreation"
+    ],
+    "communities": [
+      "Rural",
+      "Multicultural",
+      "Women",
+      "Veteran"
+    ],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/how-the-lassonde-entrepreneur-institute-is-driving-student-innovation-in-utah.md",
+    "category": "resources",
+    "title": "How the Lassonde Entrepreneur Institute Is Driving Student Innovation in Utah",
+    "fm_url": "https://startup.utah.gov/how-the-lassonde-entrepreneur-institute-is-driving-student-innovation-in-utah/",
+    "body_chars": 3302,
+    "primary_external_url": "https://eccles.utah.edu/",
+    "industries": [],
+    "communities": [
+      "Student"
+    ],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "idea",
+      "validation"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/resources/how-the-startup-state-chatbot-can-assist-you.md",
+    "category": "resources",
+    "title": "How the Startup State Chatbot Can Assist You",
+    "fm_url": "https://startup.utah.gov/how-the-startup-state-chatbot-can-assist-you/",
+    "body_chars": 2425,
+    "primary_external_url": null,
+    "industries": [
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/ihub-utah-empowering-the-next-generation-of-entrepreneurs.md",
+    "category": "resources",
+    "title": "iHub Utah: Empowering the Next Generation of Entrepreneurs",
+    "fm_url": "https://startup.utah.gov/ihub-utah-empowering-the-next-generation-of-entrepreneurs/",
+    "body_chars": 2831,
+    "primary_external_url": "https://www.ihubutah.org/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "early-stage",
+      "growth",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/ihubs-ase-program-is-turning-student-ambition-into-viable-ventures.md",
+    "category": "resources",
+    "title": "iHub\u2019s ASE Program Is Turning Student Ambition Into Viable Ventures",
+    "fm_url": "https://startup.utah.gov/ihubs-ase-program-is-turning-student-ambition-into-viable-ventures/",
+    "body_chars": 2511,
+    "primary_external_url": "https://www.ihubutah.org/",
+    "industries": [],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "early-stage"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/level-up-your-career-with-uvus-professional-education-courses.md",
+    "category": "resources",
+    "title": "Level Up Your Career with UVU\u2019s Professional Education Courses",
+    "fm_url": "https://startup.utah.gov/level-up-your-career-with-uvus-professional-education-courses/",
+    "body_chars": 3416,
+    "primary_external_url": "https://www.uvu.edu/ce/professional-education/index.html",
+    "industries": [
+      "Software and Information Technology"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": false,
+      "deadline": true,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/locally-grown-locally-owned-the-power-of-utahs-farmers-markets.md",
+    "category": "resources",
+    "title": "Locally Grown, Locally Owned: The Power of Utah\u2019s Farmers Markets",
+    "fm_url": "https://startup.utah.gov/locally-grown-locally-owned-the-power-of-utahs-farmers-markets/",
+    "body_chars": 3631,
+    "primary_external_url": "https://www.slcfarmersmarket.org/about",
+    "industries": [
+      "Agriculture",
+      "Consumer Packaged Goods"
+    ],
+    "communities": [],
+    "locations": [
+      "Salt Lake"
+    ],
+    "stage_cues": [
+      "early-stage",
+      "growth"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/networking-how-events-bolster-your-business-and-grow-community.md",
+    "category": "resources",
+    "title": "Networking: How Events Bolster Your Business and Grow Community",
+    "fm_url": "https://startup.utah.gov/networking-how-events-bolster-your-business-and-grow-community/",
+    "body_chars": 3987,
+    "primary_external_url": "https://oneutahsummit.utah.gov/",
+    "industries": [],
+    "communities": [],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "idea",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/networking-what-local-coworking-spaces-are-offering-your-startup.md",
+    "category": "resources",
+    "title": "Networking: What Local Coworking Spaces Are Offering Your Startup",
+    "fm_url": "https://startup.utah.gov/networking-what-local-coworking-spaces-are-offering-your-startup/",
+    "body_chars": 3834,
+    "primary_external_url": "https://themillatslcc.com/resource/small-business-development-center/",
+    "industries": [],
+    "communities": [
+      "Rural",
+      "Student"
+    ],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "early-stage"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/ready-to-go-global-what-entrepreneurs-should-consider-about-international-expansion.md",
+    "category": "resources",
+    "title": "Ready To Go Global? What Entrepreneurs Should Consider About International Expansion",
+    "fm_url": "https://startup.utah.gov/ready-to-go-global-what-entrepreneurs-should-consider-about-international-expansion/",
+    "body_chars": 3880,
+    "primary_external_url": "https://business.utah.gov/international/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "validation",
+      "international",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/san-juan-chambers-revival-marks-a-turning-point-in-rural-utah.md",
+    "category": "resources",
+    "title": "San Juan Chamber\u2019s Revival Marks a Turning Point in Rural Utah",
+    "fm_url": "https://startup.utah.gov/san-juan-chambers-revival-marks-a-turning-point-in-rural-utah/",
+    "body_chars": 3541,
+    "primary_external_url": "http://www.sanjuancountychamber.com/",
+    "industries": [
+      "Agriculture",
+      "Financial Services"
+    ],
+    "communities": [
+      "Rural",
+      "Multicultural"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/sba-certifications-that-could-fast-track-your-startups-growth.md",
+    "category": "resources",
+    "title": "SBA Certifications That Could Fast-Track Your Startup\u2019s Growth",
+    "fm_url": "https://startup.utah.gov/sba-certifications-that-could-fast-track-your-startups-growth/",
+    "body_chars": 4370,
+    "primary_external_url": "https://certifications.sba.gov/",
+    "industries": [
+      "Manufacturing"
+    ],
+    "communities": [
+      "Multicultural",
+      "Women",
+      "Veteran"
+    ],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/sbdc-trainings-a-closer-look-at-the-wordpress-workshop.md",
+    "category": "resources",
+    "title": "SBDC Trainings: A Closer Look at the WordPress Workshop",
+    "fm_url": "https://startup.utah.gov/sbdc-trainings-a-closer-look-at-the-wordpress-workshop/",
+    "body_chars": 2872,
+    "primary_external_url": "https://utahsbdc.org/",
+    "industries": [
+      "Arts and Entertainment and Recreation",
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "ip"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/sbdcs-free-support-to-help-small-businesses-start-and-grow.md",
+    "category": "resources",
+    "title": "SBDCs: Free Support to Help Small Businesses Start and Grow",
+    "fm_url": "https://startup.utah.gov/sbdcs-free-support-to-help-small-businesses-start-and-grow/",
+    "body_chars": 2654,
+    "primary_external_url": "https://utahsbdc.org/",
+    "industries": [],
+    "communities": [],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "idea",
+      "validation"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/silicon-slopes-introduces-fee-free-program-to-strengthen-startup-ecosystem.md",
+    "category": "resources",
+    "title": "Silicon Slopes Introduces Fee-Free Program to Strengthen Startup Ecosystem",
+    "fm_url": "https://startup.utah.gov/silicon-slopes-introduces-fee-free-program-to-strengthen-startup-ecosystem/",
+    "body_chars": 3515,
+    "primary_external_url": "https://www.siliconslopes.com/main",
+    "industries": [
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/six-things-to-include-in-your-pitch-deck.md",
+    "category": "resources",
+    "title": "Six Things to Include in Your Pitch Deck",
+    "fm_url": "https://startup.utah.gov/six-things-to-include-in-your-pitch-deck/",
+    "body_chars": 2866,
+    "primary_external_url": null,
+    "industries": [
+      "Manufacturing"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 2
+  },
+  {
+    "path": "startup-utah-content/resources/support-your-business-with-industry-organizations.md",
+    "category": "resources",
+    "title": "Support Your Business With Industry Organizations",
+    "fm_url": "https://startup.utah.gov/support-your-business-with-industry-organizations/",
+    "body_chars": 3629,
+    "primary_external_url": "https://www.47g.org/",
+    "industries": [
+      "Aerospace and Defense",
+      "Agriculture",
+      "Life Sciences and Healthcare",
+      "Manufacturing",
+      "Software and Information Technology"
+    ],
+    "communities": [
+      "Rural"
+    ],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [
+      "idea"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/resources/the-nucleus-institute-helping-innovative-tech-flourish-in-utah.md",
+    "category": "resources",
+    "title": "The Nucleus Institute: Helping Innovative Tech Flourish in Utah",
+    "fm_url": "https://startup.utah.gov/the-nucleus-institute-helping-innovative-tech-flourish-in-utah/",
+    "body_chars": 3753,
+    "primary_external_url": "https://www.nucleusutah.org/",
+    "industries": [
+      "Financial Services"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "early-stage",
+      "international",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/transform-your-business-with-uvus-advanced-business-accelerator-course.md",
+    "category": "resources",
+    "title": "Transform Your Business with UVU\u2019s Advanced Business Accelerator Course",
+    "fm_url": "https://startup.utah.gov/transform-your-business-with-uvus-advanced-business-accelerator-course/",
+    "body_chars": 2750,
+    "primary_external_url": "https://www.uvu.edu/uvbrc/",
+    "industries": [],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "early-stage"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": true,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/resources/turning-your-passion-into-a-successful-business-idea.md",
+    "category": "resources",
+    "title": "Turning Your Passion Into a Successful Business Idea",
+    "fm_url": "https://startup.utah.gov/turning-your-passion-into-a-successful-business-idea/",
+    "body_chars": 2790,
+    "primary_external_url": "https://utahsbdc.org/",
+    "industries": [
+      "Arts and Entertainment and Recreation"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/resources/university-of-utah-supports-innovation-for-remote-and-austere-areas.md",
+    "category": "resources",
+    "title": "University of Utah Supports Innovation for Remote and Austere Areas",
+    "fm_url": "https://startup.utah.gov/university-of-utah-supports-innovation-for-remote-and-austere-areas/",
+    "body_chars": 2367,
+    "primary_external_url": "https://utah.infoready4.com/#freeformCompetitionDetail/1925709:~:text=Grand%20Challenge%20Format",
+    "industries": [
+      "Life Sciences and Healthcare"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/resources/utah-center-for-rural-development-fuels-economic-growth-across-the-state.md",
+    "category": "resources",
+    "title": "Utah Center for Rural Development Fuels Economic Growth Across the State",
+    "fm_url": "https://startup.utah.gov/utah-center-for-rural-development-fuels-economic-growth-across-the-state/",
+    "body_chars": 3817,
+    "primary_external_url": "http://business.utah.gov/rural",
+    "industries": [
+      "Financial Services"
+    ],
+    "communities": [
+      "Rural",
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": true,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/resources/where-women-in-utah-can-find-support-for-business-growth.md",
+    "category": "resources",
+    "title": "Where Women in Utah Can Find Support for Business Growth",
+    "fm_url": "https://startup.utah.gov/where-women-in-utah-can-find-support-for-business-growth/",
+    "body_chars": 4378,
+    "primary_external_url": "https://wbcutah.org/",
+    "industries": [],
+    "communities": [
+      "Women"
+    ],
+    "locations": [
+      "__statewide__"
+    ],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/funding/2025-midyear-snapshot-of-the-get-started-business-idea-challenge.md",
+    "category": "funding",
+    "title": "2025 Midyear Snapshot of the Get Started: Business Idea Challenge",
+    "fm_url": "https://startup.utah.gov/2025-midyear-snapshot-of-the-get-started-business-idea-challenge/",
+    "body_chars": 2056,
+    "primary_external_url": null,
+    "industries": [],
+    "communities": [
+      "Rural",
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/funding/crowdfunding-a-democratized-way-to-raise-capital.md",
+    "category": "funding",
+    "title": "Crowdfunding: A Democratized Way To Raise Capital",
+    "fm_url": "https://startup.utah.gov/crowdfunding-a-democratized-way-to-raise-capital/",
+    "body_chars": 3557,
+    "primary_external_url": "https://www.kickstarter.com/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": true,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 2
+  },
+  {
+    "path": "startup-utah-content/funding/economic-assistance-grant-makes-available-4-5m-for-industry-and-community-development.md",
+    "category": "funding",
+    "title": "Economic Assistance Grant Makes Available $4.5M for Industry and Community Development",
+    "fm_url": "https://startup.utah.gov/economic-assistance-grant-makes-available-4-5m-for-industry-and-community-development/",
+    "body_chars": 3043,
+    "primary_external_url": "https://business.utah.gov/grants/economic-assistance-grant/",
+    "industries": [
+      "Aerospace and Defense",
+      "Financial Services",
+      "Life Sciences and Healthcare",
+      "Manufacturing",
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/funding/explore-grants-to-propel-your-business-forward.md",
+    "category": "funding",
+    "title": "Explore Grants to Propel Your Business Forward",
+    "fm_url": "https://startup.utah.gov/explore-grants-to-propel-your-business-forward/",
+    "body_chars": 4173,
+    "primary_external_url": "https://business.utah.gov/grants/",
+    "industries": [
+      "Arts and Entertainment and Recreation"
+    ],
+    "communities": [
+      "Rural",
+      "Multicultural",
+      "Women",
+      "Veteran"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/funding/pitch-competitions-providing-funding-feedback-and-validation-for-utah-startups.md",
+    "category": "funding",
+    "title": "Pitch Competitions: Providing Funding, Feedback, and Validation for Utah Startups",
+    "fm_url": "https://startup.utah.gov/pitch-competitions-providing-funding-feedback-and-validation-for-utah-startups/",
+    "body_chars": 3689,
+    "primary_external_url": "https://oneutahsummit.utah.gov/sbbc/",
+    "industries": [
+      "Arts and Entertainment and Recreation"
+    ],
+    "communities": [
+      "Student"
+    ],
+    "locations": [
+      "Uintah"
+    ],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": true,
+      "eligibility": true,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 6
+  },
+  {
+    "path": "startup-utah-content/funding/pitch-your-startup-at-the-one-utah-summit-with-50k-in-cash-prizes.md",
+    "category": "funding",
+    "title": "Pitch Your Startup at the One Utah Summit With $50K in Cash Prizes",
+    "fm_url": "https://startup.utah.gov/pitch-your-startup-at-the-one-utah-summit-with-50k-in-cash-prizes/",
+    "body_chars": 2726,
+    "primary_external_url": "https://www.suu.edu/business/entrepreneurship/state-bank-business-challenge/rules-and-entry.html",
+    "industries": [],
+    "communities": [
+      "Rural",
+      "Student"
+    ],
+    "locations": [
+      "Iron"
+    ],
+    "stage_cues": [
+      "idea",
+      "early-stage"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": true,
+      "eligibility": true,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/funding/prepare-your-utah-business-to-apply-for-up-to-200k-in-project-based-funding.md",
+    "category": "funding",
+    "title": "Prepare Your Utah Business to Apply for up to $200K in Project-Based Funding",
+    "fm_url": "https://startup.utah.gov/prepare-your-utah-business-to-apply-for-up-to-200k-in-project-based-funding/",
+    "body_chars": 3210,
+    "primary_external_url": "https://business.utah.gov/grants/economic-assistance-grant/",
+    "industries": [
+      "Life Sciences and Healthcare"
+    ],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/funding/sbir-and-sttr-programs-grant-funding-to-innovative-deep-tech-products.md",
+    "category": "funding",
+    "title": "SBIR and STTR Programs Grant Funding To Innovative Deep-Tech Products",
+    "fm_url": "https://startup.utah.gov/sbir-and-sttr-programs-grant-funding-to-innovative-deep-tech-products/",
+    "body_chars": 3787,
+    "primary_external_url": "https://nucleusutah.org/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/funding/secure-government-contracts-with-the-help-of-utahs-apex-accelerator.md",
+    "category": "funding",
+    "title": "Secure Government Contracts With the Help of Utah\u2019s APEX Accelerator",
+    "fm_url": "https://startup.utah.gov/secure-government-contracts-with-the-help-of-utahs-apex-accelerator/",
+    "body_chars": 3323,
+    "primary_external_url": "https://business.utah.gov/apex/",
+    "industries": [
+      "Aerospace and Defense"
+    ],
+    "communities": [
+      "Multicultural"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/funding/small-business-funding-finding-the-best-option-for-your-needs.md",
+    "category": "funding",
+    "title": "Small Business Funding: Finding the Best Option for Your Needs",
+    "fm_url": "https://startup.utah.gov/small-business-funding-finding-the-best-option-for-your-needs/",
+    "body_chars": 5981,
+    "primary_external_url": "https://business.utah.gov/innovation/",
+    "industries": [
+      "Financial Services"
+    ],
+    "communities": [
+      "Rural",
+      "Multicultural",
+      "Women"
+    ],
+    "locations": [
+      "Salt Lake",
+      "Summit"
+    ],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "early-stage",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": true,
+    "coverage_score": 6
+  },
+  {
+    "path": "startup-utah-content/funding/turn-ideas-into-action-with-the-startup-states-new-funding-challenge.md",
+    "category": "funding",
+    "title": "Turn Ideas Into Action With the Startup State\u2019s New Funding Challenge",
+    "fm_url": "https://startup.utah.gov/turn-ideas-into-action-with-the-startup-states-new-funding-challenge/",
+    "body_chars": 3142,
+    "primary_external_url": "https://lassonde.utah.edu/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "validation",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": true,
+      "eligibility": true,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  },
+  {
+    "path": "startup-utah-content/funding/two-utah-startups-named-winners-in-morgan-stanleys-pitch-competition.md",
+    "category": "funding",
+    "title": "Two Utah Startups Named Winners in Morgan Stanley\u2019s Pitch Competition",
+    "fm_url": "https://startup.utah.gov/two-utah-startups-named-winners-in-morgan-stanleys-pitch-competition/",
+    "body_chars": 3551,
+    "primary_external_url": "https://www.morganstanley.com/",
+    "industries": [
+      "Arts and Entertainment and Recreation",
+      "Software and Information Technology"
+    ],
+    "communities": [],
+    "locations": [
+      "Salt Lake"
+    ],
+    "stage_cues": [
+      "early-stage",
+      "growth"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/funding/usbci-bridging-the-gap-between-banks-and-disadvantaged-communities.md",
+    "category": "funding",
+    "title": "USBCI: Bridging the Gap Between Accessible Funding and Disadvantaged Communities",
+    "fm_url": "https://startup.utah.gov/usbci-bridging-the-gap-between-banks-and-disadvantaged-communities/",
+    "body_chars": 3237,
+    "primary_external_url": "https://business.utah.gov/usbci/",
+    "industries": [
+      "Financial Services"
+    ],
+    "communities": [
+      "Rural",
+      "Women"
+    ],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/funding/utah-angel-investor-groups-fuel-startup-growth-across-the-state.md",
+    "category": "funding",
+    "title": "Utah Angel Investor Groups Fuel Startup Growth Across the State",
+    "fm_url": "https://startup.utah.gov/utah-angel-investor-groups-fuel-startup-growth-across-the-state/",
+    "body_chars": 3472,
+    "primary_external_url": "http://parkcityangels.com",
+    "industries": [
+      "Life Sciences and Healthcare"
+    ],
+    "communities": [],
+    "locations": [
+      "Salt Lake",
+      "Summit"
+    ],
+    "stage_cues": [
+      "idea",
+      "early-stage",
+      "growth",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/funding/utah-startups-apply-now-for-walmarts-open-call-pitch-competition.md",
+    "category": "funding",
+    "title": "Utah Startups: Apply Now for Walmart\u2019s Open Call Pitch Competition",
+    "fm_url": "https://startup.utah.gov/utah-startups-apply-now-for-walmarts-open-call-pitch-competition/",
+    "body_chars": 3133,
+    "primary_external_url": "https://corporate.walmart.com/suppliers/investing-in-american-jobs/events/annual-open-call",
+    "industries": [
+      "Consumer Packaged Goods",
+      "Manufacturing"
+    ],
+    "communities": [],
+    "locations": [
+      "Salt Lake"
+    ],
+    "stage_cues": [
+      "idea"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/funding/utah-supports-economic-growth-with-post-performance-tax-program.md",
+    "category": "funding",
+    "title": "Utah Supports Economic Growth with Post-Performance Tax Program",
+    "fm_url": "https://startup.utah.gov/utah-supports-economic-growth-with-post-performance-tax-program/",
+    "body_chars": 3300,
+    "primary_external_url": "https://business.utah.gov/business-recruitment/",
+    "industries": [
+      "Aerospace and Defense",
+      "Financial Services",
+      "Life Sciences and Healthcare",
+      "Manufacturing",
+      "Software and Information Technology"
+    ],
+    "communities": [
+      "Rural"
+    ],
+    "locations": [],
+    "stage_cues": [],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 4
+  },
+  {
+    "path": "startup-utah-content/state-programs/goeo-providing-startup-assistance-for-any-industry-at-every-stage.md",
+    "category": "state-programs",
+    "title": "GOEO: Providing Startup Assistance for Any Industry at Every Stage",
+    "fm_url": "https://startup.utah.gov/goeo-providing-startup-assistance-for-any-industry-at-every-stage/",
+    "body_chars": 6723,
+    "primary_external_url": "https://business.utah.gov/accolades/",
+    "industries": [
+      "Aerospace and Defense",
+      "Financial Services"
+    ],
+    "communities": [
+      "Rural",
+      "Multicultural",
+      "Student"
+    ],
+    "locations": [],
+    "stage_cues": [
+      "idea",
+      "funded"
+    ],
+    "program_signals": {
+      "apply": false,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": true
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 5
+  },
+  {
+    "path": "startup-utah-content/state-programs/the-office-of-regulatory-relief-helping-utah-businesses-overcome-burdensome-regulations.md",
+    "category": "state-programs",
+    "title": "Office of Regulatory Relief: Helping Utahns Overcome Burdensome Regulations",
+    "fm_url": "https://startup.utah.gov/the-office-of-regulatory-relief-helping-utah-businesses-overcome-burdensome-regulations/",
+    "body_chars": 3146,
+    "primary_external_url": "https://business.utah.gov/regulatory-relief/",
+    "industries": [],
+    "communities": [],
+    "locations": [],
+    "stage_cues": [
+      "idea"
+    ],
+    "program_signals": {
+      "apply": true,
+      "deadline": false,
+      "eligibility": false,
+      "dollar_amount": false
+    },
+    "is_guide_by_title": false,
+    "coverage_score": 3
+  }
+]
