@@ -29,6 +29,7 @@ export function useGlobalMetaCtrlKeyToggle(options: {
     if (!enabled) return;
 
     const handler = (event: KeyboardEvent) => {
+      if (event.repeat) return;
       if (!(event.metaKey || event.ctrlKey) || event.altKey) return;
       if (event.key.toLowerCase() !== key) return;
       if (isTypingTarget(event.target)) return;
