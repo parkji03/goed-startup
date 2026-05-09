@@ -8,6 +8,12 @@ import {
   resourceStatusValidator,
 } from './resourceValidators';
 import {
+  COMMUNITY_VOCAB,
+  INDUSTRY_VOCAB,
+  LOCATION_VOCAB,
+  clampToVocab,
+} from './lib/facetVocabularies';
+import {
   buildSearchText,
   facetsFromResourceFields,
   inferStageTagsFromTags,
@@ -67,9 +73,9 @@ export const upsertResource = internalMutation({
   },
   handler: async (ctx, { row }) => {
     const contactEmail = sanitizeContactEmail(row.contactEmail);
-    const communities = splitPipeList(row.communitiesRaw);
-    const industries = splitPipeList(row.industriesRaw);
-    const locations = splitPipeList(row.locationsRaw);
+    const communities = clampToVocab(splitPipeList(row.communitiesRaw), COMMUNITY_VOCAB, 'communities');
+    const industries = clampToVocab(splitPipeList(row.industriesRaw), INDUSTRY_VOCAB, 'industries');
+    const locations = clampToVocab(splitPipeList(row.locationsRaw), LOCATION_VOCAB, 'locations');
     const tags = splitPipeList(row.tagsRaw);
     const stageTags = inferStageTagsFromTags(tags);
     const category = row.category;
