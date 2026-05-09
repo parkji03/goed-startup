@@ -47,12 +47,20 @@ export function GlobalCommandTrigger({ className }: Props) {
         <kbd className="ms-auto hidden h-5 items-center rounded bg-muted-fg/10 px-1 py-1 text-[12px] font-medium tracking-wider text-muted-fg sm:inline-flex">⌘K</kbd>
       </AriaButton>
 
-      {open ? <GlobalCommandMenu onClose={() => setOpen(false)} /> : null}
+      {/* Mounted permanently so CommandMenu's `shortcut="k"` can listen for ⌘K
+          even when the menu is closed. */}
+      <GlobalCommandMenu open={open} onOpenChange={setOpen} />
     </>
   );
 }
 
-function GlobalCommandMenu({ onClose }: { onClose: () => void }) {
+function GlobalCommandMenu({
+  open,
+  onOpenChange,
+}: {
+  open: boolean;
+  onOpenChange: (next: boolean) => void;
+}) {
   const router = useRouter();
   const [input, setInput] = useState("");
   const debounced = useDebouncedValue(input, 200);
@@ -65,7 +73,7 @@ function GlobalCommandMenu({ onClose }: { onClose: () => void }) {
 
   const navigate = (href: string) => {
     router.push(href);
-    onClose();
+    onOpenChange(false);
   };
 
   const resourceItems = useMemo(() => {
@@ -84,10 +92,8 @@ function GlobalCommandMenu({ onClose }: { onClose: () => void }) {
 
   return (
     <CommandMenu
-      isOpen
-      onOpenChange={(v: boolean) => {
-        if (!v) onClose();
-      }}
+      isOpen={open}
+      onOpenChange={onOpenChange}
       shortcut="k"
       disableClientFilter
       inputValue={input}
