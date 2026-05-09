@@ -1,8 +1,46 @@
+import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { fetchUtahNews, type NewsArticle } from "@/lib/news";
 import { Heading } from "@/components/ui/heading";
+import { routing } from "@/i18n/routing";
+import { absoluteUrl, SITE_NAME, SITE_URL } from "@/lib/seo";
 
 export const revalidate = 43200;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const localePath = locale === routing.defaultLocale ? "" : `/${locale}`;
+  const path = `${localePath}/news`;
+  const title = "Latest Utah startup news";
+  const description =
+    "Funding rounds, venture activity, hiring, and startup news across Utah and Silicon Slopes — refreshed every 12 hours.";
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: path || "/news",
+      languages: Object.fromEntries(
+        routing.locales.map((l) => [
+          l,
+          absoluteUrl(`${l === routing.defaultLocale ? "" : `/${l}`}/news`),
+        ]),
+      ),
+    },
+    openGraph: {
+      type: "website",
+      siteName: SITE_NAME,
+      title,
+      description,
+      url: `${SITE_URL}${path || "/news"}`,
+      locale,
+    },
+    twitter: { card: "summary_large_image", title, description },
+  };
+}
 
 export default async function NewsPage({
   params,

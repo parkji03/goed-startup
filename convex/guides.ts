@@ -11,6 +11,24 @@ import { guideCategoryValidator } from './guideValidators';
  * location facets, plus a journey-step ordering query.
  */
 
+/**
+ * Lightweight projection for sitemap generation. Returns just slug +
+ * last sync time so SSG/sitemap builds avoid pulling the full document.
+ */
+export const sitemapEntries = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db
+      .query('guides')
+      .withIndex('by_status', (q) => q.eq('status', 'published'))
+      .take(5000);
+    return rows.map((g) => ({
+      slug: g.slug,
+      lastModified: g.lastSyncedAt ?? g._creationTime,
+    }));
+  },
+});
+
 export const bySlug = query({
   args: { slug: v.string() },
   handler: async (ctx, { slug }) => {
@@ -63,7 +81,9 @@ type GroupedCategory = { items: GroupedItem[]; total: number };
 export const listGroupedByCategory = query({
   args: { limitPerCategory: v.optional(v.number()) },
   handler: async (ctx, { limitPerCategory }) => {
-    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 200);
+    // Default 50 keeps SSR payloads small. Hard cap at 500 gives headroom
+    // before a category's full slice doesn't fit in one payload.
+    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 500);
     const results = Object.fromEntries(
       GUIDE_CATEGORY_KEYS.map((k) => [k, { items: [], total: 0 } as GroupedCategory]),
     ) as Record<Infer<typeof guideCategoryValidator>, GroupedCategory>;

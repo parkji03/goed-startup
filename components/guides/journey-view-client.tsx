@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import type { api } from "@/convex/_generated/api";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Heading } from "@/components/ui/heading";
@@ -14,12 +14,12 @@ const SECTIONS: ReadonlyArray<{ label: string; tagline: string; range: [number, 
   { label: "Sell or exit", tagline: "Wind down or hand off", range: [19, 19] },
 ];
 
-export function JourneyViewClient() {
-  const steps = useQuery(api.guides.listJourneySteps, {});
+type Props = {
+  preloadedSteps: Preloaded<typeof api.guides.listJourneySteps>;
+};
 
-  if (steps === undefined) {
-    return <Text className="px-4 py-10 text-center text-muted-fg">Loading journey…</Text>;
-  }
+export function JourneyViewClient({ preloadedSteps }: Props) {
+  const steps = usePreloadedQuery(preloadedSteps);
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-10">

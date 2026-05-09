@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import type { api } from "@/convex/_generated/api";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { ResourceBody } from "@/components/resources/resource-body";
 import { guideCategoryLabel, type GuideCategoryKey } from "@/lib/guides/categories";
 
 type Props = {
-  slug: string;
+  preloaded: Preloaded<typeof api.guides.bySlug>;
 };
 
 function ChipRow({ label, values }: { label: string; values: string[] }) {
@@ -30,12 +30,9 @@ function ChipRow({ label, values }: { label: string; values: string[] }) {
   );
 }
 
-export function GuideDetailClient({ slug }: Props) {
-  const guide = useQuery(api.guides.bySlug, { slug });
+export function GuideDetailClient({ preloaded }: Props) {
+  const guide = usePreloadedQuery(preloaded);
 
-  if (guide === undefined) {
-    return <Text className="px-4 py-10 text-center text-muted-fg">Loading guide…</Text>;
-  }
   if (guide === null) {
     return (
       <div className="mx-auto max-w-lg px-4 py-16">
