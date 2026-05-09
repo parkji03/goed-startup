@@ -58,6 +58,13 @@ type CsvRow = {
 
 type Override = { category: ResourceCategoryKey; reason?: string };
 
+function splitPipe(value: string | undefined): string[] {
+  return (value ?? '')
+    .split('|')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 function chunk<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
@@ -96,10 +103,7 @@ async function main() {
     .map((r) => {
       const sourceId = String(r.id);
       const title = String(r.Title).trim();
-      const topics = (r.Topics ?? '')
-        .split('|')
-        .map((t) => t.trim())
-        .filter(Boolean);
+      const topics = splitPipe(r.Topics);
       const ruleResult = assignCategory({ title, topics });
       let category: ResourceCategoryKey = ruleResult.category;
       if (overrides[sourceId]) {
@@ -121,9 +125,18 @@ async function main() {
       };
     });
 
+  const categoryCounts = rows.reduce<Record<string, number>>((acc, r) => {
+    acc[r.category] = (acc[r.category] ?? 0) + 1;
+    return acc;
+  }, {});
   console.log(
-    `Parsed ${rows.length} CSV rows (${overrideHits} category overrides applied) → importInternal in chunks of ${CHUNK_ROWS}…\n`,
+    `Parsed ${rows.length} CSV rows (${overrideHits} category overrides applied) → importInternal in chunks of ${CHUNK_ROWS}…`,
   );
+  console.log('  category distribution:');
+  for (const [key, n] of Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])) {
+    console.log(`    ${n.toString().padStart(4)}  ${key}`);
+  }
+  console.log('');
 
   let appliedChunks = 0;
   let failed = 0;

@@ -56,3 +56,5 @@ __pycache__/
 
 # transient Claude Code agent worktrees
 /.claude/worktrees/
+# scheduled-task lockfile written by Claude Code's scheduler
+/.claude/scheduled_tasks.lock

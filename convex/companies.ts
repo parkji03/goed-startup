@@ -186,6 +186,10 @@ export const searchForMap = query({
         // LinkedIn-aware seed.
         hiringStatus: c.hiringStatus ?? ('unknown' as const),
         openListingsCount: c.openListingsCount ?? 0,
+        // Drives the "Claim this company" CTA on the detail panel —
+        // boolean instead of the raw `claimedBy` token so we don't ship
+        // owner identifiers to anonymous map clients.
+        isClaimed: Boolean(c.claimedBy),
       }));
   },
 });
@@ -591,6 +595,28 @@ export const allListings = query({
       })
       .filter(<T,>(x: T | null): x is T => x !== null)
       .sort((a, b) => (b.postedAt ?? 0) - (a.postedAt ?? 0));
+  },
+});
+
+/**
+ * Public photo URLs for one company. Resolves each storage id to a
+ * signed Convex URL on the server so anonymous map visitors don't need
+ * any storage permission.
+ *
+ * Only returns photos for `published` rows — pending/archived companies
+ * shouldn't leak imagery via this endpoint.
+ */
+export const publicPhotosForCompany = query({
+  args: { companyId: v.id('companies') },
+  handler: async (ctx, { companyId }) => {
+    const company = await ctx.db.get(companyId);
+    if (!company || company.status !== 'published') return [];
+    return await Promise.all(
+      company.photos.map(async (storageId) => ({
+        storageId,
+        url: await ctx.storage.getUrl(storageId),
+      })),
+    );
   },
 });
 

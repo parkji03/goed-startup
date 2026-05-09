@@ -1,9 +1,12 @@
 "use client";
 
-import { SparklesIcon } from "@heroicons/react/20/solid";
+import { Show, UserButton } from "@clerk/nextjs";
+import { useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { ChevronDownIcon, SparklesIcon } from "@heroicons/react/20/solid";
 import { LayoutGroup, motion } from "motion/react";
 import type { ReactNode } from "react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { useGlobalMetaCtrlKeyToggle } from "@/hooks/use-global-keyboard-toggle";
 import { GuideChatPanel } from "@/components/guide/guide-chat-panel";
@@ -12,7 +15,8 @@ import { LocaleSwitcher } from "@/components/locale-switcher";
 import { QuizProvider } from "@/components/quiz/quiz-provider";
 import { StartupUtahLogoLink } from "@/components/startup-utah-logo-link";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { Button } from "@/components/ui/button";
+import { Button, buttonStyles } from "@/components/ui/button";
+import { Menu, MenuContent, MenuItem, MenuTrigger } from "@/components/ui/menu";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import {
   Navbar,
@@ -28,7 +32,7 @@ import {
   SidebarProvider,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Link, usePathname } from "@/i18n/navigation";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 
 type Props = {
   children: ReactNode;
@@ -38,7 +42,14 @@ type Props = {
 const navItems = [
   { href: "/" as const, label: "Resources" },
   { href: "/guides" as const, label: "Guides" },
-  { href: "/map" as const, label: "Map" },
+  { href: "/news" as const, label: "News" },
+];
+
+const mapMenuItems = [
+  { href: "/map" as const, label: "Utah Companies" },
+  // Investors corpus is global; preselect the layer via `?type=investor`.
+  // FloatingFilterBar reads/writes the same param, so the toggle stays in sync.
+  { href: "/map?type=investor" as const, label: "Global Investors" },
 ];
 
 /**
@@ -117,6 +128,70 @@ function DrawerNavLink({
     >
       {label}
     </Link>
+  );
+}
+
+/** Desktop nav dropdown for the two map variants. Mirrors HeaderNavLink's
+ *  visual treatment (active text + animated underline) so it sits in the
+ *  layout group seamlessly. */
+function MapNavMenu({ pathname }: { pathname: string }) {
+  const active = isActivePath(pathname, "/map");
+  return (
+    <Menu>
+      <MenuTrigger
+        aria-current={active ? "page" : undefined}
+        className={twMerge(
+          "relative flex items-center gap-1 px-3 py-2.5 text-sm font-medium transition-colors outline-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+          active ? "text-fg" : "text-muted-fg hover:text-fg",
+        )}
+      >
+        Map
+        <ChevronDownIcon aria-hidden className="size-3.5" />
+        {active && (
+          <motion.span
+            layoutId="desktop-nav-active"
+            className="absolute inset-x-2 -bottom-[13px] h-0.5 rounded-full bg-primary"
+            transition={{ type: "spring", stiffness: 500, damping: 40 }}
+          />
+        )}
+      </MenuTrigger>
+      <MenuContent placement="bottom start">
+        {mapMenuItems.map((item) => (
+          <MenuItem key={item.href} href={item.href}>
+            {item.label}
+          </MenuItem>
+        ))}
+      </MenuContent>
+    </Menu>
+  );
+}
+
+/** Mobile drawer counterpart: a labeled section with two indented links. The
+ *  drawer is a flat vertical stack, so a popover would feel out of place. */
+function DrawerMapMenu({ pathname }: { pathname: string }) {
+  const { setOpen } = useNavbar();
+  const active = isActivePath(pathname, "/map");
+  return (
+    <div className="flex flex-col gap-0.5">
+      <div
+        className={twMerge(
+          "px-3 pt-2 pb-1 text-xs font-semibold uppercase tracking-wide",
+          active ? "text-fg" : "text-muted-fg",
+        )}
+      >
+        Map
+      </div>
+      {mapMenuItems.map((item) => (
+        <Link
+          key={item.href}
+          href={item.href}
+          onClick={() => setOpen(false)}
+          className="rounded-lg px-6 py-2.5 text-base font-medium text-muted-fg transition-colors hover:bg-secondary/60 hover:text-fg"
+        >
+          {item.label}
+        </Link>
+      ))}
+    </div>
   );
 }
 
@@ -247,6 +322,7 @@ function DesktopHeaderBar({
               {navItems.map((item) => (
                 <HeaderNavLink key={item.href} pathname={pathname} href={item.href} label={item.label} />
               ))}
+              <MapNavMenu pathname={pathname} />
             </nav>
           </LayoutGroup>
         </div>
@@ -262,13 +338,70 @@ function DesktopHeaderBar({
           />
         </div>
 
-        {/* Right: locale + theme */}
+        {/* Right: locale + theme + auth */}
         <div className="flex flex-1 items-center justify-end gap-2">
           <LocaleSwitcher locale={locale} className="w-[6.75rem]" triggerClassName="px-2" />
           <ThemeSwitcher />
+          <HeaderAuthSlot />
         </div>
       </div>
     </header>
+  );
+}
+
+/**
+ * Auth UI in the header. Self-contained so it can render in both the desktop
+ * top rail and the mobile drawer without each call site needing to know
+ * which Clerk components to compose. Renders nothing when Clerk isn't
+ * configured — `<Show>` is a no-op outside a `ClerkProvider`, which is
+ * itself conditional on the publishable key being set.
+ *
+ * Clerk v7 collapsed the old `<SignedIn>` / `<SignedOut>` pair into a
+ * single `<Show when="…">` API, so we use that here.
+ */
+function HeaderAuthSlot() {
+  // Subscribes to the role even for signed-out users — the query short-
+  // circuits to `kind: 'anonymous'` when there's no identity, so it's a
+  // single cheap subscription that drives every auth-aware piece of
+  // chrome (admin pill, future claimer links, etc.).
+  const role = useQuery(api.me.getRole);
+  return (
+    <>
+      <Show when="signed-out">
+        <Link
+          href="/sign-in"
+          className="rounded-md px-3 py-1.5 text-sm font-medium text-fg/80 transition-colors hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+        >
+          Sign in
+        </Link>
+      </Show>
+      <Show when="signed-in">
+        {/* Every signed-in user gets a path to their claimer dashboard.
+            If they have no claims it lands on an empty-state with a
+            "Claim a business" CTA, which is itself the right next step. */}
+        <Link
+          href="/dashboard"
+          className={twMerge(
+            buttonStyles({ intent: "outline", size: "xs" }),
+            "shrink-0 whitespace-nowrap",
+          )}
+        >
+          My businesses
+        </Link>
+        {role?.kind === "admin" && (
+          <Link
+            href="/admin"
+            className={twMerge(
+              buttonStyles({ intent: "outline", size: "xs" }),
+              "shrink-0 whitespace-nowrap",
+            )}
+          >
+            Admin
+          </Link>
+        )}
+        <UserButton />
+      </Show>
+    </>
   );
 }
 
@@ -307,6 +440,7 @@ function HeaderBar({
           {navItems.map((item) => (
             <DrawerNavLink key={item.href} pathname={pathname} href={item.href} label={item.label} />
           ))}
+          <DrawerMapMenu pathname={pathname} />
         </nav>
 
         <div className="flex-1" />
@@ -314,6 +448,7 @@ function HeaderBar({
         <div className="flex items-center gap-2 border-t border-border px-2 py-4">
           <LocaleSwitcher locale={locale} className="min-w-0 flex-1" triggerClassName="px-2" />
           <ThemeSwitcher />
+          <HeaderAuthSlot />
         </div>
       </Navbar>
 
@@ -349,6 +484,43 @@ function AiGuideSidebarBody() {
   return <GuideChatPanel compact onCollapse={toggleSidebar} />;
 }
 
+/**
+ * Side-effect-only gate that:
+ *
+ *   1. Touches the `users` directory once the role resolves so the admin
+ *      UI has a `tokenIdentifier → email` mapping for any signed-in user.
+ *   2. Redirects revoked users to `/access-revoked` from anywhere in the
+ *      app. Sits at the top of the shell so the redirect fires regardless
+ *      of which chrome branch (`usesOwnChrome` vs. public) renders below.
+ *
+ * Renders nothing. Hooks run unconditionally so React's hook-order rule
+ * is preserved across role transitions.
+ */
+function PortalAccessGate({ pathname }: { pathname: string }) {
+  const role = useQuery(api.me.getRole);
+  const touch = useMutation(api.me.touch);
+  const router = useRouter();
+
+  // Populate the users directory once we have a signed-in role. Convex
+  // mutations are idempotent on the server (`me.touch` patches only on
+  // drift), so calling once per role transition is plenty.
+  useEffect(() => {
+    if (role?.kind === "authenticated" || role?.kind === "admin") {
+      void touch({});
+    }
+  }, [role?.kind, touch]);
+
+  // Revocation redirect. Skip when already on the destination so the
+  // page itself stays reachable.
+  useEffect(() => {
+    if (!role?.revoked) return;
+    if (pathname.startsWith("/access-revoked")) return;
+    router.replace("/access-revoked");
+  }, [role?.revoked, pathname, router]);
+
+  return null;
+}
+
 export function PublicSiteShell({ children, locale }: Props) {
   const pathname = usePathname();
   const [aiOpen, setAiOpen] = useState(false);
@@ -356,22 +528,32 @@ export function PublicSiteShell({ children, locale }: Props) {
   const shortcutLabel = isMacEnv ? "⌘L" : "Ctrl L";
   const shortcutAria = isMacEnv ? "Meta+L" : "Control+L";
   const isAdminRoute = pathname.startsWith("/admin");
+  const isDashboardRoute = pathname.startsWith("/dashboard");
+  // Both admin and the owner dashboard render their own minimal chrome —
+  // skip the public site header (and its AI sidebar) on those surfaces.
+  const usesOwnChrome = isAdminRoute || isDashboardRoute;
   const toggleAiOpen = useCallback(() => setAiOpen((open) => !open), []);
 
   useGlobalMetaCtrlKeyToggle({
-    enabled: !isAdminRoute,
+    enabled: !usesOwnChrome,
     key: "l",
     onToggle: toggleAiOpen,
   });
 
-  if (isAdminRoute) {
-    return <>{children}</>;
+  if (usesOwnChrome) {
+    return (
+      <>
+        <PortalAccessGate pathname={pathname} />
+        {children}
+      </>
+    );
   }
 
   const showAi = aiOpen;
 
   return (
     <div className="flex min-h-dvh flex-col bg-bg text-fg">
+      <PortalAccessGate pathname={pathname} />
       {/* Sticky wrapper. The inner <header> can't stick on its own because
           its NavbarProvider parent (a flex-col with no fixed height) collapses
           to the header's own height, leaving sticky no room to operate. This

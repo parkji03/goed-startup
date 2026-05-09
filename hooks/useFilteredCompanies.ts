@@ -76,6 +76,10 @@ export type CompanyForList = {
   lng: number;
   lat: number;
   investorBrief?: InvestorBrief;
+  /** Whether `companies.claimedBy` is set. Drives the "Claim this company"
+   * CTA on the detail panel. Boolean — owner identifier never leaves the
+   * server. */
+  isClaimed: boolean;
   /**
    * Hiring snapshot from the most recent LinkedIn scrape. `'unknown'` is
    * the projection's default for rows that never had it computed.

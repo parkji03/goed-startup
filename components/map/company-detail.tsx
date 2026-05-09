@@ -6,6 +6,7 @@ import {
   BriefcaseIcon,
   GlobeAltIcon,
   MapPinIcon,
+  ShieldCheckIcon,
 } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
@@ -13,8 +14,10 @@ import { useQuery } from 'convex/react';
 import { Button } from 'react-aria-components/Button';
 import { api } from '@/convex/_generated/api';
 import type { CompanyForList } from '@/hooks/useFilteredCompanies';
+import { Link } from '@/i18n/navigation';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { SECTOR_TINTS } from '@/lib/companies/sector-styling';
+import { CompanyPhotosStrip } from '@/components/map/company-photos-strip';
 import { InvestorBrief } from '@/components/map/investor-brief';
 import { InvestorSources } from '@/components/map/investor-sources';
 
@@ -37,6 +40,7 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
   const tTax = useTranslations('Taxonomy');
   const tDetail = useTranslations('Map.detail');
   const tCard = useTranslations('Map.card');
+  const tCta = useTranslations('MapCta');
 
   const domain = domainFromUrl(company.website);
   const logoSmall = logoDevUrl(domain, { size: 128 });
@@ -128,27 +132,42 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
                 {tTax(`sectors.${company.sector}`)}
               </span>
             </div>
-            {(company.website || company.linkedin) && (
-              <div
-                className="-me-1 flex shrink-0 items-center gap-0.5"
-                aria-label={tDetail('sections.links')}
-              >
-                {company.website && (
-                  <IconLink
-                    href={company.website}
-                    label={domain ?? tCard('website')}
-                    icon={<GlobeAltIcon className="size-4" />}
-                  />
-                )}
-                {company.linkedin && (
-                  <IconLink
-                    href={company.linkedin}
-                    label="LinkedIn"
-                    icon={<LinkedInGlyph className="size-4" />}
-                  />
-                )}
-              </div>
-            )}
+            <div
+              className="-me-1 flex shrink-0 items-center gap-0.5"
+              aria-label={tDetail('sections.links')}
+            >
+              {company.website && (
+                <IconLink
+                  href={company.website}
+                  label={domain ?? tCard('website')}
+                  icon={<GlobeAltIcon className="size-4" />}
+                />
+              )}
+              {company.linkedin && (
+                <IconLink
+                  href={company.linkedin}
+                  label="LinkedIn"
+                  icon={<LinkedInGlyph className="size-4" />}
+                />
+              )}
+              {company.isClaimed ? (
+                // Static pill (no link) — signals ownership has been
+                // verified by GOED. Emerald reads as "good standing"
+                // without introducing a new design token.
+                <span className="ms-1 inline-flex items-center gap-1.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-700 dark:text-emerald-300">
+                  <ShieldCheckIcon className="size-3.5" aria-hidden />
+                  {tCta('claimedBadge')}
+                </span>
+              ) : (
+                <Link
+                  href={`/claim/${company.slug}`}
+                  className="ms-1 inline-flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-xs font-medium text-fg/80 transition-colors hover:border-fg/30 hover:text-fg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+                >
+                  <ShieldCheckIcon className="size-3.5" aria-hidden />
+                  {tCta('claimThisCompany')}
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
@@ -172,6 +191,15 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
             {company.description}
           </p>
         )}
+
+        {/* Owner-uploaded photos. Component self-suppresses when the
+            company has none, so no need to gate here. Click a thumbnail
+            to open the full-size lightbox. */}
+        <CompanyPhotosStrip
+          companyId={company._id}
+          className={`${enterClass} mt-4`}
+          style={enterStyle(150)}
+        />
 
         {/* Information block — editorial divider then a 2x2 mono stat grid.
             The mono numerals + uppercase labels code "data" instantly.
@@ -246,7 +274,8 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
       </div>
 
       {/* Sticky CTA bar — primary action is "Visit website", secondary is
-          "View on map". Mirrors the pattern from the example mock. */}
+          "View on map". The "Claim this company" link lives in the header
+          when the row hasn't been claimed yet. */}
       <div className="pointer-events-none sticky bottom-0 z-10 mt-auto px-3 pb-3">
         <div className="pointer-events-auto flex items-stretch gap-2 rounded-2xl border border-border bg-bg/95 p-1.5 shadow-[0_4px_20px_-8px_rgba(0,0,0,0.18)] backdrop-blur-md">
           <Button

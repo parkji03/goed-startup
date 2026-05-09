@@ -8,7 +8,10 @@
  * @module
  */
 
+import type * as admin from "../admin.js";
 import type * as companies from "../companies.js";
+import type * as companyDashboard from "../companyDashboard.js";
+import type * as companyOnboarding from "../companyOnboarding.js";
 import type * as founderProfile from "../founderProfile.js";
 import type * as guide from "../guide.js";
 import type * as guideValidators from "../guideValidators.js";
@@ -18,10 +21,12 @@ import type * as investors from "../investors.js";
 import type * as lib_adminAuth from "../lib/adminAuth.js";
 import type * as lib_facetTypes from "../lib/facetTypes.js";
 import type * as lib_facetVocabularies from "../lib/facetVocabularies.js";
+import type * as lib_geocode from "../lib/geocode.js";
 import type * as lib_guideHelpers from "../lib/guideHelpers.js";
 import type * as lib_guideQuery from "../lib/guideQuery.js";
 import type * as lib_matchResources from "../lib/matchResources.js";
 import type * as lib_resourceHelpers from "../lib/resourceHelpers.js";
+import type * as me from "../me.js";
 import type * as resourceEmbeddings from "../resourceEmbeddings.js";
 import type * as resourceEmbeddingsNode from "../resourceEmbeddingsNode.js";
 import type * as resourceImport from "../resourceImport.js";
@@ -30,6 +35,7 @@ import type * as resourceMigration from "../resourceMigration.js";
 import type * as resourceSubmissions from "../resourceSubmissions.js";
 import type * as resourceValidators from "../resourceValidators.js";
 import type * as resources from "../resources.js";
+import type * as users from "../users.js";
 
 import type {
   ApiFromModules,
@@ -38,7 +44,10 @@ import type {
 } from "convex/server";
 
 declare const fullApi: ApiFromModules<{
+  admin: typeof admin;
   companies: typeof companies;
+  companyDashboard: typeof companyDashboard;
+  companyOnboarding: typeof companyOnboarding;
   founderProfile: typeof founderProfile;
   guide: typeof guide;
   guideValidators: typeof guideValidators;
@@ -48,10 +57,12 @@ declare const fullApi: ApiFromModules<{
   "lib/adminAuth": typeof lib_adminAuth;
   "lib/facetTypes": typeof lib_facetTypes;
   "lib/facetVocabularies": typeof lib_facetVocabularies;
+  "lib/geocode": typeof lib_geocode;
   "lib/guideHelpers": typeof lib_guideHelpers;
   "lib/guideQuery": typeof lib_guideQuery;
   "lib/matchResources": typeof lib_matchResources;
   "lib/resourceHelpers": typeof lib_resourceHelpers;
+  me: typeof me;
   resourceEmbeddings: typeof resourceEmbeddings;
   resourceEmbeddingsNode: typeof resourceEmbeddingsNode;
   resourceImport: typeof resourceImport;
@@ -60,6 +71,7 @@ declare const fullApi: ApiFromModules<{
   resourceSubmissions: typeof resourceSubmissions;
   resourceValidators: typeof resourceValidators;
   resources: typeof resources;
+  users: typeof users;
 }>;
 
 /**
