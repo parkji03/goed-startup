@@ -177,3 +177,35 @@ export const getPublishedBySlug = internalQuery({
     return row?.status === 'published' ? row : null;
   },
 });
+
+/**
+ * Hard-delete a resource by sourceId, cascading to its facet and embedding
+ * rows. Used for content-derived rows we triage out post-import (e.g., events
+ * that don't belong in the catalog). Internal-only — not callable from the
+ * browser.
+ */
+export const deleteBySourceId = internalMutation({
+  args: { sourceId: v.string() },
+  handler: async (ctx, { sourceId }) => {
+    const row = await ctx.db
+      .query('resources')
+      .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
+      .unique();
+    if (!row) return { deleted: false, sourceId };
+
+    const facets = await ctx.db
+      .query('resourceFacets')
+      .withIndex('by_resourceId', (q) => q.eq('resourceId', row._id))
+      .collect();
+    for (const f of facets) await ctx.db.delete(f._id);
+
+    const embeddings = await ctx.db
+      .query('resourceEmbeddings')
+      .withIndex('by_resourceId', (q) => q.eq('resourceId', row._id))
+      .collect();
+    for (const e of embeddings) await ctx.db.delete(e._id);
+
+    await ctx.db.delete(row._id);
+    return { deleted: true, sourceId, slug: row.slug, title: row.title };
+  },
+});

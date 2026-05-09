@@ -64,6 +64,10 @@ const SKIP_STEMS = new Set([
   // Stanley Multicultural Innovation Lab) isn't really a Utah-state resource
   // and the article is winners-focused, not program-focused.
   'two-utah-startups-named-winners-in-morgan-stanleys-pitch-competition',
+  // Out-of-state event, not a Utah ecosystem program. Annual one-day pitch
+  // competition at Walmart HQ in Bentonville. Belongs on an events surface
+  // if anywhere — not in the resources catalog.
+  'utah-startups-apply-now-for-walmarts-open-call-pitch-competition',
 ]);
 
 /**
