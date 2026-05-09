@@ -8,11 +8,20 @@ import {
   type UIMessage,
 } from 'ai';
 import { api } from '@/convex/_generated/api';
-import { enforceLimits, validateUserMessageText, HISTORY_TURN_CAP } from '@/lib/guide/abuse-guards';
+import {
+  enforceLimits,
+  validateUserMessageText,
+  HISTORY_TURN_CAP,
+  MAX_INPUT_CHARS,
+} from '@/lib/guide/abuse-guards';
 import { logHallucinatedSlugs } from '@/lib/guide/output-validator';
 import { buildSystemPrompt } from '@/lib/guide/system-prompt';
 import type { GuideContextItem, GuideUIMessage } from '@/lib/guide/types';
-import type { FounderProfileConvex } from '@/convex/founderProfile';
+import {
+  clampFounderProfileForConvex,
+  emptyFounderProfile,
+  type FounderProfileConvex,
+} from '@/convex/founderProfile';
 
 export const runtime = 'nodejs'; // Need node:crypto in abuse-guards
 export const maxDuration = 30;
@@ -33,6 +42,18 @@ function lastUserText(messages: UIMessage[]): string {
   return '';
 }
 
+function exceedsPerMessageCap(messages: UIMessage[], cap: number): boolean {
+  for (const m of messages) {
+    if (m.role !== 'user') continue;
+    const text = m.parts
+      .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+      .map((p) => p.text)
+      .join('\n');
+    if (text.length > cap) return true;
+  }
+  return false;
+}
+
 export async function POST(req: Request): Promise<Response> {
   const limit = await enforceLimits(req);
   if (!limit.ok) {
@@ -48,7 +69,19 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const { messages = [], founderProfile } = payload;
+
+  if (exceedsPerMessageCap(messages, MAX_INPUT_CHARS)) {
+    return Response.json(
+      { error: `Message too long (max ${MAX_INPUT_CHARS} chars per turn).` },
+      { status: 400 },
+    );
+  }
+
   const query = lastUserText(messages);
+
+  if (!query.trim()) {
+    return Response.json({ error: 'Message text is required.' }, { status: 400 });
+  }
 
   const inputCheck = validateUserMessageText(query);
   if (!inputCheck.ok) {
@@ -80,15 +113,9 @@ export async function POST(req: Request): Promise<Response> {
     },
   });
 
-  const profile: FounderProfileConvex = founderProfile ?? {
-    industries: [],
-    stages: [],
-    goals: [],
-    audiences: [],
-    counties: [],
-    specialStatuses: [],
-    freeText: '',
-  };
+  const profile: FounderProfileConvex = clampFounderProfileForConvex(
+    founderProfile ?? emptyFounderProfile(),
+  );
 
   const system = buildSystemPrompt({ context: retrieval.context, profile, locale: 'en' });
 

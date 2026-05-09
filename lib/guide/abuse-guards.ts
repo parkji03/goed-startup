@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 
 const PER_MINUTE = 10;
 const PER_HOUR = 60;
-const MAX_INPUT_CHARS = 2000;
+export const MAX_INPUT_CHARS = 2000;
 const MAX_BODY_BYTES = 32 * 1024;
 
 type Hits = { perMinute: number[]; perHour: number[] };

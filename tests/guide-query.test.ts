@@ -109,7 +109,7 @@ describe('rankWithProfile', () => {
     slug: 'x',
     url: 'https://x',
     description: '',
-    category: 'capital' as never,
+    category: 'capital-funding' as const,
     tags: ['pre-seed'],
     industries: ['agtech'],
     communities: [],
