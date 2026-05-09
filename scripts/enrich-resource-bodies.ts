@@ -30,12 +30,10 @@ type BodyEntry = {
 };
 
 function main() {
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
   const { target, convexRunFlags } = resolveSeedTarget();
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    throw new Error(
-      'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and link Convex.',
-    );
-  }
 
   const entries: BodyEntry[] = JSON.parse(readFileSync(INPUT, 'utf-8'));
   console.log(
@@ -56,7 +54,7 @@ function main() {
     try {
       const out = execFileSync(
         'pnpm',
-        ['exec', 'convex', ...convexRunFlags, 'run', 'resourceInternal:patchBody', payload],
+        ['exec', 'convex', 'run', ...convexRunFlags, 'resourceInternal:patchBody', payload],
         {
           cwd: REPO_ROOT,
           stdio: ['ignore', 'pipe', 'inherit'],

@@ -43,10 +43,10 @@ function chunk<T>(arr: T[], size: number): T[][] {
 }
 
 function main() {
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
   const { target, convexRunFlags } = resolveSeedTarget();
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    throw new Error('NEXT_PUBLIC_CONVEX_URL is not set.');
-  }
   const rows: GeneratedGuide[] = JSON.parse(readFileSync(INPUT, 'utf-8'));
 
   for (const r of rows) {
@@ -76,7 +76,7 @@ function main() {
     try {
       execFileSync(
         'pnpm',
-        ['exec', 'convex', ...convexRunFlags, 'run', 'guidesInternal:importInternal', payload],
+        ['exec', 'convex', 'run', ...convexRunFlags, 'guidesInternal:importInternal', payload],
         { cwd: REPO_ROOT, stdio: 'inherit', env: process.env },
       );
       appliedChunks++;

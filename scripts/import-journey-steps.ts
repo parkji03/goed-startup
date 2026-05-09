@@ -147,8 +147,10 @@ type ImportRow = {
 };
 
 function main() {
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
   const { target, convexRunFlags } = resolveSeedTarget();
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) throw new Error('NEXT_PUBLIC_CONVEX_URL is not set.');
 
   const rows: ImportRow[] = STEPS.map(({ step, file, stageTags, tags }) => {
     const absPath = resolve(CONTENT, 'pages', file);
@@ -175,7 +177,7 @@ function main() {
   try {
     execFileSync(
       'pnpm',
-      ['exec', 'convex', ...convexRunFlags, 'run', 'guidesInternal:importInternal', JSON.stringify({ rows })],
+      ['exec', 'convex', 'run', ...convexRunFlags, 'guidesInternal:importInternal', JSON.stringify({ rows })],
       { cwd: REPO_ROOT, stdio: 'inherit', env: process.env },
     );
   } catch (err) {

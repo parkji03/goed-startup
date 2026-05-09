@@ -38,12 +38,10 @@ const repoRoot = path.resolve(scriptDir, '..');
 
 const CHUNK_ROWS = 40;
 
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-if (!convexUrl) {
-  throw new Error(
-    'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and link Convex.',
-  );
-}
+// Note: this script uses the Convex CLI (`convex run`) which reads its own
+// deployment env (CONVEX_DEPLOYMENT, .convex/, or `--prod`). NEXT_PUBLIC_CONVEX_URL
+// is intentionally NOT required here — that env var is for ConvexHttpClient,
+// which this script doesn't use.
 
 type CsvRow = {
   id: string;
@@ -152,7 +150,7 @@ async function main() {
       const payload = JSON.stringify({ rows: usable, status: 'published' });
       execFileSync(
         'pnpm',
-        ['exec', 'convex', ...convexRunFlags, 'run', 'resourceImport:importInternal', payload],
+        ['exec', 'convex', 'run', ...convexRunFlags, 'resourceImport:importInternal', payload],
         { cwd: repoRoot, stdio: 'inherit', env: process.env },
       );
       appliedChunks++;

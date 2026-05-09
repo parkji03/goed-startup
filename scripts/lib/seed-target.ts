@@ -21,7 +21,12 @@ export type SeedTarget = 'dev' | 'prod';
 
 export type ResolvedSeedTarget = {
   target: SeedTarget;
-  /** Flags to pass to `pnpm exec convex run …` (empty for dev, ["--prod"] for prod). */
+  /**
+   * Flags appended *after* the `run` subcommand. Convex CLI rejects `--prod`
+   * before the subcommand (`convex --prod run …` errors with "unknown option").
+   * Call sites must spread these as:
+   *   `['exec', 'convex', 'run', ...convexRunFlags, '<fn>', payload]`
+   */
   convexRunFlags: string[];
 };
 
