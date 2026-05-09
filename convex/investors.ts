@@ -26,10 +26,11 @@ export const list = query({
 });
 
 /**
- * Search + projection for the map (and the list panel beside it). Mirrors
- * `companies.searchForMap` but with a much smaller filter surface — investors
- * don't share the company taxonomy (no sector/stage/employee facets), so for
- * now this only honors the text search box.
+ * Search + projection for the map (and the list panel beside it). Honors a
+ * text search box plus four investor-specific facets (type, stage,
+ * cheque-size range, countries-of-investment). The hook layer translates
+ * filter IDs → raw OpenVC strings before calling, so this query operates
+ * purely on the doc shape.
  *
  * Filters out rows without lat/lng so the geojson contract matches companies
  * (a row in the result ⇒ plottable). The full corpus is ~2.5k, well within
@@ -38,8 +39,26 @@ export const list = query({
 export const searchForMap = query({
   args: {
     q: v.optional(v.string()),
+    /** Raw OpenVC `investorType` strings to match (OR within facet). */
+    types: v.optional(v.array(v.string())),
+    /** Raw OpenVC stage tokens (e.g. "1. Idea or Patent"); OR within facet. */
+    stages: v.optional(v.array(v.string())),
+    /**
+     * Cheque-size bucket ranges. An investor matches if their
+     * [firstChequeMin, firstChequeMax] interval overlaps any range.
+     * Open-ended buckets use Number.MAX_SAFE_INTEGER for `max` (Infinity
+     * doesn't round-trip cleanly through JSON).
+     */
+    chequeRanges: v.optional(
+      v.array(v.object({ min: v.number(), max: v.number() })),
+    ),
+    /** Country names from OpenVC `countriesOfInvestment` arrays; OR within. */
+    countries: v.optional(v.array(v.string())),
   },
-  handler: async (ctx, { q }) => {
+  handler: async (
+    ctx,
+    { q, types, stages, chequeRanges, countries },
+  ) => {
     const trimmed = q?.trim() ?? '';
     // Convex's search index caps at ~1024 fetched documents per query
     // (the index maintains a fixed scan budget). Anything beyond errors
@@ -62,9 +81,35 @@ export const searchForMap = query({
             .take(SEARCH_CAP)
         : await ctx.db.query('investors').take(FULL_CAP);
 
-    const filtered = rows.filter(
-      (i) => i.location?.lat != null && i.location?.lng != null,
-    );
+    const typeSet = types && types.length ? new Set(types) : null;
+    const stageSet = stages && stages.length ? new Set(stages) : null;
+    const countrySet =
+      countries && countries.length ? new Set(countries) : null;
+    const ranges = chequeRanges && chequeRanges.length ? chequeRanges : null;
+
+    const filtered = rows
+      .filter((i) => i.location?.lat != null && i.location?.lng != null)
+      .filter(
+        (i) => !typeSet || (i.investorType != null && typeSet.has(i.investorType)),
+      )
+      .filter(
+        (i) => !stageSet || i.stagesOfInvestment.some((s) => stageSet.has(s)),
+      )
+      .filter(
+        (i) =>
+          !countrySet || i.countriesOfInvestment.some((c) => countrySet.has(c)),
+      )
+      .filter((i) => {
+        if (!ranges) return true;
+        // Investor with no cheque info at all can't be matched against a
+        // bucket — exclude rather than guess. The other facets get the
+        // benefit of the doubt because they have explicit "Other" /
+        // empty-array semantics.
+        if (i.firstChequeMin == null && i.firstChequeMax == null) return false;
+        const lo = i.firstChequeMin ?? 0;
+        const hi = i.firstChequeMax ?? Number.MAX_SAFE_INTEGER;
+        return ranges.some((r) => lo <= r.max && hi >= r.min);
+      });
 
     // Re-rank so name matches surface above thesis-only matches. Same trick
     // as companies.searchForMap.
@@ -105,6 +150,38 @@ export const searchForMap = query({
       countriesOfInvestment: i.countriesOfInvestment,
       stagesOfInvestment: i.stagesOfInvestment,
     }));
+  },
+});
+
+/**
+ * Distinct countries-of-investment with counts, for the "Invests in" filter
+ * chip. Computed over the full geocoded corpus (not the currently-filtered
+ * set) so the dropdown stays stable as filters compose. Sorted by count
+ * desc — the broadly-targeted countries (e.g., "USA") sit at the top where
+ * a Utah founder is most likely to scan first.
+ *
+ * Returns the same `{ key, display, count }` shape as `companies.cityList`
+ * so the FilterBar can reuse the existing chip-options pattern. Country
+ * names from OpenVC are display-ready strings, so `key === display`.
+ */
+export const countryList = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query('investors').take(5000);
+    const counts = new Map<string, number>();
+    for (const r of rows) {
+      // Skip ungeocoded rows — they can't appear on the map, so showing
+      // them in the filter dropdown would be a dead-end.
+      if (r.location?.lat == null || r.location?.lng == null) continue;
+      for (const raw of r.countriesOfInvestment) {
+        const key = raw.trim();
+        if (!key) continue;
+        counts.set(key, (counts.get(key) ?? 0) + 1);
+      }
+    }
+    return Array.from(counts.entries())
+      .map(([key, count]) => ({ key, display: key, count }))
+      .sort((a, b) => b.count - a.count || a.display.localeCompare(b.display));
   },
 });
 

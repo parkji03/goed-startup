@@ -38,7 +38,12 @@ export function InvestorCard({ investor, onSelect, onView }: InvestorCardProps) 
 
   return (
     <article
-      className="group relative w-full cursor-pointer rounded-lg border border-border bg-bg p-3 text-left transition-colors hover:bg-muted/40 focus-within:bg-muted/40"
+      // Left accent rail in OpenVC's brand magenta (#ff007e) — the same hex
+      // used in the logo we credit at the bottom of the investor profile.
+      // 4px stripe doubles as the "this is an investor" tell, paired with
+      // the rounded-square map marker. Standard 1px border on the other
+      // three sides keeps the card chrome quiet.
+      className="group relative w-full cursor-pointer rounded-lg border border-border border-l-4 border-l-[#ff007e]/70 bg-bg p-3 text-left transition-colors hover:bg-muted/40 focus-within:bg-muted/40"
       onClick={onSelect}
     >
       <div className="flex items-start gap-3">

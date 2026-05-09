@@ -5,7 +5,6 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'convex/react';
 import { FunnelIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
-import { Button as AriaButton } from 'react-aria-components/Button';
 import { Dialog } from 'react-aria-components/Dialog';
 import { DialogTrigger } from 'react-aria-components/Dialog';
 import { Popover as PopoverPrimitive } from 'react-aria-components/Popover';
@@ -30,6 +29,14 @@ import {
   type EntityTypeId,
   type MapFilters,
 } from '@/lib/companies/filters';
+import {
+  CHEQUE_BUCKET_IDS,
+  INVESTOR_STAGE_IDS,
+  INVESTOR_TYPE_IDS,
+  type ChequeBucketId,
+  type InvestorStageId,
+  type InvestorTypeId,
+} from '@/lib/investors/taxonomy';
 import { SearchField, SearchInput } from '@/components/ui/search-field';
 import { FilterChip } from '@/components/ui/filter-chip';
 import { ListBox, ListBoxItem } from '@/components/ui/list-box';
@@ -149,6 +156,44 @@ export function FilterBar({
     [cityList],
   );
 
+  // Investor-side option lists. Types/stages/cheque buckets are closed
+  // enums (translated via i18n); countries are loaded from a Convex query
+  // since the OpenVC corpus has ~150 distinct ones with long-tail counts.
+  const tInvestorTax = useTranslations('Taxonomy.investor');
+  const investorTypeOptions = useMemo<Option<InvestorTypeId>[]>(
+    () =>
+      INVESTOR_TYPE_IDS.map((id) => ({
+        id,
+        name: tInvestorTax(`types.${id}`),
+      })),
+    [tInvestorTax],
+  );
+  const investorStageOptions = useMemo<Option<InvestorStageId>[]>(
+    () =>
+      INVESTOR_STAGE_IDS.map((id) => ({
+        id,
+        name: tInvestorTax(`stages.${id}`),
+      })),
+    [tInvestorTax],
+  );
+  const chequeBucketOptions = useMemo<Option<ChequeBucketId>[]>(
+    () =>
+      CHEQUE_BUCKET_IDS.map((id) => ({
+        id,
+        name: tInvestorTax(`chequeBuckets.${id}`),
+      })),
+    [tInvestorTax],
+  );
+  const investorCountryList = useQuery(api.investors.countryList);
+  const investorCountryOptions = useMemo<Option<string>[]>(
+    () =>
+      (investorCountryList ?? []).map((c) => ({
+        id: c.key,
+        name: `${c.display} (${c.count})`,
+      })),
+    [investorCountryList],
+  );
+
   // Layer counts for the Layers popover labels. Both are cheap and Convex
   // shares the underlying subscription with the map page, so subscribing
   // here costs nothing extra.
@@ -170,14 +215,25 @@ export function FilterBar({
   // Sum across the *filter* dimensions only. Layer selection is now its
   // own affordance (the Layers button) with its own badge — keeping it out
   // of this count means the Filter button reflects "narrowing" and the
-  // Layers button reflects "what's on the map", with no overlap.
+  // Layers button reflects "what's on the map", with no overlap. Includes
+  // investor facets so the badge reflects all narrowing in one number.
   const activeCount =
     filters.sectors.length +
     filters.stages.length +
     filters.employeeCounts.length +
     filters.cities.length +
-    filters.hiringStatuses.length;
+    filters.hiringStatuses.length +
+    filters.investorTypes.length +
+    filters.investorStages.length +
+    filters.chequeBuckets.length +
+    filters.investorCountries.length;
   const typesDiverges = isTypesNonDefault(filters.types);
+
+  // Which kinds are currently visible — drives whether each chip section
+  // renders and whether the section labels appear.
+  const showCompanyChips = filters.types.includes('company');
+  const showInvestorChips = filters.types.includes('investor');
+  const bothLayersOn = showCompanyChips && showInvestorChips;
 
   // `chipsOpen` is initialized once from `activeCount`, then becomes
   // user-controlled — toggling URL filters off later doesn't yank the
@@ -209,16 +265,14 @@ export function FilterBar({
             aria-label={toggleLabel}
             aria-pressed={chipsOpen}
             intent="outline"
-            // `md` matches the SearchInput at the desktop breakpoint
-            // (`min-h-9`); the explicit `min-h-11` keeps the mobile
-            // height aligned with the input's `min-h-11` so the toggle
-            // sits flush with the input on both breakpoints.
-            size="md"
+            // `sq-md` is the icon-only square variant — `size-11` on
+            // mobile, `size-9` on desktop, matching the SearchInput's
+            // own `min-h-11 sm:min-h-9` so the toggle sits flush.
+            size="sq-md"
             onPress={() => setChipsOpen((open) => !open)}
-            className="relative shrink-0 min-h-11 sm:min-h-9"
+            className="relative shrink-0"
           >
             <FunnelIcon />
-            <span>{tFilters('toggle.label')}</span>
             {activeCount > 0 && (
               <span
                 aria-hidden="true"
@@ -232,31 +286,31 @@ export function FilterBar({
         </Tooltip>
         {/* Layers button: orthogonal to filters. Filters narrow what's
             shown within a layer; layers control which kinds (companies,
-            investors) are visible at all. Badge appears only when the
-            layer state diverges from the default so a fresh load stays
-            unadorned. */}
+            investors) are visible at all. Same component + variant as
+            the Filter button above so the two read as a matched pair —
+            outline border, no drop shadow, identical sq-md footprint.
+            Badge appears only when the layer state diverges from the
+            default so a fresh load stays unadorned. */}
         <DialogTrigger>
-          <AriaButton
-            aria-label={tFilters('layers.label')}
-            className={twMerge(
-              'relative inline-flex shrink-0 items-center gap-1.5 rounded-md border bg-bg shadow-sm transition-colors min-h-11 sm:min-h-9 px-3.5 text-sm',
-              'pressed:bg-muted hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
-              typesDiverges
-                ? 'border-fg/40 bg-fg/5 font-medium'
-                : 'border-border',
-            )}
-          >
-            <RectangleStackIcon className="size-4" />
-            <span>{tFilters('layers.label')}</span>
-            {typesDiverges && (
-              <span
-                aria-hidden="true"
-                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-fg px-1 text-[10px] font-semibold text-bg"
-              >
-                {filters.types.length}
-              </span>
-            )}
-          </AriaButton>
+          <Tooltip>
+            <Button
+              aria-label={tFilters('layers.label')}
+              intent="outline"
+              size="sq-md"
+              className="relative shrink-0"
+            >
+              <RectangleStackIcon />
+              {typesDiverges && (
+                <span
+                  aria-hidden="true"
+                  className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-fg px-1 text-[10px] font-semibold text-bg"
+                >
+                  {filters.types.length}
+                </span>
+              )}
+            </Button>
+            <TooltipContent>{tFilters('layers.label')}</TooltipContent>
+          </Tooltip>
           <PopoverPrimitive
             offset={6}
             placement="bottom end"
@@ -309,51 +363,100 @@ export function FilterBar({
         aria-hidden={!chipsOpen}
       >
         <div className="min-h-0 overflow-hidden">
-          {/* Chip order is alphabetical by label (City, Employees,
-              Hiring, Sector, Stage). If a label is renamed in i18n,
-              double-check the row still reads in order. Layer selection
-              lives in the Layers button at the top of the chrome — these
-              chips are purely about narrowing the visible set. */}
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <FilterChip
-              size={size}
-              label={tFilters('city.label')}
-              options={cityOptions}
-              value={filters.cities}
-              onChange={(cities) => updateFilters({ ...filters, cities })}
-            />
-            <FilterChip
-              size={size}
-              label={tFilters('employees.label')}
-              options={employeeOptions}
-              value={filters.employeeCounts}
-              onChange={(employeeCounts) =>
-                updateFilters({ ...filters, employeeCounts })
-              }
-            />
-            <FilterChip
-              size={size}
-              label={tFilters('hiring.label')}
-              options={hiringOptions}
-              value={filters.hiringStatuses}
-              onChange={(hiringStatuses) =>
-                updateFilters({ ...filters, hiringStatuses })
-              }
-            />
-            <FilterChip
-              size={size}
-              label={tFilters('sector.label')}
-              options={sectorOptions}
-              value={filters.sectors}
-              onChange={(sectors) => updateFilters({ ...filters, sectors })}
-            />
-            <FilterChip
-              size={size}
-              label={tFilters('stage.label')}
-              options={stageOptions}
-              value={filters.stages}
-              onChange={(stages) => updateFilters({ ...filters, stages })}
-            />
+          {/* Chip order within each section is alphabetical by label. The
+              two sections only show their eyebrow labels when *both*
+              layers are on — solo views read fine without the extra
+              chrome. Empty sections are dropped entirely. */}
+          <div className="flex flex-col gap-3 pt-2">
+            {showCompanyChips && (
+              <FilterSection
+                label={bothLayersOn ? tFilters('sections.companies') : null}
+              >
+                <FilterChip
+                  size={size}
+                  label={tFilters('city.label')}
+                  options={cityOptions}
+                  value={filters.cities}
+                  onChange={(cities) => updateFilters({ ...filters, cities })}
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('employees.label')}
+                  options={employeeOptions}
+                  value={filters.employeeCounts}
+                  onChange={(employeeCounts) =>
+                    updateFilters({ ...filters, employeeCounts })
+                  }
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('hiring.label')}
+                  options={hiringOptions}
+                  value={filters.hiringStatuses}
+                  onChange={(hiringStatuses) =>
+                    updateFilters({ ...filters, hiringStatuses })
+                  }
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('sector.label')}
+                  options={sectorOptions}
+                  value={filters.sectors}
+                  onChange={(sectors) => updateFilters({ ...filters, sectors })}
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('stage.label')}
+                  options={stageOptions}
+                  value={filters.stages}
+                  onChange={(stages) => updateFilters({ ...filters, stages })}
+                />
+              </FilterSection>
+            )}
+            {showInvestorChips && (
+              <FilterSection
+                label={bothLayersOn ? tFilters('sections.investors') : null}
+              >
+                {/* Cheque size first — it's the question a founder is most
+                    likely to start with ("who writes checks my size?"). */}
+                <FilterChip
+                  size={size}
+                  label={tFilters('cheque.label')}
+                  options={chequeBucketOptions}
+                  value={filters.chequeBuckets}
+                  onChange={(chequeBuckets) =>
+                    updateFilters({ ...filters, chequeBuckets })
+                  }
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('country.label')}
+                  options={investorCountryOptions}
+                  value={filters.investorCountries}
+                  onChange={(investorCountries) =>
+                    updateFilters({ ...filters, investorCountries })
+                  }
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('investorStage.label')}
+                  options={investorStageOptions}
+                  value={filters.investorStages}
+                  onChange={(investorStages) =>
+                    updateFilters({ ...filters, investorStages })
+                  }
+                />
+                <FilterChip
+                  size={size}
+                  label={tFilters('investorType.label')}
+                  options={investorTypeOptions}
+                  value={filters.investorTypes}
+                  onChange={(investorTypes) =>
+                    updateFilters({ ...filters, investorTypes })
+                  }
+                />
+              </FilterSection>
+            )}
           </div>
         </div>
       </div>
@@ -367,4 +470,29 @@ export function FilterBar({
  */
 function formatThousands(n: number): string {
   return n.toLocaleString('en-US');
+}
+
+/**
+ * One row of chips with an optional uppercase eyebrow label. The label is
+ * suppressed when only one entity layer is active — a single section reads
+ * fine without "FILTERS:" branding. When both layers are on, the label
+ * disambiguates which kind each chip targets.
+ */
+function FilterSection({
+  label,
+  children,
+}: {
+  label: string | null;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      {label && (
+        <span className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-fg">
+          {label}
+        </span>
+      )}
+      <div className="flex flex-wrap items-center gap-2">{children}</div>
+    </div>
+  );
 }

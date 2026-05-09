@@ -74,6 +74,22 @@
       "layers": {
         "label": "Layers"
       },
+      "sections": {
+        "companies": "Companies",
+        "investors": "Investors"
+      },
+      "investorType": {
+        "label": "Type"
+      },
+      "investorStage": {
+        "label": "Funding stage"
+      },
+      "cheque": {
+        "label": "Cheque size"
+      },
+      "country": {
+        "label": "Invests in"
+      },
       "toggle": {
         "label": "Filter",
         "show": "Show filters",
@@ -207,6 +223,36 @@
       "hiring": "Hiring",
       "not-hiring": "Not hiring",
       "unknown": "Unknown"
+    },
+    "investor": {
+      "types": {
+        "vc": "VC",
+        "corporate-vc": "Corporate VC",
+        "pe-fund": "PE fund",
+        "public-fund": "Public fund",
+        "family-office": "Family office",
+        "angel-network": "Angel network",
+        "solo-angel": "Solo angel",
+        "incubator-accelerator": "Incubator / Accelerator",
+        "startup-studio": "Startup studio",
+        "revenue-based": "Revenue-based",
+        "other": "Other"
+      },
+      "stages": {
+        "idea": "Idea or Patent",
+        "prototype": "Prototype",
+        "early-revenue": "Early Revenue",
+        "scaling": "Scaling",
+        "growth": "Growth",
+        "pre-ipo": "Pre-IPO"
+      },
+      "chequeBuckets": {
+        "under-50k": "Less than $50K",
+        "50k-250k": "$50K – $250K",
+        "250k-1m": "$250K – $1M",
+        "1m-5m": "$1M – $5M",
+        "5m-plus": "$5M+"
+      }
     },
     "targetMarkets": {
       "enterprise": "Enterprise",

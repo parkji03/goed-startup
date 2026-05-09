@@ -18,6 +18,14 @@ import {
   type SectorId,
   type StageId,
 } from './taxonomy';
+import {
+  isChequeBucketId,
+  isInvestorStageId,
+  isInvestorTypeId,
+  type ChequeBucketId,
+  type InvestorStageId,
+  type InvestorTypeId,
+} from '../investors/taxonomy';
 
 /**
  * Which entity kinds the map should render. The default (`['company']`) keeps
@@ -34,11 +42,19 @@ export const DEFAULT_ENTITY_TYPES: EntityTypeId[] = ['company'];
 export type MapFilters = {
   q: string;
   types: EntityTypeId[];
+  // Company-side facets — apply only to the `'company'` layer when active.
   sectors: SectorId[];
   stages: StageId[];
   employeeCounts: EmployeeCountId[];
   cities: string[];
   hiringStatuses: HiringStatusFilterId[];
+  // Investor-side facets — apply only to the `'investor'` layer when active.
+  // Names are prefixed with `investor*` to keep the distinction obvious at
+  // call-sites and avoid collisions with the company `stages` field.
+  investorTypes: InvestorTypeId[];
+  investorStages: InvestorStageId[];
+  chequeBuckets: ChequeBucketId[];
+  investorCountries: string[];
 };
 
 export const EMPTY_FILTERS: MapFilters = {
@@ -49,6 +65,10 @@ export const EMPTY_FILTERS: MapFilters = {
   employeeCounts: [],
   cities: [],
   hiringStatuses: [],
+  investorTypes: [],
+  investorStages: [],
+  chequeBuckets: [],
+  investorCountries: [],
 };
 
 /**
@@ -72,7 +92,11 @@ export function isFiltersActive(f: MapFilters): boolean {
     f.stages.length > 0 ||
     f.employeeCounts.length > 0 ||
     f.cities.length > 0 ||
-    f.hiringStatuses.length > 0
+    f.hiringStatuses.length > 0 ||
+    f.investorTypes.length > 0 ||
+    f.investorStages.length > 0 ||
+    f.chequeBuckets.length > 0 ||
+    f.investorCountries.length > 0
   );
 }
 
@@ -113,6 +137,10 @@ export function parseFiltersFromParams(
     employeeCounts: parseCsvParam(params.get('employees'), isEmployeeCountId),
     cities: parseCitiesCsv(params.get('city')),
     hiringStatuses: parseCsvParam(params.get('hiring'), isHiringStatusFilterId),
+    investorTypes: parseCsvParam(params.get('iType'), isInvestorTypeId),
+    investorStages: parseCsvParam(params.get('iStage'), isInvestorStageId),
+    chequeBuckets: parseCsvParam(params.get('cheque'), isChequeBucketId),
+    investorCountries: parseCitiesCsv(params.get('iCountry')),
   };
 }
 
@@ -147,6 +175,13 @@ export function serializeFiltersToParams(f: MapFilters): string {
   if (f.employeeCounts.length) params.set('employees', f.employeeCounts.join(','));
   if (f.cities.length) params.set('city', f.cities.join(','));
   if (f.hiringStatuses.length) params.set('hiring', f.hiringStatuses.join(','));
+  // Investor-side params — `i*` prefix to namespace them away from the
+  // company chips (e.g., `stage` is companies, `iStage` is investors).
+  if (f.investorTypes.length) params.set('iType', f.investorTypes.join(','));
+  if (f.investorStages.length) params.set('iStage', f.investorStages.join(','));
+  if (f.chequeBuckets.length) params.set('cheque', f.chequeBuckets.join(','));
+  if (f.investorCountries.length)
+    params.set('iCountry', f.investorCountries.join(','));
   return params.toString();
 }
 

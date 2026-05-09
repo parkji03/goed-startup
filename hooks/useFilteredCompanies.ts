@@ -13,6 +13,11 @@ import {
 } from '@/lib/companies/taxonomy';
 import type { InvestorBrief } from '@/lib/companies/investor-brief';
 import { EMPTY_FILTERS, type MapFilters } from '@/lib/companies/filters';
+import {
+  CHEQUE_BUCKETS,
+  INVESTOR_STAGE_TO_RAW,
+  INVESTOR_TYPE_TO_RAW,
+} from '@/lib/investors/taxonomy';
 
 /**
  * Trimmed properties carried in each map feature — only what the renderer
@@ -177,8 +182,39 @@ export function useFilteredCompanies(
   );
 
   const investorArgs = useMemo(
-    () => ({ q: filters.q.trim() || undefined }),
-    [filters.q],
+    () => ({
+      q: filters.q.trim() || undefined,
+      // Translate filter IDs → raw OpenVC strings here so the Convex query
+      // stays a pure doc-shape comparison and doesn't need the taxonomy.
+      types: filters.investorTypes.length
+        ? filters.investorTypes.map((id) => INVESTOR_TYPE_TO_RAW[id])
+        : undefined,
+      stages: filters.investorStages.length
+        ? filters.investorStages.map((id) => INVESTOR_STAGE_TO_RAW[id])
+        : undefined,
+      // Cheque bucket IDs → numeric ranges. Open-ended top bucket caps at
+      // MAX_SAFE_INTEGER because Infinity doesn't round-trip cleanly via
+      // JSON; the query treats it as effectively unbounded.
+      chequeRanges: filters.chequeBuckets.length
+        ? filters.chequeBuckets.map((id) => {
+            const b = CHEQUE_BUCKETS.find((x) => x.id === id)!;
+            return {
+              min: b.min,
+              max: Number.isFinite(b.max) ? b.max : Number.MAX_SAFE_INTEGER,
+            };
+          })
+        : undefined,
+      countries: filters.investorCountries.length
+        ? filters.investorCountries
+        : undefined,
+    }),
+    [
+      filters.q,
+      filters.investorTypes,
+      filters.investorStages,
+      filters.chequeBuckets,
+      filters.investorCountries,
+    ],
   );
 
   const companyRows = useQuery(
