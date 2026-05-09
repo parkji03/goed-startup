@@ -22,6 +22,7 @@ import {
 import { ADDRESS_OVERRIDES } from '../data/address-overrides';
 import { FOUNDED_YEAR_OVERRIDES } from '../data/founded-year-overrides';
 import { geocode } from './lib/geocode';
+import { resolveConvexHttpUrl, resolveSeedTarget } from './lib/seed-target';
 
 const CSV_PATH = path.resolve(
   __dirname,
@@ -35,12 +36,11 @@ const LINKEDIN_HIRING_PATH = path.resolve(
   'linkedin-hiring-data.json',
 );
 
-const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL;
-if (!CONVEX_URL) {
-  throw new Error(
-    'NEXT_PUBLIC_CONVEX_URL is not set. Make sure `npx convex dev` has run and .env.local is populated.',
-  );
-}
+// Resolve target + URL up front so a misconfigured prod attempt fails before
+// we read any CSV. resolveSeedTarget() throws if CONVEX_TARGET=prod without
+// SEED_CONFIRM_PROD=1.
+const SEED_TARGET = resolveSeedTarget();
+const CONVEX_URL = resolveConvexHttpUrl(SEED_TARGET.target);
 
 /**
  * Shape of `linkedin-hiring-data.json`. Only the fields we read are typed.
@@ -455,7 +455,8 @@ async function main() {
     `Loaded LinkedIn data: ${linkedin.byHandle.size} handle entries, ${linkedin.byName.size} name entries.\n`,
   );
 
-  const client = new ConvexHttpClient(CONVEX_URL!);
+  console.log(`[target=${SEED_TARGET.target}] Using Convex URL: ${CONVEX_URL}\n`);
+  const client = new ConvexHttpClient(CONVEX_URL);
 
   const slugCounts = new Map<string, number>();
   let inserted = 0;

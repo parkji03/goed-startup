@@ -18,6 +18,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { RESOURCE_CATEGORY_KEYS } from '../lib/resources/categories';
+import { resolveSeedTarget } from './lib/seed-target';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(scriptDir, '..');
@@ -46,11 +47,10 @@ function chunk<T>(arr: T[], size: number): T[][] {
 }
 
 function main() {
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    throw new Error(
-      'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and link Convex.',
-    );
-  }
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
+  const { target, convexRunFlags } = resolveSeedTarget();
 
   const raw = readFileSync(INPUT, 'utf-8');
   const rows: GeneratedRow[] = JSON.parse(raw);
@@ -72,7 +72,7 @@ function main() {
     return copy as ImportRow;
   });
 
-  console.log(`Parsed ${cleaned.length} content-derived rows from ${INPUT}`);
+  console.log(`[target=${target}] Parsed ${cleaned.length} content-derived rows from ${INPUT}`);
   console.log(`→ importInternal in chunks of ${CHUNK_ROWS}…\n`);
 
   let appliedChunks = 0;
@@ -81,11 +81,11 @@ function main() {
     if (batch.length === 0) continue;
     const payload = JSON.stringify({ rows: batch, status: 'published' });
     try {
-      execFileSync('pnpm', ['exec', 'convex', 'run', 'resourceImport:importInternal', payload], {
-        cwd: REPO_ROOT,
-        stdio: 'inherit',
-        env: process.env,
-      });
+      execFileSync(
+        'pnpm',
+        ['exec', 'convex', 'run', ...convexRunFlags, 'resourceImport:importInternal', payload],
+        { cwd: REPO_ROOT, stdio: 'inherit', env: process.env },
+      );
       appliedChunks++;
       console.log(`Chunk ${appliedChunks}: ${batch.length} rows (${batch[0]?.title ?? ''} …)`);
     } catch (err) {

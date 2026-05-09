@@ -29,6 +29,7 @@ import {
   type ResourceCategoryKey,
 } from '../lib/resources/categories';
 import { assignCategory, cleanTags } from '../lib/resources/migration-rules';
+import { resolveSeedTarget } from './lib/seed-target';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const CSV_PATH_DEFAULT = path.resolve(scriptDir, '..', 'data', 'resources-builder-day.csv');
@@ -37,12 +38,10 @@ const repoRoot = path.resolve(scriptDir, '..');
 
 const CHUNK_ROWS = 40;
 
-const convexUrl = process.env.NEXT_PUBLIC_CONVEX_URL;
-if (!convexUrl) {
-  throw new Error(
-    'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and link Convex.',
-  );
-}
+// Note: this script uses the Convex CLI (`convex run`) which reads its own
+// deployment env (CONVEX_DEPLOYMENT, .convex/, or `--prod`). NEXT_PUBLIC_CONVEX_URL
+// is intentionally NOT required here — that env var is for ConvexHttpClient,
+// which this script doesn't use.
 
 type CsvRow = {
   id: string;
@@ -86,6 +85,8 @@ function loadOverrides(): Record<string, Override> {
 }
 
 async function main() {
+  const { target, convexRunFlags } = resolveSeedTarget();
+
   const csvPath =
     typeof process.argv[2] === 'string' ? path.resolve(process.cwd(), process.argv[2]) : CSV_PATH_DEFAULT;
 
@@ -130,7 +131,7 @@ async function main() {
     return acc;
   }, {});
   console.log(
-    `Parsed ${rows.length} CSV rows (${overrideHits} category overrides applied) → importInternal in chunks of ${CHUNK_ROWS}…`,
+    `[target=${target}] Parsed ${rows.length} CSV rows (${overrideHits} category overrides applied) → importInternal in chunks of ${CHUNK_ROWS}…`,
   );
   console.log('  category distribution:');
   for (const [key, n] of Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])) {
@@ -147,11 +148,11 @@ async function main() {
 
     try {
       const payload = JSON.stringify({ rows: usable, status: 'published' });
-      execFileSync('pnpm', ['exec', 'convex', 'run', 'resourceImport:importInternal', payload], {
-        cwd: repoRoot,
-        stdio: 'inherit',
-        env: process.env,
-      });
+      execFileSync(
+        'pnpm',
+        ['exec', 'convex', 'run', ...convexRunFlags, 'resourceImport:importInternal', payload],
+        { cwd: repoRoot, stdio: 'inherit', env: process.env },
+      );
       appliedChunks++;
       console.log(`Chunk ${appliedChunks}: ${usable.length} rows (${usable[0]?.title ?? ''} …)`);
     } catch {

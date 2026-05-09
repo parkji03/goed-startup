@@ -16,7 +16,10 @@
     "enrich:resource-bodies": "node --env-file=.env.local --import tsx scripts/enrich-resource-bodies.ts",
     "enrich:new-guides": "node --env-file=.env.local --import tsx scripts/enrich-new-guides.ts",
     "import:content-guides": "node --env-file=.env.local --import tsx scripts/import-content-guides.ts",
-    "import:journey-steps": "node --env-file=.env.local --import tsx scripts/import-journey-steps.ts"
+    "import:journey-steps": "node --env-file=.env.local --import tsx scripts/import-journey-steps.ts",
+    "seed:guides": "pnpm import:content-guides && pnpm import:journey-steps",
+    "seed:all": "pnpm seed:companies && pnpm seed:investors && pnpm seed:resources && pnpm import:content-resources && pnpm enrich:resource-bodies && pnpm seed:guides",
+    "seed:all:prod": "CONVEX_TARGET=prod pnpm seed:all"
   },
   "dependencies": {
     "@ai-sdk/openai": "^3.0.63",

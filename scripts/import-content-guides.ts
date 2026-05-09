@@ -14,6 +14,7 @@ import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { GUIDE_CATEGORY_KEYS } from '../lib/guides/categories';
+import { resolveSeedTarget } from './lib/seed-target';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(scriptDir, '..');
@@ -42,9 +43,10 @@ function chunk<T>(arr: T[], size: number): T[][] {
 }
 
 function main() {
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    throw new Error('NEXT_PUBLIC_CONVEX_URL is not set.');
-  }
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
+  const { target, convexRunFlags } = resolveSeedTarget();
   const rows: GeneratedGuide[] = JSON.parse(readFileSync(INPUT, 'utf-8'));
 
   for (const r of rows) {
@@ -62,7 +64,9 @@ function main() {
     return { ...(copy as Omit<GeneratedGuide, '_meta'>), status: 'published' };
   });
 
-  console.log(`Importing ${cleaned.length} guides → guidesInternal:importInternal in chunks of ${CHUNK_ROWS}…\n`);
+  console.log(
+    `[target=${target}] Importing ${cleaned.length} guides → guidesInternal:importInternal in chunks of ${CHUNK_ROWS}…\n`,
+  );
 
   let appliedChunks = 0;
   let failedChunks = 0;
@@ -70,11 +74,11 @@ function main() {
     if (batch.length === 0) continue;
     const payload = JSON.stringify({ rows: batch });
     try {
-      execFileSync('pnpm', ['exec', 'convex', 'run', 'guidesInternal:importInternal', payload], {
-        cwd: REPO_ROOT,
-        stdio: 'inherit',
-        env: process.env,
-      });
+      execFileSync(
+        'pnpm',
+        ['exec', 'convex', 'run', ...convexRunFlags, 'guidesInternal:importInternal', payload],
+        { cwd: REPO_ROOT, stdio: 'inherit', env: process.env },
+      );
       appliedChunks++;
       console.log(`Chunk ${appliedChunks}: ${batch.length} guides (${batch[0]?.title ?? ''} …)`);
     } catch (err) {
