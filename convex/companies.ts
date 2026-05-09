@@ -249,6 +249,48 @@ export const cityList = query({
 });
 
 /**
+ * Single company by id, returning the same projection as `searchForMap`.
+ * Used by the map page to render the detail panel + camera fly-to for an
+ * entity that the user clicked from the AI chat sidebar but isn't in the
+ * current `searchForMap` subscription (because their layer setting
+ * excluded its kind, or filters narrowed it out). Returns null if the
+ * row is unpublished, missing, or never geocoded.
+ */
+export const byId = query({
+  args: { id: v.id('companies') },
+  handler: async (ctx, { id }) => {
+    const c = await ctx.db.get(id);
+    if (!c) return null;
+    if (c.status !== 'published') return null;
+    if (c.location.lat == null || c.location.lng == null) return null;
+    return {
+      _id: c._id,
+      name: c.name,
+      slug: c.slug,
+      sector: c.sector,
+      stage: c.stage,
+      employeeCount: c.employeeCount,
+      yearFounded: c.yearFounded,
+      description: c.description,
+      website: c.website,
+      linkedin: c.linkedin,
+      location: {
+        rawAddress: c.location.rawAddress,
+        city: c.location.city,
+        county: c.location.county,
+        state: c.location.state,
+      },
+      lng: c.location.lng,
+      lat: c.location.lat,
+      investorBrief: c.investorBrief,
+      hiringStatus: c.hiringStatus ?? ('unknown' as const),
+      openListingsCount: c.openListingsCount ?? 0,
+      isClaimed: Boolean(c.claimedBy),
+    };
+  },
+});
+
+/**
  * Single company by slug — for company profile pages.
  */
 export const bySlug = query({

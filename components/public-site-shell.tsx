@@ -12,6 +12,7 @@ import { useGlobalMetaCtrlKeyToggle } from "@/hooks/use-global-keyboard-toggle";
 import { GuideChatPanel } from "@/components/guide/guide-chat-panel";
 import { GlobalCommandTrigger } from "@/components/global-command-trigger";
 import { LocaleSwitcher } from "@/components/locale-switcher";
+import { MapQuizProvider } from "@/components/map/map-quiz-provider";
 import { QuizProvider } from "@/components/quiz/quiz-provider";
 import { StartupUtahLogoLink } from "@/components/startup-utah-logo-link";
 import { ThemeSwitcher } from "@/components/theme-switcher";
@@ -575,12 +576,14 @@ export function PublicSiteShell({ children, locale }: Props) {
         style={{ "--sidebar-width": "26rem" } as React.CSSProperties}
       >
         <QuizProvider>
-          <SidebarInset>
-            <main className="min-h-[calc(100dvh-4rem)]">
-              {children}
-            </main>
-          </SidebarInset>
-          <AiGuideSidebar />
+          <MapQuizProvider>
+            <SidebarInset>
+              <main className="min-h-[calc(100dvh-4rem)]">
+                {children}
+              </main>
+            </SidebarInset>
+            <AiGuideSidebar />
+          </MapQuizProvider>
         </QuizProvider>
       </SidebarProvider>
       <FloatingAiBubble

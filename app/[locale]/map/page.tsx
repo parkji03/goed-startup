@@ -6,6 +6,7 @@ import { useQuery } from 'convex/react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { api } from '@/convex/_generated/api';
+import type { Id } from '@/convex/_generated/dataModel';
 import {
   useFilteredCompanies,
   type EntityFeatureProps,
@@ -18,6 +19,7 @@ import {
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { FloatingFilterBar } from '@/components/map/floating-filter-bar';
 import { MapSubmitBusinessCta } from '@/components/map/map-submit-business-cta';
+import { useMapQuiz } from '@/components/map/map-quiz-provider';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -62,14 +64,61 @@ export default function MapPage() {
   const shownCount = filtered?.entities.length ?? 0;
 
   // Currently-selected entity id. The detail view replaces the result list
-  // when this is set; clicks come from either the list cards or the map
-  // markers. Stored as id (not the row) so we can re-resolve the latest
-  // record from `filtered.entities` on every render.
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selectedEntity = useMemo(
+  // when this is set; clicks come from either the list cards, the map
+  // markers, or the AI chat sidebar's recommendation links. Stored as id
+  // (not the row) so we can re-resolve the latest record from
+  // `filtered.entities` on every render.
+  const [selectedId, setSelectedIdRaw] = useState<string | null>(null);
+  // Discriminator paired with `selectedId` when the selection came from
+  // a chat-link click for an entity that may not be in `filtered.entities`
+  // (e.g., user's layer setting excludes its kind). Lets us fetch the
+  // row directly via `byId` so the detail panel renders without waiting
+  // for a layer toggle. Cleared on non-chat selections so the override
+  // queries skip when the row is already on the map.
+  const [overrideKind, setOverrideKind] = useState<'company' | 'investor' | null>(null);
+  // All non-chat selections (marker clicks, list cards, X button) go
+  // through this so they atomically drop the override discriminator.
+  // Chat-link clicks set both pieces together (see the effect below).
+  const setSelectedId = useCallback((id: string | null) => {
+    setSelectedIdRaw(id);
+    setOverrideKind(null);
+  }, []);
+  const inFiltered = useMemo(
     () => filtered?.entities.find((e) => e._id === selectedId) ?? null,
     [filtered, selectedId],
   );
+  // Skip the fallback fetch when the entity is already in the filtered
+  // list — same shape, no extra subscription. The cast on `selectedId` is
+  // safe at runtime because Convex `Id<...>` is string-encoded; we narrow
+  // by table via `overrideKind`.
+  //
+  // Also reject obviously-bogus ids before they reach Convex, so a model
+  // hallucination ("#entity-investor-5") doesn't crash the page. Convex
+  // ids are at least ~16 chars; anything shorter is guaranteed to be an
+  // ArgumentValidationError on the server side.
+  const looksLikeConvexId = selectedId != null && selectedId.length >= 16;
+  const overrideCompany = useQuery(
+    api.companies.byId,
+    overrideKind === 'company' && looksLikeConvexId && selectedId && !inFiltered
+      ? { id: selectedId as Id<'companies'> }
+      : 'skip',
+  );
+  const overrideInvestor = useQuery(
+    api.investors.byId,
+    overrideKind === 'investor' && looksLikeConvexId && selectedId && !inFiltered
+      ? { id: selectedId as Id<'investors'> }
+      : 'skip',
+  );
+  const selectedEntity = useMemo<EntityForList | null>(() => {
+    if (inFiltered) return inFiltered;
+    if (overrideKind === 'company' && overrideCompany) {
+      return { kind: 'company', ...overrideCompany };
+    }
+    if (overrideKind === 'investor' && overrideInvestor) {
+      return { kind: 'investor', ...overrideInvestor };
+    }
+    return null;
+  }, [inFiltered, overrideKind, overrideCompany, overrideInvestor]);
 
   // Treat any search-query change as the user pivoting away from the
   // current detail view: typing should reveal the list, and the
@@ -78,7 +127,7 @@ export default function MapPage() {
   // both interactions.
   useEffect(() => {
     setSelectedId(null);
-  }, [filters.q]);
+  }, [filters.q, setSelectedId]);
 
   // Panel opens whenever filters are active OR an entity is selected.
   // Marker clicks therefore expand the panel into a detail view even when
@@ -129,18 +178,51 @@ export default function MapPage() {
       setSelectedId(entity._id);
       panToEntity(entity);
     },
-    [panToEntity],
+    [panToEntity, setSelectedId],
   );
 
   // Marker click — same selection state, but no auto-pan since the marker
   // the user just clicked is already on screen.
   const onSelectFromMarker = useCallback((id: string) => {
     setSelectedId(id);
-  }, []);
+  }, [setSelectedId]);
   const onSelectFromMarkerRef = useRef(onSelectFromMarker);
   useEffect(() => {
     onSelectFromMarkerRef.current = onSelectFromMarker;
   }, [onSelectFromMarker]);
+
+  // Hook the AI guide chat sidebar's `[Name](#entity-<kind>-<id>)` link
+  // clicks into the same selection + fly-to flow used by the result list.
+  // The kind is encoded in the link so we can fetch the row directly via
+  // `byId` even when the user's layer setting excludes it — the panel
+  // shows the right detail without a layer toggle, and the marker
+  // appears on the map once they enable that layer themselves.
+  const mapQuiz = useMapQuiz();
+  // Tracks the id we need to fly to once it resolves (either in the
+  // filtered list or via the byId fallback). Cleared after the camera
+  // pans so a re-render of the filtered list doesn't re-fly mid-pan.
+  const pendingFlyIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    mapQuiz.registerEntitySelect((entityId, kind) => {
+      // Set both pieces atomically via the raw setters — using
+      // `setSelectedId` would clear the kind we just learned.
+      setSelectedIdRaw(entityId);
+      setOverrideKind(kind);
+      pendingFlyIdRef.current = entityId;
+    });
+    return () => mapQuiz.registerEntitySelect(null);
+  }, [mapQuiz]);
+
+  // Fly when the selected entity becomes available, whether that's via
+  // the filtered subscription or the byId override. `selectedEntity`
+  // collapses both sources, so a single effect handles either path.
+  useEffect(() => {
+    const pendingId = pendingFlyIdRef.current;
+    if (!pendingId) return;
+    if (!selectedEntity || selectedEntity._id !== pendingId) return;
+    pendingFlyIdRef.current = null;
+    flyToEntity(selectedEntity);
+  }, [selectedEntity, flyToEntity]);
 
   // Initialize the map once
   useEffect(() => {

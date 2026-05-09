@@ -8,6 +8,12 @@ import { Link } from "@/i18n/navigation";
 import type { GuideContextItem } from "@/lib/guide/types";
 
 const RESOURCE_PATH = /^\/resources\/([a-z0-9][a-z0-9-]*)\/?$/i;
+// Map-recommend route emits links of the form `#entity-<kind>-<id>` where
+// kind is literally "company" or "investor". Embedding the kind tells
+// the click handler which Convex table to fetch from without keeping a
+// separate persona-tracking state in sync.
+const ENTITY_FRAGMENT = /^#entity-(company|investor)-([A-Za-z0-9_-]+)$/;
+export type EntityLinkKind = 'company' | 'investor';
 
 type Props = {
   text: string;
@@ -25,6 +31,14 @@ type Props = {
    * those same verified links inline without opening a new attack surface.
    */
   sources: GuideContextItem[];
+  /**
+   * Optional handler for map-recommendation entity links. When provided,
+   * `[Name](#entity-<kind>-<id>)` markdown links render as inline
+   * buttons that call this with the parsed id and kind. When omitted,
+   * those links degrade to plain text — same trust posture as unverified
+   * resource links.
+   */
+  onEntitySelect?: (entityId: string, kind: EntityLinkKind) => void;
 };
 
 /**
@@ -34,7 +48,7 @@ type Props = {
  * until closing tokens arrive. Hallucinated/injected hrefs are stripped to
  * plain text per the trust contract above.
  */
-export function AssistantMarkdown({ text, sources }: Props) {
+export function AssistantMarkdown({ text, sources, onEntitySelect }: Props) {
   const trustedSlugs = useMemo(
     () => new Set(sources.map((s) => s.slug.toLowerCase())),
     [sources],
@@ -51,6 +65,25 @@ export function AssistantMarkdown({ text, sources }: Props) {
         components={{
           a: ({ href, children }) => {
             if (!href) return <span>{children}</span>;
+
+            // Map-recommend entity links: render as button when a handler
+            // is wired up. Without a handler, fall through to the
+            // not-trusted plain-text path (no in-page anchor jump on a
+            // page that has no such anchor).
+            const entityMatch = href.match(ENTITY_FRAGMENT);
+            if (entityMatch && onEntitySelect) {
+              const kind = entityMatch[1] as EntityLinkKind;
+              const id = entityMatch[2];
+              return (
+                <button
+                  type="button"
+                  onClick={() => onEntitySelect(id, kind)}
+                  className="font-medium text-fg underline underline-offset-2 hover:text-primary"
+                >
+                  {children}
+                </button>
+              );
+            }
 
             const resourceMatch = href.match(RESOURCE_PATH);
             if (resourceMatch) {

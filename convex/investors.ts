@@ -201,6 +201,47 @@ export const mapTotalCount = query({
 });
 
 /**
+ * Single investor by id, returning the same projection as `searchForMap`.
+ * Sibling of `companies.byId` — used by the map page to render the
+ * detail panel and camera fly-to when the user clicks an investor from
+ * the AI chat sidebar that isn't in the current `searchForMap`
+ * subscription (e.g. because the investor layer is off, or filters
+ * exclude it). Returns null if the investor is missing or never
+ * geocoded.
+ */
+export const byId = query({
+  args: { id: v.id('investors') },
+  handler: async (ctx, { id }) => {
+    const i = await ctx.db.get(id);
+    if (!i) return null;
+    if (i.location?.lat == null || i.location?.lng == null) return null;
+    return {
+      _id: i._id,
+      name: i.name,
+      slug: i.slug,
+      website: i.website,
+      globalHq: i.globalHq,
+      location: i.location
+        ? {
+            rawAddress: i.location.rawAddress,
+            city: i.location.city,
+            region: i.location.region,
+            country: i.location.country,
+          }
+        : undefined,
+      lng: i.location.lng,
+      lat: i.location.lat,
+      investorType: i.investorType,
+      investmentThesis: i.investmentThesis,
+      firstChequeMin: i.firstChequeMin,
+      firstChequeMax: i.firstChequeMax,
+      countriesOfInvestment: i.countriesOfInvestment,
+      stagesOfInvestment: i.stagesOfInvestment,
+    };
+  },
+});
+
+/**
  * Single investor by slug — for investor profile pages or deep links.
  */
 export const bySlug = query({
