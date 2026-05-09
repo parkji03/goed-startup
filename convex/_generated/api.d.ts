@@ -14,6 +14,7 @@ import type * as guide from "../guide.js";
 import type * as investors from "../investors.js";
 import type * as lib_adminAuth from "../lib/adminAuth.js";
 import type * as lib_facetTypes from "../lib/facetTypes.js";
+import type * as lib_guideQuery from "../lib/guideQuery.js";
 import type * as lib_matchResources from "../lib/matchResources.js";
 import type * as lib_resourceHelpers from "../lib/resourceHelpers.js";
 import type * as resourceEmbeddings from "../resourceEmbeddings.js";
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   investors: typeof investors;
   "lib/adminAuth": typeof lib_adminAuth;
   "lib/facetTypes": typeof lib_facetTypes;
+  "lib/guideQuery": typeof lib_guideQuery;
   "lib/matchResources": typeof lib_matchResources;
   "lib/resourceHelpers": typeof lib_resourceHelpers;
   resourceEmbeddings: typeof resourceEmbeddings;

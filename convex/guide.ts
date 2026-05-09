@@ -1,4 +1,4 @@
-import { v } from 'convex/values';
+import { type Infer, v } from 'convex/values';
 import { internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { action, internalQuery } from './_generated/server';
@@ -6,24 +6,25 @@ import {
   clampFounderProfileForConvex,
   emptyFounderProfile,
   founderProfileValidator,
-  type FounderProfileConvex,
 } from './founderProfile';
+import {
+  expandQuery,
+  rankWithProfile,
+  synthesizeQueryFromProfile,
+  validateRetrievalInput,
+} from './lib/guideQuery';
+import { resourceCategoryValidator } from './resourceValidators';
 
 /**
- * Hackathon-mode guide:
- * - No persistence. Each `ask` call is independent — refreshing the chat
- *   wipes it. Matches the Cursor-docs UX target.
- * - No language model wired in yet. We answer with a deterministic stub
- *   that searches the resource catalog. Swap `buildStubReply` for a real
- *   `streamText` call (likely from an `httpAction`) once we're ready to
- *   spend tokens. The action's args + return shape are designed so the
- *   client doesn't have to change when streaming lands.
- * - No rate limiting yet. Add a `@convex-dev/rate-limiter` component (or
- *   IP-based throttling at the HTTP layer) before opening this up.
+ * AI guide retrieval — full-text only (no embeddings in v1). Public action so
+ * the Next.js /api/chat route can call it via ConvexHttpClient. The Next route
+ * owns the LLM call and the abuse layer; this action is intentionally narrow:
+ * input → ranked context, no model interaction here.
  */
 
-const MAX_PROMPT_LENGTH = 6000;
-const MAX_CONTEXT_HITS = 4;
+const RAW_LIMIT = 12;
+const FALLBACK_THRESHOLD = 4;
+const TOP_K = 6;
 
 const guideContextItemValidator = v.object({
   resourceId: v.id('resources'),
@@ -31,9 +32,12 @@ const guideContextItemValidator = v.object({
   slug: v.string(),
   url: v.string(),
   description: v.string(),
+  category: resourceCategoryValidator,
   tags: v.array(v.string()),
   industries: v.array(v.string()),
   communities: v.array(v.string()),
+  locations: v.array(v.string()),
+  stageTags: v.array(v.string()),
 });
 
 export type GuideContextItem = {
@@ -42,9 +46,12 @@ export type GuideContextItem = {
   slug: string;
   url: string;
   description: string;
+  category: Infer<typeof resourceCategoryValidator>;
   tags: string[];
   industries: string[];
   communities: string[];
+  locations: string[];
+  stageTags: string[];
 };
 
 export const searchPublishedResourcesForGuide = internalQuery({
@@ -53,7 +60,7 @@ export const searchPublishedResourcesForGuide = internalQuery({
   handler: async (ctx, { query, limit }): Promise<GuideContextItem[]> => {
     const trimmed = query.trim();
     if (!trimmed) return [];
-    const lim = Math.min(Math.max(limit, 1), MAX_CONTEXT_HITS);
+    const lim = Math.min(Math.max(limit, 1), RAW_LIMIT);
     const hits = await ctx.db
       .query('resources')
       .withSearchIndex('search_resources', (s) =>
@@ -66,80 +73,53 @@ export const searchPublishedResourcesForGuide = internalQuery({
       slug: r.slug,
       url: r.url,
       description: r.description,
+      category: r.category,
       tags: r.tags,
       industries: r.industries,
       communities: r.communities,
+      locations: r.locations,
+      stageTags: r.stageTags,
     }));
   },
 });
 
-function profileSummary(profile: FounderProfileConvex): string | null {
-  const bits = [
-    profile.industries.length ? `industries: ${profile.industries.join(', ')}` : null,
-    profile.stages.length ? `stages: ${profile.stages.join(', ')}` : null,
-    profile.goals.length ? `goals: ${profile.goals.join(', ')}` : null,
-    profile.audiences.length ? `audiences: ${profile.audiences.join(', ')}` : null,
-  ].filter(Boolean);
-  return bits.length ? bits.join(' · ') : null;
-}
-
-function buildStubReply(
-  prompt: string,
-  profile: FounderProfileConvex,
-  hits: GuideContextItem[],
-): string {
-  if (hits.length === 0) {
-    return [
-      `Thanks for asking about "${prompt}".`,
-      "I couldn't find a published Utah resource matching that yet. Try the founder quiz or browse the resource library — and the AI guide will get smarter once we wire it to a live model.",
-    ].join('\n\n');
-  }
-
-  const lines = hits.map((h, i) => {
-    const tags = [...h.tags, ...h.industries, ...h.communities].slice(0, 4).join(', ');
-    return [
-      `[#${i + 1}] ${h.title}`,
-      `Link: /resources/${h.slug} · ${h.url}`,
-      tags ? `Tags: ${tags}` : null,
-      h.description.slice(0, 240),
-    ]
-      .filter(Boolean)
-      .join('\n');
-  });
-
-  const summary = profileSummary(profile);
-  return [
-    `Here ${hits.length === 1 ? 'is a starting point' : `are ${hits.length} starting points`} that match "${prompt}":`,
-    summary ? `_Personalized hint from your quiz — ${summary}._` : null,
-    lines.join('\n\n'),
-    '_(Hackathon stub: deterministic resource lookup. Live, streamed model responses land next.)_',
-  ]
-    .filter(Boolean)
-    .join('\n\n');
-}
-
-export const ask = action({
+export const retrieve = action({
   args: {
-    prompt: v.string(),
+    query: v.string(),
     founderProfile: v.optional(founderProfileValidator),
   },
   returns: v.object({
-    reply: v.string(),
     context: v.array(guideContextItemValidator),
   }),
-  handler: async (ctx, { prompt, founderProfile }) => {
-    const trimmed = prompt.trim().slice(0, MAX_PROMPT_LENGTH);
-    if (!trimmed) {
-      return { reply: '', context: [] };
-    }
+  handler: async (ctx, { query, founderProfile }) => {
+    const validation = validateRetrievalInput(query);
+    if (!validation.ok) return { context: [] };
 
     const profile = clampFounderProfileForConvex(founderProfile ?? emptyFounderProfile());
-    const context: GuideContextItem[] = await ctx.runQuery(
-      internal.guide.searchPublishedResourcesForGuide,
-      { query: trimmed, limit: MAX_CONTEXT_HITS },
-    );
 
-    const reply = buildStubReply(trimmed, profile, context);
-    return { reply, context };
+    const expanded = expandQuery(validation.query, profile);
+    const lexical: GuideContextItem[] = expanded
+      ? await ctx.runQuery(internal.guide.searchPublishedResourcesForGuide, {
+          query: expanded,
+          limit: RAW_LIMIT,
+        })
+      : [];
+
+    let merged: GuideContextItem[] = lexical;
+
+    if (lexical.length < FALLBACK_THRESHOLD) {
+      const synth = synthesizeQueryFromProfile(profile);
+      if (synth) {
+        const fallback: GuideContextItem[] = await ctx.runQuery(
+          internal.guide.searchPublishedResourcesForGuide,
+          { query: synth, limit: RAW_LIMIT },
+        );
+        const seen = new Set(lexical.map((h) => h.slug));
+        for (const f of fallback) if (!seen.has(f.slug)) merged.push(f);
+      }
+    }
+
+    const ranked = rankWithProfile(merged, profile);
+    return { context: ranked.slice(0, TOP_K) };
   },
 });
