@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { ResourceBody } from "@/components/resources/resource-body";
 import { categoryLabel, type ResourceCategoryKey } from "@/lib/resources/categories";
 
 type Props = {
@@ -80,6 +81,14 @@ export function ResourceDetailClient({ slug }: Props) {
           </Link>
         </div>
       </div>
+      {resource.body ? (
+        <section aria-label="Background">
+          <Heading level={2} className="mb-3 text-xl font-semibold tracking-tight">
+            Background
+          </Heading>
+          <ResourceBody body={resource.body} />
+        </section>
+      ) : null}
       <div className="rounded-xl border border-border bg-muted/30 p-4">
         <ChipRow label="Tags" values={resource.tags} />
         <ChipRow label="Communities / audiences" values={resource.communities} />
