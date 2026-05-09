@@ -304,6 +304,7 @@ function DesktopHeaderBar({
   onToggleAi,
   shortcutLabel,
   shortcutAria,
+  hideAiChrome,
 }: {
   locale: string;
   pathname: string;
@@ -311,6 +312,7 @@ function DesktopHeaderBar({
   onToggleAi: () => void;
   shortcutLabel: string;
   shortcutAria: string;
+  hideAiChrome: boolean;
 }) {
   return (
     <header className="sticky top-0 z-40 hidden border-border border-b bg-bg/95 backdrop-blur supports-backdrop-filter:bg-bg/95 lg:block">
@@ -328,15 +330,19 @@ function DesktopHeaderBar({
           </LayoutGroup>
         </div>
 
-        {/* Center: search + ask AI */}
+        {/* Center: search + ask AI. Hidden on /map — that surface drives its
+            own AI flow via the questionnaire, and the global resource search
+            doesn't apply there. */}
         <div className="flex flex-1 items-center justify-center px-4">
-          <SearchAskCluster
-            aiOpen={aiOpen}
-            onToggleAi={onToggleAi}
-            shortcutLabel={shortcutLabel}
-            shortcutAria={shortcutAria}
-            className="w-full max-w-sm xl:max-w-md"
-          />
+          {hideAiChrome ? null : (
+            <SearchAskCluster
+              aiOpen={aiOpen}
+              onToggleAi={onToggleAi}
+              shortcutLabel={shortcutLabel}
+              shortcutAria={shortcutAria}
+              className="w-full max-w-sm xl:max-w-md"
+            />
+          )}
         </div>
 
         {/* Right: locale + theme + auth */}
@@ -413,6 +419,7 @@ function HeaderBar({
   onToggleAi,
   shortcutLabel,
   shortcutAria,
+  hideAiChrome,
 }: {
   locale: string;
   pathname: string;
@@ -420,6 +427,7 @@ function HeaderBar({
   onToggleAi: () => void;
   shortcutLabel: string;
   shortcutAria: string;
+  hideAiChrome: boolean;
 }) {
   return (
     <NavbarProvider mobileMediaQuery={HEADER_COMPACT_MEDIA_QUERY}>
@@ -430,6 +438,7 @@ function HeaderBar({
         onToggleAi={onToggleAi}
         shortcutLabel={shortcutLabel}
         shortcutAria={shortcutAria}
+        hideAiChrome={hideAiChrome}
       />
 
       <Navbar suppressDesktopChrome isSticky side="left" intent="default">
@@ -456,13 +465,15 @@ function HeaderBar({
       <NavbarMobile className="border-border border-b bg-bg/95 backdrop-blur-md supports-backdrop-filter:bg-bg/95 lg:hidden">
         <StartupUtahLogoLink className="min-w-0 shrink-0 overflow-hidden" />
         <div className="flex min-h-9 min-w-0 flex-1 items-center justify-center px-1">
-          <SearchAskCluster
-            aiOpen={aiOpen}
-            onToggleAi={onToggleAi}
-            shortcutLabel={shortcutLabel}
-            shortcutAria={shortcutAria}
-            className="w-auto max-w-[calc(100vw-8.5rem)]"
-          />
+          {hideAiChrome ? null : (
+            <SearchAskCluster
+              aiOpen={aiOpen}
+              onToggleAi={onToggleAi}
+              shortcutLabel={shortcutLabel}
+              shortcutAria={shortcutAria}
+              className="w-auto max-w-[calc(100vw-8.5rem)]"
+            />
+          )}
         </div>
         <NavbarTrigger aria-label="Open menu" />
       </NavbarMobile>
@@ -470,19 +481,23 @@ function HeaderBar({
   );
 }
 
-function AiGuideSidebar() {
+function AiGuideSidebar({ chatScope }: { chatScope: 'map' | 'main' }) {
   return (
     <Sidebar side="right" collapsible="hidden" className="top-[calc(4rem+1px)] bg-bg text-fg">
       <SidebarContent className="overflow-hidden p-0">
-        <AiGuideSidebarBody />
+        <AiGuideSidebarBody chatScope={chatScope} />
       </SidebarContent>
     </Sidebar>
   );
 }
 
-function AiGuideSidebarBody() {
+function AiGuideSidebarBody({ chatScope }: { chatScope: 'map' | 'main' }) {
   const { toggleSidebar } = useSidebar();
-  return <GuideChatPanel compact onCollapse={toggleSidebar} />;
+  // Remount across the map/non-map boundary so `useChat` history starts
+  // fresh — the chat speaks to two different agents (`/api/chat` for
+  // resources, `/api/map-recommend` for the map quiz) and bubbles from one
+  // shouldn't leak into the other surface.
+  return <GuideChatPanel key={chatScope} compact onCollapse={toggleSidebar} />;
 }
 
 /**
@@ -533,10 +548,23 @@ export function PublicSiteShell({ children, locale }: Props) {
   // Both admin and the owner dashboard render their own minimal chrome —
   // skip the public site header (and its AI sidebar) on those surfaces.
   const usesOwnChrome = isAdminRoute || isDashboardRoute;
+  // The map page hides the global search + Ask AI cluster; its AI flow is
+  // driven by the questionnaire, and the global resource search doesn't
+  // apply to a map of companies/investors.
+  const isMapRoute = pathname.startsWith("/map");
+  const chatScope: 'map' | 'main' = isMapRoute ? 'map' : 'main';
   const toggleAiOpen = useCallback(() => setAiOpen((open) => !open), []);
 
+  // Force-close the sidebar when the user crosses the map boundary in
+  // either direction. We're remounting `GuideChatPanel` via `chatScope` to
+  // clear its `useChat` history; leaving the sidebar open would briefly
+  // flash an empty panel mid-transition.
+  useEffect(() => {
+    setAiOpen(false);
+  }, [isMapRoute]);
+
   useGlobalMetaCtrlKeyToggle({
-    enabled: !usesOwnChrome,
+    enabled: !usesOwnChrome && !isMapRoute,
     key: "i",
     onToggle: toggleAiOpen,
   });
@@ -568,6 +596,7 @@ export function PublicSiteShell({ children, locale }: Props) {
           onToggleAi={toggleAiOpen}
           shortcutLabel={shortcutLabel}
           shortcutAria={shortcutAria}
+          hideAiChrome={isMapRoute}
         />
       </div>
       <SidebarProvider
@@ -584,15 +613,17 @@ export function PublicSiteShell({ children, locale }: Props) {
                 {children}
               </main>
             </SidebarInset>
-            <AiGuideSidebar />
+            <AiGuideSidebar chatScope={chatScope} />
           </MapQuizProvider>
         </QuizProvider>
       </SidebarProvider>
-      <FloatingAiBubble
-        aiOpen={showAi}
-        onPress={toggleAiOpen}
-        shortcutAria={shortcutAria}
-      />
+      {isMapRoute ? null : (
+        <FloatingAiBubble
+          aiOpen={showAi}
+          onPress={toggleAiOpen}
+          shortcutAria={shortcutAria}
+        />
+      )}
     </div>
   );
 }
