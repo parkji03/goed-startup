@@ -17,6 +17,8 @@ export type ResourceRowData = {
   tags: string[];
   stageTags: string[];
   communities: string[];
+  industries: string[];
+  locations: string[];
 };
 
 export function ResourceRow({ resource }: { resource: ResourceRowData }) {

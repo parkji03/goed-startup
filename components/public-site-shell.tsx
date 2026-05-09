@@ -369,14 +369,21 @@ export function PublicSiteShell({ children, locale }: Props) {
 
   return (
     <div className="flex min-h-dvh flex-col bg-bg text-fg">
-      <HeaderBar
-        locale={locale}
-        pathname={pathname}
-        aiOpen={showAi}
-        onToggleAi={toggleAiOpen}
-        shortcutLabel={shortcutLabel}
-        shortcutAria={shortcutAria}
-      />
+      {/* Sticky wrapper. The inner <header> can't stick on its own because
+          its NavbarProvider parent (a flex-col with no fixed height) collapses
+          to the header's own height, leaving sticky no room to operate. This
+          wrapper is a flex item of the full-page column, which has the height
+          sticky needs. */}
+      <div className="sticky top-0 z-40">
+        <HeaderBar
+          locale={locale}
+          pathname={pathname}
+          aiOpen={showAi}
+          onToggleAi={toggleAiOpen}
+          shortcutLabel={shortcutLabel}
+          shortcutAria={shortcutAria}
+        />
+      </div>
       <SidebarProvider
         isOpen={showAi}
         onOpenChange={setAiOpen}

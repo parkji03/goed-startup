@@ -185,6 +185,8 @@ type GroupedItem = {
   tags: string[];
   stageTags: string[];
   communities: string[];
+  industries: string[];
+  locations: string[];
 };
 
 type GroupedCategory = { items: GroupedItem[]; total: number };
@@ -215,10 +217,44 @@ export const listGroupedByCategory = query({
         tags: r.tags ?? [],
         stageTags: r.stageTags,
         communities: r.communities,
+        industries: r.industries,
+        locations: r.locations,
       }));
       results[key] = { items, total: all.length };
     }
     return results;
+  },
+});
+
+/**
+ * Distinct values for every filter facet, returned in one query so the
+ * filter bar doesn't fan out into 4 round-trips. Sorted by frequency so the
+ * most-selected options surface first in each dropdown.
+ */
+export const listFilterFacets = query({
+  args: {},
+  handler: async (ctx) => {
+    const FACET_TYPES = ['stage', 'industry', 'community', 'location'] as const;
+    const out: Record<(typeof FACET_TYPES)[number], string[]> = {
+      stage: [],
+      industry: [],
+      community: [],
+      location: [],
+    };
+    for (const facetType of FACET_TYPES) {
+      const rows = await ctx.db
+        .query('resourceFacets')
+        .withIndex('by_facetType_and_status', (q) =>
+          q.eq('facetType', facetType).eq('status', 'published'),
+        )
+        .take(2000);
+      const counts = new Map<string, number>();
+      for (const r of rows) counts.set(r.value, (counts.get(r.value) ?? 0) + 1);
+      out[facetType] = [...counts.entries()]
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([v]) => v);
+    }
+    return out;
   },
 });
 
