@@ -8,6 +8,17 @@ import {
 } from './resourceValidators';
 
 /**
+ * Status lifecycle for anonymous company registrations and claim requests.
+ * Mirrors `submissionStatusValidator` but defined separately so the two
+ * pipelines can diverge later (e.g. claim-specific 'magic_link_sent').
+ */
+const companySubmissionStatusValidator = v.union(
+  v.literal('pending'),
+  v.literal('approved'),
+  v.literal('rejected'),
+);
+
+/**
  * Validators reused by mutations in this directory. These literal unions
  * mirror lib/companies/taxonomy.ts — keep the two in sync. (When a sector,
  * stage, or employee bucket is added there, add it here too.)
@@ -299,7 +310,13 @@ export default defineSchema({
 
     // Workflow / governance
     status: companyStatusValidator,
-    claimedBy: v.optional(v.string()), // becomes v.id('users') when auth lands
+    /**
+     * Convex `tokenIdentifier` (issuer + subject) of the user who claimed
+     * this company — sourced from `ctx.auth.getUserIdentity().tokenIdentifier`.
+     * Indexed by `by_claimedBy` so the owner dashboard can list all of a
+     * user's claims without a scan. See `convex/companyDashboard.ts`.
+     */
+    claimedBy: v.optional(v.string()),
     lastEditedAt: v.number(),
     diffLog: v.array(
       v.object({
@@ -312,6 +329,9 @@ export default defineSchema({
     .index('by_slug', ['slug'])
     .index('by_status', ['status'])
     .index('by_sector', ['sector'])
+    // Owner lookup for the claimed-business dashboard. `claimedBy` stores
+    // the Convex `tokenIdentifier` (issuer + subject) of the claiming user.
+    .index('by_claimedBy', ['claimedBy'])
     // Powers the map's text search box. `status` is a filter field so we can
     // scope to published rows inside the search query.
     .searchIndex('search_text', {
@@ -349,6 +369,61 @@ export default defineSchema({
     .index('by_companyId_and_postedAt', ['companyId', 'postedAt']),
 
   /**
+   * Public submissions to add a new business to the map. Filled by anonymous
+   * users via `/[locale]/register`. Admin reviews each row and either
+   * publishes it as a `companies` row or rejects it. The submitter's email
+   * is the eventual owner contact when claim is wired up downstream.
+   */
+  companySubmissions: defineTable({
+    name: v.string(),
+    website: v.optional(v.string()),
+    description: v.string(),
+    /** Free-form sector/industry as the submitter described it. Admin maps
+     * to a curated `sectorValidator` value at approval time. */
+    sectorRaw: v.optional(v.string()),
+    /** City + state (or full address) the submitter typed. Geocoded later. */
+    locationRaw: v.string(),
+    submitterName: v.string(),
+    submitterEmail: v.string(),
+    submitterRole: v.optional(v.string()),
+    notes: v.optional(v.string()),
+    status: companySubmissionStatusValidator,
+    moderatorNote: v.optional(v.string()),
+    /** Set when an admin promotes this row into the published map. */
+    mergedIntoCompanyId: v.optional(v.id('companies')),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_status', ['status'])
+    .index('by_submitterEmail', ['submitterEmail']),
+
+  /**
+   * Public requests to take ownership of an existing `companies` row.
+   * Anonymous form keyed off the company's slug. Approval is a separate
+   * (future) flow that emits a magic link to `submitterEmail` so the user
+   * can sign up via Clerk; on first sign-in we bind `claimedBy` on the
+   * company to the new user's `tokenIdentifier`. Until then this table is
+   * just a queue.
+   */
+  companyClaimRequests: defineTable({
+    companyId: v.id('companies'),
+    /** Snapshotted at submit time so admins can see what the submitter
+     * thought they were claiming, even if the company is later renamed. */
+    companyNameSnapshot: v.string(),
+    submitterName: v.string(),
+    submitterEmail: v.string(),
+    submitterRole: v.string(),
+    notes: v.optional(v.string()),
+    status: companySubmissionStatusValidator,
+    moderatorNote: v.optional(v.string()),
+    createdAt: v.number(),
+    updatedAt: v.number(),
+  })
+    .index('by_status', ['status'])
+    .index('by_companyId_and_status', ['companyId', 'status'])
+    .index('by_submitterEmail', ['submitterEmail']),
+
+  /**
    * Investor directory seeded from the OpenVC October 2025 export. Source
    * fields are kept free-form (investorType, stagesOfInvestment) because the
    * OpenVC vocabulary is too varied to lock down with literal unions — unlike
@@ -381,4 +456,66 @@ export default defineSchema({
     .searchIndex('search_text', {
       searchField: 'searchText',
     }),
+
+  /**
+   * Lightweight user directory mirrored from Clerk identities. Populated
+   * lazily by `me.touch` (called on app mount when signed in) so we have
+   * a stable email lookup keyed by `tokenIdentifier` — Convex's auth
+   * guideline says `tokenIdentifier` is the canonical ownership key, but
+   * humans need to see emails when moderating, hence this side-table.
+   *
+   * `companies.claimedBy` stores `tokenIdentifier`, so a claimer-listing
+   * UI joins through this table to show the email.
+   */
+  users: defineTable({
+    tokenIdentifier: v.string(),
+    email: v.string(),
+    lastSeenAt: v.number(),
+  })
+    .index('by_token', ['tokenIdentifier'])
+    .index('by_email', ['email']),
+
+  /**
+   * Users whose access to the founder/claimer portal has been revoked
+   * by an admin. Keyed by `tokenIdentifier` so the access gate is a
+   * single indexed lookup. `email` and `reason` are kept for display in
+   * the admin UI; they aren't part of the matching key.
+   *
+   * Revocation is per-user (not per-company): once revoked, a user is
+   * blocked from the entire portal regardless of how many claims they
+   * hold. Admins (env-allowlisted) bypass this — the founding admin can
+   * never lock themselves out via this table.
+   */
+  revokedUsers: defineTable({
+    tokenIdentifier: v.string(),
+    email: v.string(),
+    reason: v.optional(v.string()),
+    revokedAt: v.number(),
+    revokedBySubject: v.string(),
+    revokedByEmail: v.string(),
+  })
+    .index('by_token', ['tokenIdentifier'])
+    .index('by_email', ['email']),
+
+  /**
+   * Runtime-editable admin allowlist. Layered on top of the env-var
+   * allowlist (`ADMIN_EMAILS` / `ADMIN_EMAIL_DOMAINS`): the env vars stay
+   * as the founding-admin bootstrap (deploy-side, locked), and this table
+   * carries everyone added later via the admin UI. `checkAdminGate`
+   * unions the two sources.
+   *
+   * `kind: 'email'` rows are exact-address matches; `kind: 'domain'` rows
+   * are suffix matches against the email's `@domain` segment. Values are
+   * always stored lowercased so lookups can compare directly.
+   */
+  adminAllowlist: defineTable({
+    kind: v.union(v.literal('email'), v.literal('domain')),
+    value: v.string(),
+    note: v.optional(v.string()),
+    addedBySubject: v.string(),
+    addedByEmail: v.string(),
+    addedAt: v.number(),
+  })
+    .index('by_kind_value', ['kind', 'value'])
+    .index('by_kind', ['kind']),
 });

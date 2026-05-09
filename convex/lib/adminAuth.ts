@@ -4,7 +4,8 @@ export type AdminAccessDeniedReason =
   | 'signed_out'
   | 'missing_email_in_token'
   | 'not_configured'
-  | 'not_in_allowlist';
+  | 'not_in_allowlist'
+  | 'domain_not_allowed';
 
 export type AdminGateOk = { ok: true; email: string; tokenIdentifier: string };
 export type AdminGateDenied = { ok: false; reason: AdminAccessDeniedReason };
@@ -39,19 +40,56 @@ export async function checkAdminGate(
   if (!email) {
     return { ok: false, reason: 'missing_email_in_token' };
   }
-  const allowList =
-    process.env.ADMIN_EMAILS?.split(',').map((e) => e.trim().toLowerCase()) ?? [];
-  if (allowList.length === 0) {
+  // Two-axis allowlist, two sources:
+  //   `ADMIN_EMAILS`         — exact, full-address matches (env, locked).
+  //   `ADMIN_EMAIL_DOMAINS`  — domain-suffix matches (env, locked).
+  //   `adminAllowlist` table — runtime-editable from the admin UI; rows
+  //                            are tagged `kind: 'email' | 'domain'` and
+  //                            unioned with the env-driven sets at check
+  //                            time. The env stays as the founding-admin
+  //                            bootstrap so the table can never lock the
+  //                            deployment out of itself.
+  // A user is admin if any source matches.
+  const envEmails =
+    process.env.ADMIN_EMAILS?.split(',').map((e) => e.trim().toLowerCase()).filter(Boolean) ?? [];
+  const envDomains =
+    process.env.ADMIN_EMAIL_DOMAINS?.split(',').map((d) => d.trim().toLowerCase()).filter(Boolean) ?? [];
+
+  // Table reads only run on Query/Mutation contexts. Actions don't have
+  // `ctx.db`, so we narrow with a runtime check — actions still get the
+  // env-var path which covers the founding admin.
+  const tableEmails = new Set<string>();
+  const tableDomains = new Set<string>();
+  if ('db' in ctx) {
+    const rows = await ctx.db.query('adminAllowlist').collect();
+    for (const r of rows) {
+      if (r.kind === 'email') tableEmails.add(r.value);
+      else tableDomains.add(r.value);
+    }
+  }
+
+  if (envEmails.length === 0 && envDomains.length === 0 && tableEmails.size === 0 && tableDomains.size === 0) {
     return { ok: false, reason: 'not_configured' };
   }
+
   const emailLower = email.toLowerCase();
-  if (!allowList.includes(emailLower)) {
-    return { ok: false, reason: 'not_in_allowlist' };
+  if (envEmails.includes(emailLower) || tableEmails.has(emailLower)) {
+    return { ok: true, email, tokenIdentifier: identity.tokenIdentifier };
   }
+  // Domain check: everything after the last `@`. Malformed (no `@`) emails
+  // fall through to the deny branch since `domain` won't match any rule.
+  const atIndex = emailLower.lastIndexOf('@');
+  const domain = atIndex >= 0 ? emailLower.slice(atIndex + 1) : emailLower;
+  if (envDomains.includes(domain) || tableDomains.has(domain)) {
+    return { ok: true, email, tokenIdentifier: identity.tokenIdentifier };
+  }
+
+  // Specific reason helps the UI distinguish "you're not on any email
+  // list" from "no email list configured at all".
+  const anyEmailRule = envEmails.length > 0 || tableEmails.size > 0;
   return {
-    ok: true,
-    email,
-    tokenIdentifier: identity.tokenIdentifier,
+    ok: false,
+    reason: anyEmailRule ? 'not_in_allowlist' : 'domain_not_allowed',
   };
 }
 
@@ -66,9 +104,11 @@ function adminGateDeniedMessage(reason: AdminAccessDeniedReason): string {
         'See comments in convex/auth.config.ts.'
       );
     case 'not_configured':
-      return 'Admin access is not configured (set ADMIN_EMAILS on your Convex deployment).';
+      return 'Admin access is not configured (set ADMIN_EMAILS and/or ADMIN_EMAIL_DOMAINS on your Convex deployment).';
     case 'not_in_allowlist':
-      return 'Forbidden: signed-in email is not listed in ADMIN_EMAILS.';
+      return 'Forbidden: signed-in email is not listed in ADMIN_EMAILS and its domain is not in ADMIN_EMAIL_DOMAINS.';
+    case 'domain_not_allowed':
+      return 'Forbidden: signed-in email\'s domain is not in ADMIN_EMAIL_DOMAINS.';
     default: {
       const _exhaustive: never = reason;
       return _exhaustive;

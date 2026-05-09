@@ -17,6 +17,7 @@ import {
 } from '@/lib/companies/filters';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { FloatingFilterBar } from '@/components/map/floating-filter-bar';
+import { MapSubmitBusinessCta } from '@/components/map/map-submit-business-cta';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
@@ -395,6 +396,7 @@ export default function MapPage() {
         onClearSelection={() => setSelectedId(null)}
         onView={flyToEntity}
       />
+      <MapSubmitBusinessCta />
     </>
   );
 }
