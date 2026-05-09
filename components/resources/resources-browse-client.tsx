@@ -157,25 +157,31 @@ export function ResourcesBrowseClient() {
                   if (list.length === 0) return null;
                   return (
                     <Disclosure key={c.key} id={c.key}>
-                      <div id={sectionDomId(c.key)} className="scroll-mt-24">
-                        <DisclosureTrigger triggerIndicator={false}>
-                          <ChevronDownIcon
-                            aria-hidden
-                            className="size-4 shrink-0 -rotate-90 transition-all duration-200 group-expanded/disclosure-item:rotate-0 group-expanded:rotate-0"
-                          />
-                          <span className="font-medium">{c.label}</span>
-                          <span className="ml-auto text-muted-fg text-sm tabular-nums">
-                            {list.length}
-                          </span>
-                        </DisclosureTrigger>
-                        <DisclosurePanel>
-                          <div className="rounded-lg border border-border bg-overlay">
-                            {list.map((r) => (
-                              <ResourceRow key={String(r._id)} resource={r} />
-                            ))}
-                          </div>
-                        </DisclosurePanel>
-                      </div>
+                      {({ isExpanded }) => (
+                        <div id={sectionDomId(c.key)} className="scroll-mt-24">
+                          <DisclosureTrigger triggerIndicator={false}>
+                            <ChevronDownIcon
+                              aria-hidden
+                              className="size-4 shrink-0"
+                              style={{
+                                transform: isExpanded ? "rotate(0deg)" : "rotate(-90deg)",
+                                transition: "transform 200ms",
+                              }}
+                            />
+                            <span className="font-medium">{c.label}</span>
+                            <span className="ml-auto text-muted-fg text-sm tabular-nums">
+                              {list.length}
+                            </span>
+                          </DisclosureTrigger>
+                          <DisclosurePanel>
+                            <div className="rounded-lg border border-border bg-overlay">
+                              {list.map((r) => (
+                                <ResourceRow key={String(r._id)} resource={r} />
+                              ))}
+                            </div>
+                          </DisclosurePanel>
+                        </div>
+                      )}
                     </Disclosure>
                   );
                 })}
