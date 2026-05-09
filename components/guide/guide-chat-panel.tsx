@@ -14,7 +14,7 @@ import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { Link } from "@/i18n/navigation";
 import { loadQuizAnswers } from "@/lib/founder-quiz";
 import { useSmoothText } from "@/lib/guide/use-smooth-text";
-import type { GuideContextItem, GuideUIMessage } from "@/lib/guide/types";
+import type { GuideContextItem, GuideRagItem, GuideUIMessage } from "@/lib/guide/types";
 
 type Props = {
   initialQuery?: string;
@@ -379,6 +379,7 @@ function ChatBubble({
     .map((p) => p.text)
     .join('');
   const sources = message.metadata?.sources ?? [];
+  const guides = message.metadata?.guides ?? [];
   const text = useSmoothText(rawText);
 
   const showThinking = !isUser && streaming && rawText.length === 0;
@@ -398,10 +399,15 @@ function ChatBubble({
       ) : isUser ? (
         <p className="whitespace-pre-wrap text-sm leading-relaxed">{rawText}</p>
       ) : (
-        <AssistantMarkdown text={text} sources={sources} onEntitySelect={onEntitySelect} />
+        <AssistantMarkdown
+          text={text}
+          sources={sources}
+          guides={guides}
+          onEntitySelect={onEntitySelect}
+        />
       )}
-      {!isUser && !streaming && sources.length > 0 ? (
-        <ContextDisclosure items={sources} />
+      {!isUser && !streaming && (sources.length > 0 || guides.length > 0) ? (
+        <ContextDisclosure resources={sources} guides={guides} />
       ) : null}
       {isCompleted ? (
         <div className="mt-2 flex items-center gap-0.5">
@@ -423,28 +429,76 @@ function ChatBubble({
   );
 }
 
-function ContextDisclosure({ items }: { items: GuideContextItem[] }) {
+function ContextDisclosure({
+  resources,
+  guides,
+}: {
+  resources: GuideContextItem[];
+  guides: GuideRagItem[];
+}) {
+  const total = resources.length + guides.length;
+  if (total === 0) return null;
+  const summaryWord = total === 1 ? "source" : "sources";
   return (
     <details className="group mt-3 rounded-lg border border-border bg-muted/20">
       <summary className="cursor-pointer list-none px-3 py-2 text-xs font-medium text-muted-fg outline-0 outline-offset-2 hover:text-fg focus-visible:outline-2 focus-visible:outline-ring">
         <span className="inline-flex items-center gap-1">
           <span className="transition group-open:rotate-90" aria-hidden>▸</span>
-          {items.length} {items.length === 1 ? "source" : "sources"} used
+          {total} {summaryWord} used
         </span>
       </summary>
-      <ul className="space-y-1.5 px-3 pb-3">
-        {items.map((c) => (
-          <li key={c.slug} className="text-xs">
-            <Link href={`/resources/${c.slug}`} className="font-medium text-fg hover:underline">
-              {c.title}
-            </Link>
-            {" · "}
-            <UiLink href={c.url} className="text-muted-fg hover:underline" rel="noopener noreferrer" target="_blank">
-              Official site
-            </UiLink>
-          </li>
-        ))}
-      </ul>
+      <div className="space-y-3 px-3 pb-3">
+        {resources.length > 0 ? (
+          <div>
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-fg">
+              Resources
+            </p>
+            <ul className="space-y-1.5">
+              {resources.map((c) => (
+                <li key={`r-${c.slug}`} className="text-xs">
+                  <Link href={`/resources/${c.slug}`} className="font-medium text-fg hover:underline">
+                    {c.title}
+                  </Link>
+                  {" · "}
+                  <UiLink
+                    href={c.url}
+                    className="text-muted-fg hover:underline"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Official site
+                  </UiLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+        {guides.length > 0 ? (
+          <div>
+            <p className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-muted-fg">
+              Further reading
+            </p>
+            <ul className="space-y-1.5">
+              {guides.map((g) => (
+                <li key={`g-${g.slug}`} className="text-xs">
+                  <Link href={`/guides/${g.slug}`} className="font-medium text-fg hover:underline">
+                    {g.title}
+                  </Link>
+                  {" · "}
+                  <UiLink
+                    href={g.sourceUrl}
+                    className="text-muted-fg hover:underline"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Read original
+                  </UiLink>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+      </div>
     </details>
   );
 }

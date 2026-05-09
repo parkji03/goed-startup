@@ -1,16 +1,17 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import type { api } from "@/convex/_generated/api";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { buttonStyles } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Text } from "@/components/ui/text";
+import { ResourceBody } from "@/components/resources/resource-body";
 import { categoryLabel, type ResourceCategoryKey } from "@/lib/resources/categories";
 
 type Props = {
-  slug: string;
+  preloaded: Preloaded<typeof api.resources.bySlug>;
 };
 
 function ChipRow({ label, values }: { label: string; values: string[] }) {
@@ -29,12 +30,9 @@ function ChipRow({ label, values }: { label: string; values: string[] }) {
   );
 }
 
-export function ResourceDetailClient({ slug }: Props) {
-  const resource = useQuery(api.resources.bySlug, { slug });
+export function ResourceDetailClient({ preloaded }: Props) {
+  const resource = usePreloadedQuery(preloaded);
 
-  if (resource === undefined) {
-    return <Text className="px-4 py-10 text-center text-muted-fg">Loading resource…</Text>;
-  }
   if (resource === null) {
     return (
       <div className="mx-auto max-w-lg px-4 py-16">
@@ -80,6 +78,14 @@ export function ResourceDetailClient({ slug }: Props) {
           </Link>
         </div>
       </div>
+      {resource.body ? (
+        <section aria-label="Background">
+          <Heading level={2} className="mb-3 text-xl font-semibold tracking-tight">
+            Background
+          </Heading>
+          <ResourceBody body={resource.body} />
+        </section>
+      ) : null}
       <div className="rounded-xl border border-border bg-muted/30 p-4">
         <ChipRow label="Tags" values={resource.tags} />
         <ChipRow label="Communities / audiences" values={resource.communities} />

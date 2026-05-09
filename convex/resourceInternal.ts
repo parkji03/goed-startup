@@ -8,6 +8,12 @@ import {
   resourceStatusValidator,
 } from './resourceValidators';
 import {
+  COMMUNITY_VOCAB,
+  INDUSTRY_VOCAB,
+  LOCATION_VOCAB,
+  clampToVocab,
+} from './lib/facetVocabularies';
+import {
   buildSearchText,
   facetsFromResourceFields,
   inferStageTagsFromTags,
@@ -67,12 +73,20 @@ export const upsertResource = internalMutation({
   },
   handler: async (ctx, { row }) => {
     const contactEmail = sanitizeContactEmail(row.contactEmail);
-    const communities = splitPipeList(row.communitiesRaw);
-    const industries = splitPipeList(row.industriesRaw);
-    const locations = splitPipeList(row.locationsRaw);
+    const communities = clampToVocab(splitPipeList(row.communitiesRaw), COMMUNITY_VOCAB, 'communities');
+    const industries = clampToVocab(splitPipeList(row.industriesRaw), INDUSTRY_VOCAB, 'industries');
+    const locations = clampToVocab(splitPipeList(row.locationsRaw), LOCATION_VOCAB, 'locations');
     const tags = splitPipeList(row.tagsRaw);
     const stageTags = inferStageTagsFromTags(tags);
     const category = row.category;
+    const slug = makeResourceSlug(row.title, row.sourceId);
+    const existing = await ctx.db
+      .query('resources')
+      .withIndex('by_sourceId', (q) => q.eq('sourceId', row.sourceId))
+      .unique();
+    // Preserve any existing body when re-importing — body is populated out of
+    // band by patchBody (P2.3) and shouldn't be wiped by a CSV refresh.
+    const body = existing?.body;
     const searchText = buildSearchText({
       title: row.title,
       description: row.description,
@@ -84,12 +98,8 @@ export const upsertResource = internalMutation({
       locations,
       tags,
       stageTags,
+      body,
     });
-    const slug = makeResourceSlug(row.title, row.sourceId);
-    const existing = await ctx.db
-      .query('resources')
-      .withIndex('by_sourceId', (q) => q.eq('sourceId', row.sourceId))
-      .unique();
 
     let resourceId: Id<'resources'>;
     if (existing) {
@@ -169,5 +179,78 @@ export const getPublishedBySlug = internalQuery({
       .withIndex('by_slug', (q) => q.eq('slug', slug))
       .first();
     return row?.status === 'published' ? row : null;
+  },
+});
+
+/**
+ * Attach a long-form markdown body to a resource by sourceId, recomputing
+ * searchText so the lexical index covers the new content.
+ *
+ * Intentionally does NOT reschedule embedding generation: embeddingSourceText
+ * (convex/lib/resourceHelpers.ts) excludes body, and convex/guide.ts retrieve
+ * is lexical-only ("no embeddings in v1"). Re-embedding would be wasted CPU
+ * for this work. P2.6 surfaces a body excerpt to the model via the retrieval
+ * context, not via vectors.
+ */
+export const patchBody = internalMutation({
+  args: { sourceId: v.string(), body: v.string() },
+  handler: async (ctx, { sourceId, body }) => {
+    const row = await ctx.db
+      .query('resources')
+      .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
+      .unique();
+    if (!row) return { patched: false, sourceId };
+
+    const searchText = buildSearchText({
+      title: row.title,
+      description: row.description,
+      url: row.url,
+      contactEmail: row.contactEmail,
+      category: row.category,
+      communities: row.communities,
+      industries: row.industries,
+      locations: row.locations,
+      tags: row.tags,
+      stageTags: row.stageTags,
+      body,
+    });
+    await ctx.db.patch(row._id, {
+      body,
+      searchText,
+      lastSyncedAt: Date.now(),
+    });
+    return { patched: true, sourceId, slug: row.slug, bodyChars: body.length };
+  },
+});
+
+/**
+ * Hard-delete a resource by sourceId, cascading to its facet and embedding
+ * rows. Used for content-derived rows we triage out post-import (e.g., events
+ * that don't belong in the catalog). Internal-only — not callable from the
+ * browser.
+ */
+export const deleteBySourceId = internalMutation({
+  args: { sourceId: v.string() },
+  handler: async (ctx, { sourceId }) => {
+    const row = await ctx.db
+      .query('resources')
+      .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
+      .unique();
+    if (!row) return { deleted: false, sourceId };
+
+    const facets = await ctx.db
+      .query('resourceFacets')
+      .withIndex('by_resourceId', (q) => q.eq('resourceId', row._id))
+      .collect();
+    for (const f of facets) await ctx.db.delete(f._id);
+
+    const embeddings = await ctx.db
+      .query('resourceEmbeddings')
+      .withIndex('by_resourceId', (q) => q.eq('resourceId', row._id))
+      .collect();
+    for (const e of embeddings) await ctx.db.delete(e._id);
+
+    await ctx.db.delete(row._id);
+    return { deleted: true, sourceId, slug: row.slug, title: row.title };
   },
 });

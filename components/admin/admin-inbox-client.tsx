@@ -19,6 +19,7 @@ import {
   SelectItem,
   SelectTrigger,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Text } from "@/components/ui/text";
 import { splitSuggestedTags } from "@/lib/forms/resource-submit";
 import {
@@ -26,6 +27,24 @@ import {
   categoryLabel,
   type ResourceCategoryKey,
 } from "@/lib/resources/categories";
+
+function InboxLoadingSkeleton({ label }: { label: string }) {
+  return (
+    <ul className="space-y-3" aria-busy="true" aria-label={label}>
+      {[0, 1, 2].map((i) => (
+        <li key={i} className="rounded-xl border border-border bg-overlay p-4 space-y-3">
+          <Skeleton className="h-5 w-2/3" soft />
+          <Skeleton className="h-4 w-full" soft />
+          <Skeleton className="h-4 w-5/6" soft />
+          <div className="flex gap-2">
+            <Skeleton className="h-8 w-24" soft />
+            <Skeleton className="h-8 w-24" soft />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 /** Copy for the admin-gate denied panel — same reason set as
  * `resourceSubmissions:listPendingForAdmin`. */
@@ -120,7 +139,7 @@ function ClaimsSection({ claims }: { claims: ClaimRow[] | null }) {
       </div>
 
       {claims === null ? (
-        <Text className="text-muted-fg text-sm">Loading…</Text>
+        <InboxLoadingSkeleton label="Loading claim requests" />
       ) : claims.length === 0 ? (
         <Text className="text-muted-fg text-sm">No pending claim requests.</Text>
       ) : (
@@ -317,7 +336,7 @@ function RegistrationsSection({
       </div>
 
       {registrations === null ? (
-        <Text className="text-muted-fg text-sm">Loading…</Text>
+        <InboxLoadingSkeleton label="Loading new business submissions" />
       ) : registrations.length === 0 ? (
         <Text className="text-muted-fg text-sm">No pending submissions.</Text>
       ) : (
