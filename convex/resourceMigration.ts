@@ -34,6 +34,7 @@ export const setCategoryById = internalMutation({
       locations: r.locations,
       tags,
       stageTags,
+      body: r.body,
     });
     await ctx.db.patch(resourceId, {
       category,
@@ -89,6 +90,7 @@ export const setTitleBySourceId = internalMutation({
       locations: r.locations,
       tags: r.tags,
       stageTags: r.stageTags,
+      body: r.body,
     });
     await ctx.db.patch(r._id, {
       title: cleanTitle,

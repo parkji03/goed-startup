@@ -79,6 +79,14 @@ export const upsertResource = internalMutation({
     const tags = splitPipeList(row.tagsRaw);
     const stageTags = inferStageTagsFromTags(tags);
     const category = row.category;
+    const slug = makeResourceSlug(row.title, row.sourceId);
+    const existing = await ctx.db
+      .query('resources')
+      .withIndex('by_sourceId', (q) => q.eq('sourceId', row.sourceId))
+      .unique();
+    // Preserve any existing body when re-importing — body is populated out of
+    // band by patchBody (P2.3) and shouldn't be wiped by a CSV refresh.
+    const body = existing?.body;
     const searchText = buildSearchText({
       title: row.title,
       description: row.description,
@@ -90,12 +98,8 @@ export const upsertResource = internalMutation({
       locations,
       tags,
       stageTags,
+      body,
     });
-    const slug = makeResourceSlug(row.title, row.sourceId);
-    const existing = await ctx.db
-      .query('resources')
-      .withIndex('by_sourceId', (q) => q.eq('sourceId', row.sourceId))
-      .unique();
 
     let resourceId: Id<'resources'>;
     if (existing) {

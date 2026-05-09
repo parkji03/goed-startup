@@ -46,6 +46,7 @@ export function buildSearchText(parts: {
   locations: string[];
   tags: string[];
   stageTags: string[];
+  body?: string;
 }): string {
   const chunks = [
     parts.title,
@@ -58,6 +59,7 @@ export function buildSearchText(parts: {
     ...parts.locations,
     ...parts.tags,
     ...parts.stageTags,
+    parts.body,
   ];
   return chunks.filter(Boolean).join(' | ');
 }

@@ -161,6 +161,13 @@ export default defineSchema({
     /** Free-form-ish secondary descriptors. */
     tags: v.array(v.string()),
     stageTags: v.array(v.string()),
+    /**
+     * Long-form markdown body — populated by P2.3 enrichment for rows that
+     * have a startup.utah.gov article behind them. Optional; CSV-only rows
+     * have no body. Indexed via `searchText` (lexical), NOT via embeddings —
+     * see comment in `embeddingSourceText` for why.
+     */
+    body: v.optional(v.string()),
     searchText: v.string(),
     status: resourceStatusValidator,
     submissionId: v.optional(v.id('resourceSubmissions')),
