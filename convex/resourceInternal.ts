@@ -163,10 +163,6 @@ export const upsertResource = internalMutation({
       status: row.status,
       facetRows,
     });
-
-    await ctx.scheduler.runAfter(0, internal.resourceEmbeddingsNode.embedResource, {
-      resourceId,
-    });
   },
 });
 

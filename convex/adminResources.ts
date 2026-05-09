@@ -231,10 +231,6 @@ export const upsertForAdmin = mutation({
       }),
     });
 
-    await ctx.scheduler.runAfter(0, internal.resourceEmbeddingsNode.embedResource, {
-      resourceId,
-    });
-
     return { _id: resourceId, slug, action };
   },
 });

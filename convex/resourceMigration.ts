@@ -56,7 +56,6 @@ export const setCategoryById = internalMutation({
       status: r.status,
       facetRows,
     });
-    await ctx.scheduler.runAfter(0, internal.resourceEmbeddingsNode.embedResource, { resourceId });
   },
 });
 
@@ -150,9 +149,6 @@ export const setTitleBySourceId = internalMutation({
       title: cleanTitle,
       searchText,
       lastSyncedAt: Date.now(),
-    });
-    await ctx.scheduler.runAfter(0, internal.resourceEmbeddingsNode.embedResource, {
-      resourceId: r._id,
     });
     return { resourceId: r._id, previousTitle: r.title, newTitle: cleanTitle };
   },
