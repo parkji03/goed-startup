@@ -2,7 +2,7 @@ import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { internalMutation, internalQuery } from './_generated/server';
-import { resourceStatusValidator } from './resourceValidators';
+import { facetTypeValidator, resourceStatusValidator } from './resourceValidators';
 import {
   buildSearchText,
   facetsFromResourceFields,
@@ -18,13 +18,7 @@ export const replaceFacets = internalMutation({
     status: resourceStatusValidator,
     facetRows: v.array(
       v.object({
-        facetType: v.union(
-          v.literal('community'),
-          v.literal('industry'),
-          v.literal('location'),
-          v.literal('topic'),
-          v.literal('stage'),
-        ),
+        facetType: facetTypeValidator,
         value: v.string(),
       }),
     ),

@@ -6,12 +6,25 @@ export const resourceStatusValidator = v.union(
   v.literal('archived'),
 );
 
+export const resourceCategoryValidator = v.union(
+  v.literal('capital-funding'),
+  v.literal('programs-accelerators'),
+  v.literal('workforce-talent'),
+  v.literal('legal-ip-operations'),
+  v.literal('mentorship-advisory'),
+  v.literal('community-events'),
+  v.literal('education-training'),
+  v.literal('government-econdev'),
+);
+
 export const facetTypeValidator = v.union(
   v.literal('community'),
   v.literal('industry'),
   v.literal('location'),
   v.literal('topic'),
+  v.literal('tag'),
   v.literal('stage'),
+  v.literal('category'),
 );
 
 export const submissionStatusValidator = v.union(
