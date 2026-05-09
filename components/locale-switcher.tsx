@@ -7,10 +7,9 @@ import {
   SelectLabel,
   SelectTrigger,
 } from "@/components/ui/select";
-import { usePathname, useRouter } from "@/i18n/navigation";
+import { usePathname } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { useTranslations } from "next-intl";
-import { useTransition } from "react";
 import { twMerge } from "tailwind-merge";
 
 type LocaleItem = { id: string; label: string };
@@ -23,10 +22,8 @@ type Props = {
 };
 
 export function LocaleSwitcher({ locale, triggerClassName, className }: Props) {
-  const router = useRouter();
   const pathname = usePathname();
   const t = useTranslations("LocaleSwitcher");
-  const [, startTransition] = useTransition();
 
   const items: LocaleItem[] = routing.locales.map((code) => ({
     id: code,
@@ -39,10 +36,11 @@ export function LocaleSwitcher({ locale, triggerClassName, className }: Props) {
       className={twMerge("w-[min(100%,6.75rem)] shrink-0", className)}
       selectedKey={locale}
       onSelectionChange={(key) => {
-        if (key == null) return;
-        startTransition(() => {
-          router.replace(pathname, { locale: String(key) });
-        });
+        if (key == null || key === locale) return;
+        // Hard nav so next-themes' boot script doesn't re-render on a soft
+        // client transition — that triggers a "Encountered a script tag while
+        // rendering" console error from React.
+        window.location.assign(`/${String(key)}${pathname === "/" ? "" : pathname}`);
       }}
     >
       <SelectTrigger

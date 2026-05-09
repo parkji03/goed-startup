@@ -40,6 +40,12 @@ export function ResourcesBrowseClient() {
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
 
+  // Only show jump buttons for categories that have at least one resource —
+  // otherwise the button scrolls to a section that isn't rendered.
+  const visibleCategories = grouped
+    ? RESOURCE_CATEGORIES.filter((c) => (grouped[c.key]?.total ?? 0) > 0)
+    : RESOURCE_CATEGORIES;
+
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
       <section className="space-y-6">
@@ -119,7 +125,7 @@ export function ResourcesBrowseClient() {
           Jump to
         </Heading>
         <div className="flex flex-wrap gap-2">
-          {RESOURCE_CATEGORIES.map((c) => (
+          {visibleCategories.map((c) => (
             <Button
               key={c.key}
               size="sm"
@@ -142,8 +148,10 @@ export function ResourcesBrowseClient() {
             <div className="hidden md:block">
               <DisclosureGroup allowsMultipleExpanded defaultExpandedKeys={ALL_CATEGORY_KEYS}>
                 {RESOURCE_CATEGORIES.map((c) => {
-                  const list = grouped[c.key] ?? [];
-                  if (list.length === 0) return null;
+                  const group = grouped[c.key];
+                  const items = group?.items ?? [];
+                  const total = group?.total ?? 0;
+                  if (items.length === 0) return null;
                   return (
                     <Disclosure key={c.key} id={c.key}>
                       {({ isExpanded }) => (
@@ -159,12 +167,12 @@ export function ResourcesBrowseClient() {
                             />
                             <span className="font-medium">{c.label}</span>
                             <span className="ml-auto text-muted-fg text-sm tabular-nums">
-                              {list.length}
+                              {total}
                             </span>
                           </DisclosureTrigger>
                           <DisclosurePanel>
                             <div className="rounded-lg border border-border bg-overlay">
-                              {list.map((r) => (
+                              {items.map((r) => (
                                 <ResourceRow key={String(r._id)} resource={r} />
                               ))}
                             </div>
@@ -180,18 +188,20 @@ export function ResourcesBrowseClient() {
             {/* Mobile: cards under category headings */}
             <div className="md:hidden space-y-6">
               {RESOURCE_CATEGORIES.map((c) => {
-                const list = grouped[c.key] ?? [];
-                if (list.length === 0) return null;
+                const group = grouped[c.key];
+                const items = group?.items ?? [];
+                const total = group?.total ?? 0;
+                if (items.length === 0) return null;
                 return (
                   <div key={c.key} id={sectionDomId(c.key)} className="space-y-3 scroll-mt-24">
                     <div className="flex items-baseline justify-between">
                       <Heading level={3} className="text-base">
                         {c.label}
                       </Heading>
-                      <Text className="text-muted-fg text-sm tabular-nums">{list.length}</Text>
+                      <Text className="text-muted-fg text-sm tabular-nums">{total}</Text>
                     </div>
                     <div className="grid gap-4">
-                      {list.map((r) => (
+                      {items.map((r) => (
                         <ResourceCard key={String(r._id)} resource={r} />
                       ))}
                     </div>

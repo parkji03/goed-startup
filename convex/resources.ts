@@ -175,34 +175,37 @@ export const facetValues = query({
   },
 });
 
+type GroupedItem = {
+  _id: unknown;
+  title: string;
+  slug: string;
+  description: string;
+  url: string;
+  category: ResourceCategoryKey;
+  tags: string[];
+  stageTags: string[];
+  communities: string[];
+};
+
+type GroupedCategory = { items: GroupedItem[]; total: number };
+
 export const listGroupedByCategory = query({
   args: { limitPerCategory: v.optional(v.number()) },
   handler: async (ctx, { limitPerCategory }) => {
     const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 200);
-    const results: Record<
-      ResourceCategoryKey,
-      Array<{
-        _id: unknown;
-        title: string;
-        slug: string;
-        description: string;
-        url: string;
-        category: ResourceCategoryKey;
-        tags: string[];
-        stageTags: string[];
-        communities: string[];
-      }>
-    > = Object.fromEntries(RESOURCE_CATEGORY_KEYS.map((k) => [k, []])) as Record<
-      ResourceCategoryKey,
-      never[]
-    >;
+    const results = Object.fromEntries(
+      RESOURCE_CATEGORY_KEYS.map((k) => [k, { items: [], total: 0 } as GroupedCategory]),
+    ) as Record<ResourceCategoryKey, GroupedCategory>;
 
     for (const key of RESOURCE_CATEGORY_KEYS) {
-      const rows = await ctx.db
+      // Total count is independent of the display cap so the UI can show the
+      // true number even when only a slice is rendered. Capped at 1000 to
+      // bound the scan as the catalog grows.
+      const all = await ctx.db
         .query('resources')
         .withIndex('by_category', (q) => q.eq('category', key).eq('status', 'published'))
-        .take(lim);
-      results[key] = rows.map((r) => ({
+        .take(1000);
+      const items = all.slice(0, lim).map((r) => ({
         _id: r._id,
         title: r.title,
         slug: r.slug,
@@ -213,6 +216,7 @@ export const listGroupedByCategory = query({
         stageTags: r.stageTags,
         communities: r.communities,
       }));
+      results[key] = { items, total: all.length };
     }
     return results;
   },

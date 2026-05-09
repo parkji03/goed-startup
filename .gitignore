@@ -50,3 +50,9 @@ __pycache__/
 
 # superpowers brainstorm mockups
 .superpowers/
+
+# agent-browser QA output (screenshots, videos, reports)
+/.qa-output/
+
+# transient Claude Code agent worktrees
+/.claude/worktrees/
