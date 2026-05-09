@@ -7,6 +7,14 @@
  * Default CSV: data/resources-builder-day.csv (override: first CLI arg path).
  *
  * Idempotent by `sourceId` via `internal.resourceImport:importInternal` (not callable from browsers).
+ *
+ * Per-row pipeline:
+ *   1. CSV row → split Topics into a string array
+ *   2. assignCategory(title, topics) → category (rule-based)
+ *   3. category-overrides.json (keyed by sourceId) wins over rule-based when present
+ *   4. cleanTags(topics) → tagsRaw (drops stage-fragment topics like "Late Stage Growth")
+ *   5. Pass {sourceId, title, description, url, category, communitiesRaw,
+ *      industriesRaw, locationsRaw, tagsRaw} to importInternal
  */
 
 import { execFileSync } from 'node:child_process';
@@ -16,9 +24,15 @@ import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
 
 import { sanitizeContactEmail } from '../convex/lib/resourceHelpers';
+import {
+  RESOURCE_CATEGORY_KEYS,
+  type ResourceCategoryKey,
+} from '../lib/resources/categories';
+import { assignCategory, cleanTags } from '../lib/resources/migration-rules';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const CSV_PATH_DEFAULT = path.resolve(scriptDir, '..', 'data', 'resources-builder-day.csv');
+const OVERRIDES_PATH = path.resolve(scriptDir, '..', 'data', 'category-overrides.json');
 const repoRoot = path.resolve(scriptDir, '..');
 
 const CHUNK_ROWS = 40;
@@ -42,10 +56,26 @@ type CsvRow = {
   email?: string;
 };
 
+type Override = { category: ResourceCategoryKey; reason?: string };
+
 function chunk<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
   return out;
+}
+
+function loadOverrides(): Record<string, Override> {
+  if (!fs.existsSync(OVERRIDES_PATH)) return {};
+  const raw = fs.readFileSync(OVERRIDES_PATH, 'utf-8');
+  const parsed = JSON.parse(raw) as Record<string, Override>;
+  for (const [sourceId, ov] of Object.entries(parsed)) {
+    if (!RESOURCE_CATEGORY_KEYS.includes(ov.category)) {
+      throw new Error(
+        `data/category-overrides.json: sourceId=${sourceId} has unknown category "${ov.category}"`,
+      );
+    }
+  }
+  return parsed;
 }
 
 async function main() {
@@ -58,21 +88,42 @@ async function main() {
     console.warn('CSV parse warnings:', parsed.errors.slice(0, 3));
   }
 
+  const overrides = loadOverrides();
+  let overrideHits = 0;
+
   const rows = parsed.data
     .filter((r) => Boolean(r.Title?.trim() && String(r.id) && r.link?.trim()))
-    .map((r) => ({
-      sourceId: String(r.id),
-      title: String(r.Title).trim(),
-      description: (r.description ?? '').trim(),
-      url: String(r.link).trim(),
-      contactEmail: sanitizeContactEmail(r.email?.trim()),
-      communitiesRaw: r.Communities,
-      industriesRaw: r.Industries,
-      locationsRaw: r.Locations,
-      topicsRaw: r.Topics,
-    }));
+    .map((r) => {
+      const sourceId = String(r.id);
+      const title = String(r.Title).trim();
+      const topics = (r.Topics ?? '')
+        .split('|')
+        .map((t) => t.trim())
+        .filter(Boolean);
+      const ruleResult = assignCategory({ title, topics });
+      let category: ResourceCategoryKey = ruleResult.category;
+      if (overrides[sourceId]) {
+        category = overrides[sourceId].category;
+        overrideHits++;
+      }
+      const tagsRaw = cleanTags(topics).join('|');
+      return {
+        sourceId,
+        title,
+        description: (r.description ?? '').trim(),
+        url: String(r.link).trim(),
+        contactEmail: sanitizeContactEmail(r.email?.trim()),
+        communitiesRaw: r.Communities,
+        industriesRaw: r.Industries,
+        locationsRaw: r.Locations,
+        tagsRaw,
+        category,
+      };
+    });
 
-  console.log(`Parsed ${rows.length} CSV rows → importInternal in chunks of ${CHUNK_ROWS}…\n`);
+  console.log(
+    `Parsed ${rows.length} CSV rows (${overrideHits} category overrides applied) → importInternal in chunks of ${CHUNK_ROWS}…\n`,
+  );
 
   let appliedChunks = 0;
   let failed = 0;

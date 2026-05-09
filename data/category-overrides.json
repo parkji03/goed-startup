@@ -1,0 +1,6 @@
+{
+  "2645": {
+    "category": "programs-accelerators",
+    "reason": "Altitude Lab is a wet-lab incubator/accelerator for biotech founders. assignCategory() rules don't match the title 'Altitude Labs' and fall through Topics='Entrepreneurship Communities|Relocate a Business to Utah' to community-events, which is wrong."
+  }
+}
