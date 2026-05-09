@@ -62,3 +62,63 @@ export async function geocode(rawAddress: string): Promise<GeocodeResult | null>
     state: ctx.region?.region_code ?? ctx.region?.name,
   };
 }
+
+/**
+ * Worldwide variant — drops the US-only country filter and returns the
+ * resolved country code/name. Used by the investor seed (OpenVC HQs span
+ * the globe). Keeping this separate from `geocode()` avoids regressing the
+ * Utah-biased company seed, which intentionally locks to US matches.
+ */
+export type WorldwideGeocodeResult = {
+  lng: number;
+  lat: number;
+  city?: string;
+  region?: string;
+  country?: string;
+};
+
+export async function geocodeWorldwide(
+  rawAddress: string,
+): Promise<WorldwideGeocodeResult | null> {
+  if (!MAPBOX_TOKEN) {
+    throw new Error('NEXT_PUBLIC_MAPBOX_TOKEN is not set in .env.local');
+  }
+  if (!rawAddress?.trim()) return null;
+
+  const url = new URL('https://api.mapbox.com/search/geocode/v6/forward');
+  url.searchParams.set('q', rawAddress);
+  url.searchParams.set('access_token', MAPBOX_TOKEN);
+  url.searchParams.set('limit', '1');
+
+  const res = await fetch(url);
+  if (!res.ok) {
+    const body = await res.text();
+    throw new Error(`Mapbox geocode failed (${res.status}): ${body}`);
+  }
+
+  const data = (await res.json()) as {
+    features: Array<{
+      geometry: { coordinates: [number, number] };
+      properties: {
+        context?: {
+          place?: { name?: string };
+          region?: { name?: string; region_code?: string };
+          country?: { name?: string; country_code?: string };
+        };
+      };
+    }>;
+  };
+
+  const feature = data.features[0];
+  if (!feature) return null;
+
+  const [lng, lat] = feature.geometry.coordinates;
+  const ctx = feature.properties.context ?? {};
+  return {
+    lng,
+    lat,
+    city: ctx.place?.name,
+    region: ctx.region?.region_code ?? ctx.region?.name,
+    country: ctx.country?.country_code ?? ctx.country?.name,
+  };
+}

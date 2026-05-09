@@ -27,4 +27,5 @@ export const FOUNDED_YEAR_OVERRIDES: Record<string, number> = {
   gauge: 2016,
   'thymeless-enterprises': 2021,
   'guard-iq': 2022,
+  remi: 2022,
 };

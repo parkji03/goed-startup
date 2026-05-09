@@ -63,7 +63,19 @@
         "label": "Contratando",
         "placeholder": "Cualquier estado"
       },
+      "type": {
+        "label": "Tipo",
+        "placeholder": "Cualquier tipo",
+        "options": {
+          "company": "Empresas",
+          "investor": "Inversores"
+        }
+      },
+      "layers": {
+        "label": "Capas"
+      },
       "toggle": {
+        "label": "Filtro",
         "show": "Mostrar filtros",
         "hide": "Ocultar filtros"
       },
@@ -138,6 +150,25 @@
     "list": {
       "emptyTitle": "Sin resultados",
       "emptyHint": "Prueba a quitar un filtro o acortar la búsqueda."
+    },
+    "investor": {
+      "eyebrow": "Perfil del inversor",
+      "countriesValue": "{count, plural, one {# país} other {# países}}",
+      "moreCount": "+{count} más",
+      "stats": {
+        "type": "Tipo",
+        "cheque": "Primera inversión",
+        "countries": "Países",
+        "stages": "Etapas"
+      },
+      "sections": {
+        "facts": "Datos",
+        "stages": "Etapas de inversión",
+        "countriesWithCount": "Países · {count}"
+      },
+      "attribution": {
+        "prefix": "Datos de inversores de"
+      }
     },
     "nav": {
       "sidebarLabel": "Resultados de búsqueda",

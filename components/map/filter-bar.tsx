@@ -4,7 +4,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'convex/react';
-import { FunnelIcon } from '@heroicons/react/24/outline';
+import { FunnelIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
+import { Button as AriaButton } from 'react-aria-components/Button';
+import { Dialog } from 'react-aria-components/Dialog';
+import { DialogTrigger } from 'react-aria-components/Dialog';
+import { Popover as PopoverPrimitive } from 'react-aria-components/Popover';
+import { twMerge } from 'tailwind-merge';
 import { api } from '@/convex/_generated/api';
 import {
   EMPLOYEE_COUNT_IDS,
@@ -17,12 +22,17 @@ import {
   type StageId,
 } from '@/lib/companies/taxonomy';
 import {
+  DEFAULT_ENTITY_TYPES,
+  ENTITY_TYPE_IDS,
+  isTypesNonDefault,
   parseFiltersFromParams,
   serializeFiltersToParams,
+  type EntityTypeId,
   type MapFilters,
 } from '@/lib/companies/filters';
 import { SearchField, SearchInput } from '@/components/ui/search-field';
 import { FilterChip } from '@/components/ui/filter-chip';
+import { ListBox, ListBoxItem } from '@/components/ui/list-box';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent } from '@/components/ui/tooltip';
 
@@ -139,15 +149,35 @@ export function FilterBar({
     [cityList],
   );
 
-  // Sum across all filter dimensions. Drives the toggle's count badge
-  // and the initial-open default (so a `?sector=fintech` deep link lands
-  // with chips already visible).
+  // Layer counts for the Layers popover labels. Both are cheap and Convex
+  // shares the underlying subscription with the map page, so subscribing
+  // here costs nothing extra.
+  const companyTotal = useQuery(api.companies.mapTotalCount);
+  const investorTotal = useQuery(api.investors.mapTotalCount);
+  const layerOptions = useMemo<Option<EntityTypeId>[]>(
+    () =>
+      ENTITY_TYPE_IDS.map((id) => {
+        const total = id === 'company' ? companyTotal : investorTotal;
+        const base = tFilters(`type.options.${id}`);
+        return {
+          id,
+          name: total != null ? `${base} (${formatThousands(total)})` : base,
+        };
+      }),
+    [tFilters, companyTotal, investorTotal],
+  );
+
+  // Sum across the *filter* dimensions only. Layer selection is now its
+  // own affordance (the Layers button) with its own badge — keeping it out
+  // of this count means the Filter button reflects "narrowing" and the
+  // Layers button reflects "what's on the map", with no overlap.
   const activeCount =
     filters.sectors.length +
     filters.stages.length +
     filters.employeeCounts.length +
     filters.cities.length +
     filters.hiringStatuses.length;
+  const typesDiverges = isTypesNonDefault(filters.types);
 
   // `chipsOpen` is initialized once from `activeCount`, then becomes
   // user-controlled — toggling URL filters off later doesn't yank the
@@ -179,15 +209,16 @@ export function FilterBar({
             aria-label={toggleLabel}
             aria-pressed={chipsOpen}
             intent="outline"
-            // sq-md is 44px (mobile) / 36px (desktop) — matches the
-            // SearchInput's `min-h-11 sm:min-h-9` exactly so the toggle
-            // sits flush with the input on both breakpoints regardless
-            // of the `size` prop. (`size` here only affects chip sizing.)
-            size="sq-md"
+            // `md` matches the SearchInput at the desktop breakpoint
+            // (`min-h-9`); the explicit `min-h-11` keeps the mobile
+            // height aligned with the input's `min-h-11` so the toggle
+            // sits flush with the input on both breakpoints.
+            size="md"
             onPress={() => setChipsOpen((open) => !open)}
-            className="relative shrink-0"
+            className="relative shrink-0 min-h-11 sm:min-h-9"
           >
             <FunnelIcon />
+            <span>{tFilters('toggle.label')}</span>
             {activeCount > 0 && (
               <span
                 aria-hidden="true"
@@ -199,6 +230,71 @@ export function FilterBar({
           </Button>
           <TooltipContent>{toggleLabel}</TooltipContent>
         </Tooltip>
+        {/* Layers button: orthogonal to filters. Filters narrow what's
+            shown within a layer; layers control which kinds (companies,
+            investors) are visible at all. Badge appears only when the
+            layer state diverges from the default so a fresh load stays
+            unadorned. */}
+        <DialogTrigger>
+          <AriaButton
+            aria-label={tFilters('layers.label')}
+            className={twMerge(
+              'relative inline-flex shrink-0 items-center gap-1.5 rounded-md border bg-bg shadow-sm transition-colors min-h-11 sm:min-h-9 px-3.5 text-sm',
+              'pressed:bg-muted hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+              typesDiverges
+                ? 'border-fg/40 bg-fg/5 font-medium'
+                : 'border-border',
+            )}
+          >
+            <RectangleStackIcon className="size-4" />
+            <span>{tFilters('layers.label')}</span>
+            {typesDiverges && (
+              <span
+                aria-hidden="true"
+                className="absolute -right-1 -top-1 inline-flex h-4 min-w-4 items-center justify-center rounded-full bg-fg px-1 text-[10px] font-semibold text-bg"
+              >
+                {filters.types.length}
+              </span>
+            )}
+          </AriaButton>
+          <PopoverPrimitive
+            offset={6}
+            placement="bottom end"
+            className={twMerge(
+              'overflow-hidden rounded-xl shadow-lg',
+              'entering:animate-in entering:fade-in-0 entering:zoom-in-95',
+              'exiting:animate-out exiting:fade-out-0 exiting:zoom-out-95',
+            )}
+          >
+            <Dialog className="outline-none">
+              <ListBox
+                aria-label={tFilters('layers.label')}
+                selectionMode="multiple"
+                selectedKeys={filters.types}
+                // Empty selection falls back to the default
+                // (`['company']`) so the map never goes blank — toggling
+                // every layer off would otherwise be a usability dead-end.
+                onSelectionChange={(keys) => {
+                  const next =
+                    keys === 'all'
+                      ? [...ENTITY_TYPE_IDS]
+                      : (Array.from(keys) as EntityTypeId[]);
+                  updateFilters({
+                    ...filters,
+                    types: next.length > 0 ? next : DEFAULT_ENTITY_TYPES,
+                  });
+                }}
+                items={layerOptions}
+              >
+                {(item) => (
+                  <ListBoxItem id={item.id} textValue={item.name}>
+                    {item.name}
+                  </ListBoxItem>
+                )}
+              </ListBox>
+            </Dialog>
+          </PopoverPrimitive>
+        </DialogTrigger>
       </div>
 
       {/* Chip row reveal: same `0fr → 1fr` grid trick used for the
@@ -215,7 +311,9 @@ export function FilterBar({
         <div className="min-h-0 overflow-hidden">
           {/* Chip order is alphabetical by label (City, Employees,
               Hiring, Sector, Stage). If a label is renamed in i18n,
-              double-check the row still reads in order. */}
+              double-check the row still reads in order. Layer selection
+              lives in the Layers button at the top of the chrome — these
+              chips are purely about narrowing the visible set. */}
           <div className="flex flex-wrap items-center gap-2 pt-2">
             <FilterChip
               size={size}
@@ -261,4 +359,12 @@ export function FilterBar({
       </div>
     </div>
   );
+}
+
+/**
+ * "2545" → "2,545". Locale-agnostic; we don't need full Intl machinery for
+ * this single label and it'd add weight to the bundle.
+ */
+function formatThousands(n: number): string {
+  return n.toLocaleString('en-US');
 }

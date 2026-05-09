@@ -8,8 +8,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { api } from '@/convex/_generated/api';
 import {
   useFilteredCompanies,
-  type CompanyFeatureProps,
-  type CompanyForList,
+  type EntityFeatureProps,
+  type EntityForList,
 } from '@/hooks/useFilteredCompanies';
 import {
   isFiltersActive,
@@ -20,13 +20,15 @@ import { FloatingFilterBar } from '@/components/map/floating-filter-bar';
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 
-const COMPANIES_SOURCE = 'companies';
+// Single source carries both companies and investors. Each feature has a
+// `kind` property the marker renderer branches on (circle vs rounded-square).
+const ENTITIES_SOURCE = 'entities';
 
 export default function MapPage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
-  // Live registry of DOM markers, keyed by company `_id`. Mapbox owns cluster
-  // rendering; this map owns the per-company logo markers and reconciles them
+  // Live registry of DOM markers, keyed by entity `_id`. Mapbox owns cluster
+  // rendering; this map owns the per-entity logo markers and reconciles them
   // against the source's currently-unclustered features on every viewport
   // change.
   const markersRef = useRef<Map<string, mapboxgl.Marker>>(new Map());
@@ -44,24 +46,43 @@ export default function MapPage() {
   );
   const filtered = useFilteredCompanies(filters);
   const geojson = filtered?.geojson;
-  // Total of mappable companies (denominator for "Showing X of Y").
-  const totalCount = useQuery(api.companies.mapTotalCount);
-  const shownCount = filtered?.companies.length ?? 0;
+  // Total denominator for "Showing X of Y". Sum across whichever entity
+  // kinds are currently visible — keeps the ratio honest as the user toggles
+  // companies/investors on and off.
+  const companyTotal = useQuery(
+    api.companies.mapTotalCount,
+    filters.types.includes('company') ? {} : 'skip',
+  );
+  const investorTotal = useQuery(
+    api.investors.mapTotalCount,
+    filters.types.includes('investor') ? {} : 'skip',
+  );
+  const totalCount = (companyTotal ?? 0) + (investorTotal ?? 0);
+  const shownCount = filtered?.entities.length ?? 0;
 
-  // Currently-selected company id. The detail view replaces the result list
+  // Currently-selected entity id. The detail view replaces the result list
   // when this is set; clicks come from either the list cards or the map
   // markers. Stored as id (not the row) so we can re-resolve the latest
-  // record from `filtered.companies` on every render.
+  // record from `filtered.entities` on every render.
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selectedCompany = useMemo(
-    () => filtered?.companies.find((c) => c._id === selectedId) ?? null,
+  const selectedEntity = useMemo(
+    () => filtered?.entities.find((e) => e._id === selectedId) ?? null,
     [filtered, selectedId],
   );
 
-  // Panel opens whenever filters are active OR a company is selected.
+  // Treat any search-query change as the user pivoting away from the
+  // current detail view: typing should reveal the list, and the
+  // SearchField's X (which empties `q`) should also drop the selected
+  // marker. Both go through `filters.q`, so a single dependency covers
+  // both interactions.
+  useEffect(() => {
+    setSelectedId(null);
+  }, [filters.q]);
+
+  // Panel opens whenever filters are active OR an entity is selected.
   // Marker clicks therefore expand the panel into a detail view even when
   // the user hasn't typed/filtered anything.
-  const panelOpen = isFiltersActive(filters) || selectedCompany != null;
+  const panelOpen = isFiltersActive(filters) || selectedEntity != null;
 
   // When the panel is open it covers the left side of the canvas, so a
   // marker placed at canvas center sits uncomfortably close to the panel
@@ -75,14 +96,14 @@ export default function MapPage() {
   const cameraOffset = (): [number, number] =>
     panelOpenRef.current ? [200, 0] : [0, 0];
 
-  // Soft pan to a company without changing zoom — used when the user picks
+  // Soft pan to an entity without changing zoom — used when the user picks
   // a card from the list. The marker comes into view without yanking the
   // user's current zoom level.
-  const panToCompany = useCallback((company: CompanyForList) => {
+  const panToEntity = useCallback((entity: EntityForList) => {
     const map = mapRef.current;
     if (!map) return;
     map.easeTo({
-      center: [company.lng, company.lat],
+      center: [entity.lng, entity.lat],
       offset: cameraOffset(),
       duration: 600,
       essential: true,
@@ -91,23 +112,23 @@ export default function MapPage() {
 
   // Explicit "View on map" — pans + zooms in close. The detail's CTA and
   // any list-card "View on map" link both use this.
-  const flyToCompany = useCallback((company: CompanyForList) => {
+  const flyToEntity = useCallback((entity: EntityForList) => {
     const map = mapRef.current;
     if (!map) return;
     map.flyTo({
-      center: [company.lng, company.lat],
+      center: [entity.lng, entity.lat],
       zoom: 17,
       offset: cameraOffset(),
       essential: true,
     });
   }, []);
 
-  const onSelectCompany = useCallback(
-    (company: CompanyForList) => {
-      setSelectedId(company._id);
-      panToCompany(company);
+  const onSelectEntity = useCallback(
+    (entity: EntityForList) => {
+      setSelectedId(entity._id);
+      panToEntity(entity);
     },
-    [panToCompany],
+    [panToEntity],
   );
 
   // Marker click — same selection state, but no auto-pan since the marker
@@ -212,7 +233,7 @@ export default function MapPage() {
     if (!map || !geojson) return;
 
     const onReady = () => {
-      const existing = map.getSource(COMPANIES_SOURCE) as
+      const existing = map.getSource(ENTITIES_SOURCE) as
         | mapboxgl.GeoJSONSource
         | undefined;
 
@@ -222,7 +243,7 @@ export default function MapPage() {
         return;
       }
 
-      map.addSource(COMPANIES_SOURCE, {
+      map.addSource(ENTITIES_SOURCE, {
         type: 'geojson',
         data: geojson,
         cluster: true,
@@ -235,7 +256,7 @@ export default function MapPage() {
       // two read as part of the same family.
       map.addLayer({
         id: 'clusters',
-        source: COMPANIES_SOURCE,
+        source: ENTITIES_SOURCE,
         type: 'circle',
         filter: ['has', 'point_count'],
         paint: {
@@ -260,7 +281,7 @@ export default function MapPage() {
       // Cluster count label
       map.addLayer({
         id: 'cluster-count',
-        source: COMPANIES_SOURCE,
+        source: ENTITIES_SOURCE,
         type: 'symbol',
         filter: ['has', 'point_count'],
         layout: {
@@ -284,7 +305,7 @@ export default function MapPage() {
         if (geom.type !== 'Point') return;
         const [lng, lat] = geom.coordinates;
         const clusterId = feature.properties?.cluster_id as number;
-        const source = map.getSource(COMPANIES_SOURCE) as mapboxgl.GeoJSONSource;
+        const source = map.getSource(ENTITIES_SOURCE) as mapboxgl.GeoJSONSource;
         source.getClusterExpansionZoom(clusterId, (err, zoom) => {
           if (err) return;
           map.easeTo({
@@ -302,16 +323,16 @@ export default function MapPage() {
       });
 
       const syncMarkers = () => {
-        if (!map.getSource(COMPANIES_SOURCE)) return;
+        if (!map.getSource(ENTITIES_SOURCE)) return;
         const markers = markersRef.current;
-        const features = map.querySourceFeatures(COMPANIES_SOURCE, {
+        const features = map.querySourceFeatures(ENTITIES_SOURCE, {
           filter: ['!', ['has', 'point_count']],
         });
 
         const visibleIds = new Set<string>();
         for (const f of features) {
           if (f.geometry.type !== 'Point') continue;
-          const props = f.properties as unknown as CompanyFeatureProps;
+          const props = f.properties as unknown as EntityFeatureProps;
           const id = props._id;
           if (!id || visibleIds.has(id)) continue;
           visibleIds.add(id);
@@ -338,8 +359,8 @@ export default function MapPage() {
       map.on('moveend', syncMarkers);
       map.on('sourcedata', (e) => {
         if (
-          e.sourceId === COMPANIES_SOURCE &&
-          map.isSourceLoaded(COMPANIES_SOURCE)
+          e.sourceId === ENTITIES_SOURCE &&
+          map.isSourceLoaded(ENTITIES_SOURCE)
         ) {
           syncMarkers();
         }
@@ -366,23 +387,29 @@ export default function MapPage() {
       />
       <FloatingFilterBar
         panelOpen={panelOpen}
-        companies={filtered?.companies}
-        total={totalCount ?? 0}
+        entities={filtered?.entities}
+        total={totalCount}
         shown={shownCount}
-        selected={selectedCompany}
-        onSelect={onSelectCompany}
+        selected={selectedEntity}
+        onSelect={onSelectEntity}
         onClearSelection={() => setSelectedId(null)}
-        onView={flyToCompany}
+        onView={flyToEntity}
       />
     </>
   );
 }
 
 function createMarkerElement(
-  props: CompanyFeatureProps,
+  props: EntityFeatureProps,
   onClick: () => void,
 ): HTMLDivElement {
   const logoSrc = logoDevUrl(domainFromUrl(props.website), { size: 96 });
+
+  // Investors render as rounded squares to differentiate at a glance from
+  // the circular company markers. Same shadow, ring, hover treatment —
+  // only the corner radius changes — so the two read as one visual family.
+  const isInvestor = props.kind === 'investor';
+  const cornerRadius = isInvestor ? '8px' : '50%';
 
   // IMPORTANT: Mapbox writes `transform: translate(...)` to the marker's root
   // element every frame to keep it pinned to its lng/lat. Anything we put on
@@ -404,7 +431,7 @@ function createMarkerElement(
   Object.assign(inner.style, {
     width: '100%',
     height: '100%',
-    borderRadius: '50%',
+    borderRadius: cornerRadius,
     backgroundColor: '#FFFFFF',
     border: '2px solid #FFFFFF',
     boxShadow:

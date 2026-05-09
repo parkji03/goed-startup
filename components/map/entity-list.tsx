@@ -2,13 +2,14 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import type { CompanyForList } from '@/hooks/useFilteredCompanies';
+import type { EntityForList } from '@/hooks/useFilteredCompanies';
 import { CompanyCard } from './company-card';
+import { InvestorCard } from './investor-card';
 
-interface CompanyListProps {
-  companies: CompanyForList[] | undefined;
-  onSelect: (company: CompanyForList) => void;
-  onView: (company: CompanyForList) => void;
+interface EntityListProps {
+  entities: EntityForList[] | undefined;
+  onSelect: (entity: EntityForList) => void;
+  onView: (entity: EntityForList) => void;
 }
 
 const PAGE_SIZE = 30;
@@ -25,16 +26,16 @@ function findScrollParent(el: HTMLElement | null): HTMLElement | null {
 }
 
 /**
- * Scrollable list of company cards in the results sidebar. Renders three
- * states: undefined (initial load → skeleton), empty (no matches), and
- * populated (the list).
+ * Scrollable list of entity cards in the results sidebar. Same windowed
+ * pseudo-virtualization as the old company-only list — defers DOM work for
+ * the long tail (especially relevant once investors are toggled on:
+ * thousands of rows, ~30 mounted at a time).
  *
- * The populated list is windowed: it shows PAGE_SIZE cards at a time and
- * grows by PAGE_SIZE whenever a sentinel below the last card scrolls into
- * the parent scroll container. Cheap pseudo-virtualization — the full
- * dataset already lives in memory, this just defers DOM work.
+ * Dispatches per row to a kind-specific card. Selecting a row from either
+ * card type bubbles the entity back up unchanged so the parent's selection
+ * state stays kind-agnostic.
  */
-export function CompanyList({ companies, onSelect, onView }: CompanyListProps) {
+export function EntityList({ entities, onSelect, onView }: EntityListProps) {
   const tList = useTranslations('Map.list');
   const [visible, setVisible] = useState(PAGE_SIZE);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -42,9 +43,9 @@ export function CompanyList({ companies, onSelect, onView }: CompanyListProps) {
   // Reset the window whenever the result set changes (new query/filter).
   useEffect(() => {
     setVisible(PAGE_SIZE);
-  }, [companies]);
+  }, [entities]);
 
-  const total = companies?.length ?? 0;
+  const total = entities?.length ?? 0;
   const hasMore = visible < total;
 
   useEffect(() => {
@@ -65,7 +66,7 @@ export function CompanyList({ companies, onSelect, onView }: CompanyListProps) {
     return () => observer.disconnect();
   }, [hasMore, total]);
 
-  if (companies === undefined) {
+  if (entities === undefined) {
     return (
       <div className="flex flex-col gap-2 p-3" aria-busy="true">
         {Array.from({ length: 4 }).map((_, i) => (
@@ -78,7 +79,7 @@ export function CompanyList({ companies, onSelect, onView }: CompanyListProps) {
     );
   }
 
-  if (companies.length === 0) {
+  if (entities.length === 0) {
     return (
       <div className="grid place-items-center px-6 py-12 text-center">
         <p className="text-sm font-medium text-fg">{tList('emptyTitle')}</p>
@@ -87,15 +88,29 @@ export function CompanyList({ companies, onSelect, onView }: CompanyListProps) {
     );
   }
 
-  const windowed = companies.slice(0, visible);
+  const windowed = entities.slice(0, visible);
 
   return (
     <ul className="flex flex-col gap-2 p-3" role="list">
-      {windowed.map((company) => (
-        <li key={company._id}>
-          <CompanyCard company={company} onSelect={onSelect} onView={onView} />
-        </li>
-      ))}
+      {windowed.map((entity) =>
+        entity.kind === 'company' ? (
+          <li key={entity._id}>
+            <CompanyCard
+              company={entity}
+              onSelect={() => onSelect(entity)}
+              onView={() => onView(entity)}
+            />
+          </li>
+        ) : (
+          <li key={entity._id}>
+            <InvestorCard
+              investor={entity}
+              onSelect={() => onSelect(entity)}
+              onView={() => onView(entity)}
+            />
+          </li>
+        ),
+      )}
       {hasMore && <div ref={sentinelRef} aria-hidden="true" className="h-px" />}
     </ul>
   );

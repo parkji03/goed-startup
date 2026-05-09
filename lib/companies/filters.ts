@@ -19,8 +19,21 @@ import {
   type StageId,
 } from './taxonomy';
 
+/**
+ * Which entity kinds the map should render. The default (`['company']`) keeps
+ * the original Utah ecosystem view as-is; opting in to investors floods the
+ * map with the OpenVC corpus (~2.5k pins, mostly outside Utah).
+ */
+export const ENTITY_TYPE_IDS = ['company', 'investor'] as const;
+export type EntityTypeId = (typeof ENTITY_TYPE_IDS)[number];
+export function isEntityTypeId(s: string): s is EntityTypeId {
+  return (ENTITY_TYPE_IDS as readonly string[]).includes(s);
+}
+export const DEFAULT_ENTITY_TYPES: EntityTypeId[] = ['company'];
+
 export type MapFilters = {
   q: string;
+  types: EntityTypeId[];
   sectors: SectorId[];
   stages: StageId[];
   employeeCounts: EmployeeCountId[];
@@ -30,6 +43,7 @@ export type MapFilters = {
 
 export const EMPTY_FILTERS: MapFilters = {
   q: '',
+  types: DEFAULT_ENTITY_TYPES,
   sectors: [],
   stages: [],
   employeeCounts: [],
@@ -37,9 +51,23 @@ export const EMPTY_FILTERS: MapFilters = {
   hiringStatuses: [],
 };
 
+/**
+ * Treat `types` as "active" only when it diverges from the default
+ * (`['company']`). Otherwise opening the map with no investor toggle would
+ * still be flagged active and pop the chip row open on every load.
+ *
+ * Exported so the filter bar's count badge agrees with `isFiltersActive`.
+ */
+export function isTypesNonDefault(types: EntityTypeId[]): boolean {
+  if (types.length !== DEFAULT_ENTITY_TYPES.length) return true;
+  const set = new Set(types);
+  return DEFAULT_ENTITY_TYPES.some((id) => !set.has(id));
+}
+
 export function isFiltersActive(f: MapFilters): boolean {
   return (
     f.q.trim().length > 0 ||
+    isTypesNonDefault(f.types) ||
     f.sectors.length > 0 ||
     f.stages.length > 0 ||
     f.employeeCounts.length > 0 ||
@@ -72,8 +100,14 @@ function parseCsvParam<T extends string>(
 export function parseFiltersFromParams(
   params: URLSearchParams | ReadonlyURLSearchParams,
 ): MapFilters {
+  const parsedTypes = parseCsvParam(params.get('type'), isEntityTypeId);
   return {
     q: (params.get('q') ?? '').trim(),
+    // Empty/missing `type` param falls back to the default. Once a user
+    // toggles investors off entirely we still write `?type=...` (handled
+    // by the serializer + filter bar), so an empty array here always means
+    // "no override" rather than "user selected nothing".
+    types: parsedTypes.length > 0 ? parsedTypes : DEFAULT_ENTITY_TYPES,
     sectors: parseCsvParam(params.get('sector'), isSectorId),
     stages: parseCsvParam(params.get('stage'), isStageId),
     employeeCounts: parseCsvParam(params.get('employees'), isEmployeeCountId),
@@ -105,6 +139,9 @@ export function serializeFiltersToParams(f: MapFilters): string {
   const params = new URLSearchParams();
   const q = f.q.trim();
   if (q) params.set('q', q);
+  // Only serialize `type` when it diverges from the default — keeps shareable
+  // URLs tidy for the common case (companies-only).
+  if (isTypesNonDefault(f.types)) params.set('type', f.types.join(','));
   if (f.sectors.length) params.set('sector', f.sectors.join(','));
   if (f.stages.length) params.set('stage', f.stages.join(','));
   if (f.employeeCounts.length) params.set('employees', f.employeeCounts.join(','));

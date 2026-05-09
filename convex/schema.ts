@@ -128,6 +128,21 @@ export const locationValidator = v.object({
   lat: v.optional(v.number()),
 });
 
+/**
+ * Worldwide variant for `investors.location`. OpenVC HQs span the globe, so
+ * we drop `county` (US-centric) and add `country`. Kept separate from
+ * `locationValidator` to avoid forcing a country migration on existing
+ * `companies` rows.
+ */
+export const investorLocationValidator = v.object({
+  rawAddress: v.string(),
+  city: v.optional(v.string()),
+  region: v.optional(v.string()),
+  country: v.optional(v.string()),
+  lng: v.optional(v.number()),
+  lat: v.optional(v.number()),
+});
+
 export default defineSchema({
   /** State programs & partner resources — full-text searchable + facets. */
   resources: defineTable({
@@ -332,4 +347,38 @@ export default defineSchema({
   })
     .index('by_companyId', ['companyId'])
     .index('by_companyId_and_postedAt', ['companyId', 'postedAt']),
+
+  /**
+   * Investor directory seeded from the OpenVC October 2025 export. Source
+   * fields are kept free-form (investorType, stagesOfInvestment) because the
+   * OpenVC vocabulary is too varied to lock down with literal unions — unlike
+   * the curated `companies` taxonomy. `slug` is the idempotent upsert key for
+   * `scripts/seed-investors.ts`.
+   */
+  investors: defineTable({
+    name: v.string(),
+    slug: v.string(),
+    website: v.optional(v.string()),
+    /** Raw HQ string from OpenVC (e.g. "San Francisco, CA"). Geocoded into `location`. */
+    globalHq: v.optional(v.string()),
+    location: v.optional(investorLocationValidator),
+    /** Comma-split country list from "Countries of investment". */
+    countriesOfInvestment: v.array(v.string()),
+    /** Comma-split stages, kept in source form ("1. Idea or Patent", ...). */
+    stagesOfInvestment: v.array(v.string()),
+    investmentThesis: v.optional(v.string()),
+    /** Free-form, e.g. "VC", "Solo angel", "Incubator, Accelerator". */
+    investorType: v.optional(v.string()),
+    firstChequeMin: v.optional(v.number()),
+    firstChequeMax: v.optional(v.number()),
+    /** Provenance — today only 'openvc'. */
+    source: v.string(),
+    sourceImportedAt: v.number(),
+    /** name + thesis + globalHq + countries, kept in sync on every write. */
+    searchText: v.string(),
+  })
+    .index('by_slug', ['slug'])
+    .searchIndex('search_text', {
+      searchField: 'searchText',
+    }),
 });

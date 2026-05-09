@@ -23,12 +23,30 @@ import { EMPTY_FILTERS, type MapFilters } from '@/lib/companies/filters';
  * doesn't survive the round-trip through the GL JS source.
  */
 export type CompanyFeatureProps = {
+  kind: 'company';
   _id: string;
   name: string;
   slug: string;
   sector: SectorId;
   website?: string;
 };
+
+export type InvestorFeatureProps = {
+  kind: 'investor';
+  _id: string;
+  name: string;
+  slug: string;
+  /** Free-form OpenVC type ("VC", "Solo angel", etc.). */
+  investorType?: string;
+  website?: string;
+};
+
+/**
+ * Discriminated union the marker renderer branches on. Both shapes carry
+ * `_id`/`name`/`slug` so generic UI (selection state, hover label) doesn't
+ * need to peek at `kind`.
+ */
+export type EntityFeatureProps = CompanyFeatureProps | InvestorFeatureProps;
 
 /**
  * Full per-company record consumed by the results sidebar's cards.
@@ -62,32 +80,77 @@ export type CompanyForList = {
   openListingsCount: number;
 };
 
-export type FilteredCompanies = {
-  /** Raw companies the list view consumes. */
-  companies: CompanyForList[];
-  /** Map-source-ready FeatureCollection. Stable identity across renders. */
-  geojson: FeatureCollection<Point, CompanyFeatureProps>;
+/**
+ * Investor row consumed by the results list + detail panel. Mirrors the
+ * `investors.searchForMap` projection — see that query for the source of
+ * each field.
+ */
+export type InvestorForList = {
+  _id: Id<'investors'>;
+  name: string;
+  slug: string;
+  website?: string;
+  globalHq?: string;
+  location?: {
+    rawAddress: string;
+    city?: string;
+    region?: string;
+    country?: string;
+  };
+  lng: number;
+  lat: number;
+  investorType?: string;
+  investmentThesis?: string;
+  firstChequeMin?: number;
+  firstChequeMax?: number;
+  countriesOfInvestment: string[];
+  stagesOfInvestment: string[];
 };
 
 /**
- * Reactively subscribes to `companies.searchForMap` and returns both the
- * raw company array (for the results sidebar) and a GeoJSON
- * FeatureCollection (for `map.getSource(...).setData()`).
+ * List-panel discriminated union. The card and detail components branch on
+ * `kind` to pick the right renderer. Selecting an entity by id pulls from
+ * this list (so the detail can reflect the latest data without an extra fetch).
+ */
+export type EntityForList =
+  | ({ kind: 'company' } & CompanyForList)
+  | ({ kind: 'investor' } & InvestorForList);
+
+export type FilteredCompanies = {
+  /** Companies subset (back-compat for callers that only care about companies). */
+  companies: CompanyForList[];
+  /** Investors subset. Empty array when `filters.types` excludes investors. */
+  investors: InvestorForList[];
+  /** Mixed list — companies first, then investors. Order subject to design. */
+  entities: EntityForList[];
+  /** Map-source-ready FeatureCollection. Stable identity across renders. */
+  geojson: FeatureCollection<Point, EntityFeatureProps>;
+};
+
+/**
+ * Reactively subscribes to `companies.searchForMap` and (when investors are
+ * enabled in the filter) `investors.searchForMap`, then merges both into a
+ * single GeoJSON FeatureCollection (for `map.getSource(...).setData()`) and
+ * a single discriminated `entities` list (for the results sidebar).
  *
- * Sharing one query between the map and the list keeps the two views in
- * lockstep — the marker count and the card count always agree because
+ * Sharing one merged result between the map and the list keeps the two views
+ * in lockstep — the marker count and the card count always agree because
  * they're projected from the same row set.
  *
- * Returns `undefined` while the query is loading. Memoized on the query
- * result reference so object identity is stable when the data hasn't
- * changed.
+ * Conditionally skips each underlying query when its kind isn't in
+ * `filters.types` (so toggling investors off costs nothing on the wire).
+ *
+ * Returns `undefined` while any active query is loading.
  */
 export function useFilteredCompanies(
   filters: MapFilters = EMPTY_FILTERS,
 ): FilteredCompanies | undefined {
+  const wantsCompanies = filters.types.includes('company');
+  const wantsInvestors = filters.types.includes('investor');
+
   // Build the Convex args object, omitting empty arrays so the query path
   // can short-circuit ("no constraint on that dimension").
-  const queryArgs = useMemo(
+  const companyArgs = useMemo(
     () => ({
       q: filters.q.trim() || undefined,
       sectors: filters.sectors.length ? filters.sectors : undefined,
@@ -113,25 +176,72 @@ export function useFilteredCompanies(
     ],
   );
 
-  const rows = useQuery(api.companies.searchForMap, queryArgs);
+  const investorArgs = useMemo(
+    () => ({ q: filters.q.trim() || undefined }),
+    [filters.q],
+  );
+
+  const companyRows = useQuery(
+    api.companies.searchForMap,
+    wantsCompanies ? companyArgs : 'skip',
+  );
+  const investorRows = useQuery(
+    api.investors.searchForMap,
+    wantsInvestors ? investorArgs : 'skip',
+  );
 
   return useMemo(() => {
-    if (!rows) return undefined;
-    const geojson: FeatureCollection<Point, CompanyFeatureProps> = {
-      type: 'FeatureCollection',
-      features: rows.map((c, i) => ({
+    // Wait for every active subscription before painting — avoids a flash
+    // where companies render alone for a frame before investors arrive.
+    if (wantsCompanies && companyRows === undefined) return undefined;
+    if (wantsInvestors && investorRows === undefined) return undefined;
+
+    const companies = wantsCompanies ? (companyRows ?? []) : [];
+    const investors = wantsInvestors ? (investorRows ?? []) : [];
+
+    const entities: EntityForList[] = [
+      ...companies.map((c) => ({ kind: 'company' as const, ...c })),
+      ...investors.map((i) => ({ kind: 'investor' as const, ...i })),
+    ];
+
+    const features: FeatureCollection<Point, EntityFeatureProps>['features'] = [];
+    let idx = 0;
+    for (const c of companies) {
+      features.push({
         type: 'Feature',
-        id: i, // numeric id required by setFeatureState
+        id: idx++, // numeric id required by setFeatureState
         geometry: { type: 'Point', coordinates: [c.lng, c.lat] },
         properties: {
+          kind: 'company',
           _id: c._id,
           name: c.name,
           slug: c.slug,
           sector: c.sector,
           website: c.website,
         },
-      })),
+      });
+    }
+    for (const i of investors) {
+      features.push({
+        type: 'Feature',
+        id: idx++,
+        geometry: { type: 'Point', coordinates: [i.lng, i.lat] },
+        properties: {
+          kind: 'investor',
+          _id: i._id,
+          name: i.name,
+          slug: i.slug,
+          investorType: i.investorType,
+          website: i.website,
+        },
+      });
+    }
+
+    return {
+      companies,
+      investors,
+      entities,
+      geojson: { type: 'FeatureCollection', features },
     };
-    return { companies: rows, geojson };
-  }, [rows]);
+  }, [wantsCompanies, wantsInvestors, companyRows, investorRows]);
 }

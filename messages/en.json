@@ -63,7 +63,19 @@
         "label": "Hiring",
         "placeholder": "Any status"
       },
+      "type": {
+        "label": "Type",
+        "placeholder": "Any type",
+        "options": {
+          "company": "Companies",
+          "investor": "Investors"
+        }
+      },
+      "layers": {
+        "label": "Layers"
+      },
       "toggle": {
+        "label": "Filter",
         "show": "Show filters",
         "hide": "Hide filters"
       },
@@ -138,6 +150,25 @@
     "list": {
       "emptyTitle": "No matches",
       "emptyHint": "Try removing a filter or shortening your search."
+    },
+    "investor": {
+      "eyebrow": "Investor profile",
+      "countriesValue": "{count, plural, one {# country} other {# countries}}",
+      "moreCount": "+{count} more",
+      "stats": {
+        "type": "Type",
+        "cheque": "First cheque",
+        "countries": "Countries",
+        "stages": "Stages"
+      },
+      "sections": {
+        "facts": "Facts",
+        "stages": "Stages of investment",
+        "countriesWithCount": "Countries · {count}"
+      },
+      "attribution": {
+        "prefix": "Investor data from"
+      }
     },
     "nav": {
       "sidebarLabel": "Search results",

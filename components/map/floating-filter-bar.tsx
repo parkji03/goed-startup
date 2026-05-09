@@ -9,23 +9,23 @@ import {
   parseFiltersFromParams,
   serializeFiltersToParams,
 } from '@/lib/companies/filters';
-import type { CompanyForList } from '@/hooks/useFilteredCompanies';
-import { CompanyDetail } from './company-detail';
-import { CompanyList } from './company-list';
+import type { EntityForList } from '@/hooks/useFilteredCompanies';
+import { EntityDetail } from './entity-detail';
+import { EntityList } from './entity-list';
 import { FilterBar } from './filter-bar';
 
 interface FloatingFilterBarProps {
   /** When true, the panel grows downward to show the result list (or detail). */
   panelOpen: boolean;
-  companies: CompanyForList[] | undefined;
+  entities: EntityForList[] | undefined;
   total: number;
   shown: number;
-  /** Currently-selected company; when set, the panel shows the detail view
+  /** Currently-selected entity; when set, the panel shows the detail view
    * instead of the list. */
-  selected: CompanyForList | null;
-  onSelect: (company: CompanyForList) => void;
+  selected: EntityForList | null;
+  onSelect: (entity: EntityForList) => void;
   onClearSelection: () => void;
-  onView: (company: CompanyForList) => void;
+  onView: (entity: EntityForList) => void;
 }
 
 // Width is content-driven. The search input has a fixed width, the
@@ -56,7 +56,7 @@ interface FloatingFilterBarProps {
  */
 export function FloatingFilterBar({
   panelOpen,
-  companies,
+  entities,
   total,
   shown,
   selected,
@@ -81,13 +81,34 @@ export function FloatingFilterBar({
   return (
     <div
       className={[
-        'fixed left-3 top-[70px] z-10 flex w-fit flex-col overflow-hidden border border-border bg-bg/95 shadow-lg backdrop-blur-md',
-        // Floor at 560px so the chrome stays a stable target at rest;
-        // cap at 620px so it can't grow unbounded as filters and badges
-        // stack up; the inner viewport-safety bound keeps it from
-        // spilling off-screen on narrower windows. Mobile collapses to
-        // edge-to-edge and drops both bounds.
-        'min-w-[560px] max-w-[min(620px,calc(100vw-1.5rem))] max-md:left-2 max-md:right-2 max-md:w-auto max-md:min-w-0 max-md:max-w-none',
+        'fixed left-3 top-[70px] z-10 flex flex-col overflow-hidden border border-border bg-bg/95 shadow-lg backdrop-blur-md',
+        // Cap the entire panel at viewport-minus-top-offset (70px) minus a
+        // 12px bottom safety margin. With this bound on the outer, the
+        // inner scroll area uses `flex-1` to fill whatever's left after
+        // the FilterBar — so the list never spills past the viewport
+        // bottom regardless of how tall the FilterBar gets when chip
+        // rows wrap. `100dvh` instead of `100vh` so iOS Safari's
+        // dynamic toolbar doesn't push the bottom off-screen.
+        'max-h-[calc(100dvh-82px)]',
+        // At rest (panel closed), `w-fit` shrinks the chrome to its
+        // natural content — search input + filter toggle + layers
+        // toggle — capped so chip badges can't push it off-screen.
+        // When the panel opens, lock to a fixed width so the result
+        // list and the entity detail render at the *same* width.
+        // (Don't keep `w-fit` here: with content that wraps, fit-content
+        // grows to fill whatever max-width allows, defeating the lock.)
+        //
+        // The width is set by the top row's three controls:
+        //   search 380 + gap 8 + filter ~100 + gap 8 + layers ~100 +
+        //   px-2.5 padding 20 ≈ 616px → 648 leaves slack for the count
+        //   badge that pops out of the Filter button's top-right corner.
+        // Adjust both values together if another top-row control lands.
+        // The viewport clamp keeps narrow windows safe; mobile drops
+        // both bounds entirely.
+        panelOpen
+          ? 'w-[648px] max-w-[calc(100vw-1.5rem)]'
+          : 'w-fit max-w-[min(700px,calc(100vw-1.5rem))]',
+        'max-md:left-2 max-md:right-2 max-md:w-auto max-md:min-w-0 max-md:max-w-none',
         // Single fixed corner radius. `rounded-full` reads as a pill
         // at the FilterBar's collapsed height, but its 9999px value
         // gets clamped to half-min-dimension per frame — animating
@@ -104,8 +125,10 @@ export function FloatingFilterBar({
     >
       {/* The FilterBar lives at the same JSX position in both states.
           Padding stays consistent so the bar's internal layout never
-          shifts when the panel toggles. */}
-      <div className="px-2.5 py-1.5">
+          shifts when the panel toggles. `shrink-0` keeps it at its
+          natural height so the panel below can `flex-1` into whatever
+          space is left under the outer max-height cap. */}
+      <div className="shrink-0 px-2.5 py-1.5">
         <FilterBar size="sm" />
       </div>
 
@@ -117,19 +140,25 @@ export function FloatingFilterBar({
        * mounted across the toggle so the collapse animation has
        * something to fold up; while collapsed, the list receives
        * `undefined` and renders its lightweight skeleton (clipped
-       * out of view anyway). */}
+       * out of view anyway).
+       *
+       * When open, this wrapper takes whatever vertical space is left
+       * under the outer's max-height (via `flex-1 min-h-0`), and the
+       * inner scroll area inside fills that bound. That keeps the
+       * panel inside the viewport whether the FilterBar shows zero,
+       * one, or two rows of chips. */}
       <div
         className={[
           'grid transition-[grid-template-rows] duration-200 ease-out',
-          panelOpen ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+          panelOpen ? 'grid-rows-[1fr] flex-1 min-h-0' : 'grid-rows-[0fr]',
         ].join(' ')}
         aria-hidden={!panelOpen}
       >
-        <div className="min-h-0 overflow-hidden">
+        <div className="flex min-h-0 flex-col overflow-hidden">
           {/* Status row hides while a detail is open — the detail has its own
               header and the count would just be visual noise behind it. */}
           {!selected && (
-            <div className="flex items-center justify-between gap-3 border-t border-border px-3 py-2 text-xs text-muted-fg">
+            <div className="flex shrink-0 items-center justify-between gap-3 border-t border-border px-3 py-2 text-xs text-muted-fg">
               <span aria-live="polite">
                 {tFilters('resultsCount', { shown, total })}
               </span>
@@ -145,19 +174,21 @@ export function FloatingFilterBar({
             </div>
           )}
 
-          {/* Inner scroll height = viewport minus the panel's top offset
-              (70px), the FilterBar (~64px), the optional status row (~36px),
-              and a 12px bottom safety margin. ~180px of chrome total. */}
-          <div className="max-h-[calc(100vh-180px)] overflow-y-auto border-t border-border">
+          {/* Scrolls within whatever leftover height the outer cap allows.
+              `flex-1 min-h-0` is the canonical "fill remaining flex space
+              and let me scroll" pair — without `min-h-0`, flex children
+              refuse to shrink below their content size and the scrollbar
+              never appears. */}
+          <div className="flex-1 min-h-0 overflow-y-auto border-t border-border">
             {selected ? (
-              <CompanyDetail
-                company={selected}
+              <EntityDetail
+                entity={selected}
                 onBack={onClearSelection}
                 onView={onView}
               />
             ) : (
-              <CompanyList
-                companies={panelOpen ? companies : undefined}
+              <EntityList
+                entities={panelOpen ? entities : undefined}
                 onSelect={onSelect}
                 onView={onView}
               />

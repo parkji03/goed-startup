@@ -11,6 +11,7 @@
 import type * as companies from "../companies.js";
 import type * as founderProfile from "../founderProfile.js";
 import type * as guide from "../guide.js";
+import type * as investors from "../investors.js";
 import type * as lib_adminAuth from "../lib/adminAuth.js";
 import type * as lib_facetTypes from "../lib/facetTypes.js";
 import type * as lib_matchResources from "../lib/matchResources.js";
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   companies: typeof companies;
   founderProfile: typeof founderProfile;
   guide: typeof guide;
+  investors: typeof investors;
   "lib/adminAuth": typeof lib_adminAuth;
   "lib/facetTypes": typeof lib_facetTypes;
   "lib/matchResources": typeof lib_matchResources;
