@@ -183,6 +183,47 @@ export const getPublishedBySlug = internalQuery({
 });
 
 /**
+ * Attach a long-form markdown body to a resource by sourceId, recomputing
+ * searchText so the lexical index covers the new content.
+ *
+ * Intentionally does NOT reschedule embedding generation: embeddingSourceText
+ * (convex/lib/resourceHelpers.ts) excludes body, and convex/guide.ts retrieve
+ * is lexical-only ("no embeddings in v1"). Re-embedding would be wasted CPU
+ * for this work. P2.6 surfaces a body excerpt to the model via the retrieval
+ * context, not via vectors.
+ */
+export const patchBody = internalMutation({
+  args: { sourceId: v.string(), body: v.string() },
+  handler: async (ctx, { sourceId, body }) => {
+    const row = await ctx.db
+      .query('resources')
+      .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
+      .unique();
+    if (!row) return { patched: false, sourceId };
+
+    const searchText = buildSearchText({
+      title: row.title,
+      description: row.description,
+      url: row.url,
+      contactEmail: row.contactEmail,
+      category: row.category,
+      communities: row.communities,
+      industries: row.industries,
+      locations: row.locations,
+      tags: row.tags,
+      stageTags: row.stageTags,
+      body,
+    });
+    await ctx.db.patch(row._id, {
+      body,
+      searchText,
+      lastSyncedAt: Date.now(),
+    });
+    return { patched: true, sourceId, slug: row.slug, bodyChars: body.length };
+  },
+});
+
+/**
  * Hard-delete a resource by sourceId, cascading to its facet and embedding
  * rows. Used for content-derived rows we triage out post-import (e.g., events
  * that don't belong in the catalog). Internal-only — not callable from the
