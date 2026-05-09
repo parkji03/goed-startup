@@ -1,31 +1,19 @@
 "use client";
 
-import { ArrowDownTrayIcon, ArrowUpIcon, ClipboardDocumentIcon } from "@heroicons/react/20/solid";
-import { useAction } from "convex/react";
-import { useEffect, useRef, useState } from "react";
-import { api } from "@/convex/_generated/api";
-import type { Id } from "@/convex/_generated/dataModel";
+import { useChat } from '@ai-sdk/react';
+import { ArrowDownTrayIcon, ArrowUpIcon, ClipboardDocumentIcon, SparklesIcon, StopIcon } from "@heroicons/react/20/solid";
+import { DefaultChatTransport } from 'ai';
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { AssistantMarkdown } from "@/components/guide/assistant-markdown";
+import { useQuiz } from "@/components/quiz/quiz-provider";
 import { Button } from "@/components/ui/button";
 import { Link as UiLink } from "@/components/ui/link";
 import { Text } from "@/components/ui/text";
 import { Tooltip, TooltipContent } from "@/components/ui/tooltip";
 import { Link } from "@/i18n/navigation";
 import { loadQuizAnswers } from "@/lib/founder-quiz";
-
-type GuideContextItem = {
-  resourceId: Id<"resources">;
-  title: string;
-  slug: string;
-  url: string;
-  description: string;
-  tags: string[];
-  industries: string[];
-  communities: string[];
-};
-
-type ChatMessage =
-  | { id: string; role: "user"; content: string }
-  | { id: string; role: "assistant"; content: string; pending: boolean; context: GuideContextItem[] };
+import { useSmoothText } from "@/lib/guide/use-smooth-text";
+import type { GuideContextItem, GuideUIMessage } from "@/lib/guide/types";
 
 type Props = {
   initialQuery?: string;
@@ -41,26 +29,38 @@ const SUGGESTED_PROMPTS = [
   "How do I connect with Utah angel investors?",
 ];
 
-function newId() {
-  if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
-    return crypto.randomUUID();
+/**
+ * Render a friendly message for `useChat` errors. The server can return HTML
+ * error pages (e.g. Next.js 404) and we don't want that bleeding into the UI.
+ * If the error message looks like HTML or is suspiciously long, fall back to
+ * a generic line.
+ */
+function friendlyErrorText(error: Error | undefined): string | null {
+  const raw = error?.message;
+  if (!raw) return null;
+  const looksLikeHtml = /<\/?[a-z][\s\S]*?>/i.test(raw);
+  if (looksLikeHtml || raw.length > 200) {
+    return "Couldn't reach the guide. Try again in a moment.";
   }
-  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  return raw;
 }
 
-function exportToMarkdown(messages: ChatMessage[]): string {
+function exportToMarkdown(messages: GuideUIMessage[]): string {
   const date = new Date().toLocaleString();
   const lines: string[] = ["# Utah founder guide chat", "", `Exported ${date}`, ""];
   for (const m of messages) {
+    const text = m.parts
+      .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+      .map((p) => p.text)
+      .join('');
     if (m.role === "user") {
-      lines.push("## You", "", m.content, "");
-    } else {
-      lines.push("## Guide", "", m.content, "");
-      if (m.context.length > 0) {
+      lines.push("## You", "", text, "");
+    } else if (m.role === "assistant") {
+      const sources = m.metadata?.sources ?? [];
+      lines.push("## Guide", "", text, "");
+      if (sources.length > 0) {
         lines.push("**Sources used**", "");
-        for (const c of m.context) {
-          lines.push(`- [${c.title}](${c.url}) — \`/resources/${c.slug}\``);
-        }
+        for (const c of sources) lines.push(`- [${c.title}](${c.url}) — \`/resources/${c.slug}\``);
         lines.push("");
       }
     }
@@ -81,12 +81,13 @@ function downloadMarkdown(filename: string, body: string) {
 }
 
 export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
-  const ask = useAction(api.guide.ask);
+  const { messages, sendMessage, status, stop, error } = useChat<GuideUIMessage>({
+    transport: new DefaultChatTransport({ api: '/api/chat' }),
+  });
+  const { pendingPrompt, setPendingPrompt } = useQuiz();
 
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState(initialQuery);
-  const [error, setError] = useState<string | null>(null);
-  const [pending, setPending] = useState(false);
+  const isStreaming = status === 'submitted' || status === 'streaming';
 
   const scrollerRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
@@ -95,45 +96,40 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
     node.scrollTop = node.scrollHeight;
   }, [messages]);
 
-  const sendMessage = (overrideText?: string) => {
-    if (pending) return;
+  // Auto-send a kickstart prompt set by the questionnaire's "Start chatting"
+  // action, but only into an empty thread. If the user already has messages,
+  // discard the queued prompt so we don't disrupt an in-progress conversation.
+  useEffect(() => {
+    if (!pendingPrompt || isStreaming) return;
+    if (messages.length > 0) {
+      setPendingPrompt(null);
+      return;
+    }
+    const text = pendingPrompt;
+    setPendingPrompt(null);
+    sendMessage(
+      { text },
+      { body: { founderProfile: loadQuizAnswers() ?? undefined } },
+    );
+  }, [pendingPrompt, messages.length, isStreaming, sendMessage, setPendingPrompt]);
+
+  const onSend = (overrideText?: string) => {
+    if (isStreaming) return;
     const value = (overrideText ?? input).trim();
     if (!value) return;
-
-    const assistantId = newId();
-    setMessages((prev) => [
-      ...prev,
-      { id: newId(), role: "user", content: value },
-      { id: assistantId, role: "assistant", content: "", pending: true, context: [] },
-    ]);
     setInput("");
-    setError(null);
-    setPending(true);
-
-    void (async () => {
-      try {
-        const founderProfile = loadQuizAnswers() ?? undefined;
-        const result = await ask({ prompt: value, founderProfile });
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantId
-              ? { id: assistantId, role: "assistant", content: result.reply, pending: false, context: result.context }
-              : m,
-          ),
-        );
-      } catch (err) {
-        setError(err instanceof Error ? err.message : String(err));
-        setMessages((prev) => prev.filter((m) => m.id !== assistantId));
-      } finally {
-        setPending(false);
-      }
-    })();
+    sendMessage(
+      { text: value },
+      { body: { founderProfile: loadQuizAnswers() ?? undefined } },
+    );
   };
 
   const exportAll = () => {
     const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
     downloadMarkdown(`utah-founder-guide-chat-${stamp}.md`, exportToMarkdown(messages));
   };
+
+  const errorText = friendlyErrorText(error);
 
   return (
     <div className="flex min-h-0 flex-1 flex-col">
@@ -154,21 +150,26 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
       {/* Message area */}
       <div ref={scrollerRef} className="min-h-0 flex-1 overflow-y-auto px-4">
         {messages.length === 0 ? (
-          <EmptyState onChipClick={(p) => sendMessage(p)} />
+          <EmptyState onChipClick={(p) => onSend(p)} />
         ) : (
           <div className="space-y-5 pb-4">
             {messages.map((m) => (
-              <ChatBubble key={m.id} message={m} onExport={exportAll} />
+              <ChatBubble
+                key={m.id}
+                message={m}
+                streaming={isStreaming && m === messages.at(-1)}
+                onExport={exportAll}
+              />
             ))}
           </div>
         )}
       </div>
 
       {/* Error */}
-      {error ? (
+      {errorText ? (
         <div role="alert" className="mx-4 mb-2 rounded-lg border border-danger/30 bg-danger-subtle/40 px-3 py-2">
           <Text className="text-danger-subtle-fg text-xs font-medium">Guide hiccup</Text>
-          <Text className="mt-0.5 text-muted-fg text-xs">{error}</Text>
+          <Text className="mt-0.5 text-muted-fg text-xs">{errorText}</Text>
         </div>
       ) : null}
 
@@ -178,50 +179,100 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
           <input
             value={input}
             placeholder="Ask about Utah programs..."
-            disabled={pending}
+            disabled={isStreaming}
             className="min-w-0 flex-1 bg-transparent text-sm text-fg placeholder:text-muted-fg outline-none disabled:opacity-50"
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter" && !e.shiftKey) {
                 e.preventDefault();
-                sendMessage();
+                onSend();
               }
             }}
           />
-          <Tooltip>
-            <Button
-              intent="primary"
-              size="sq-xs"
-              isCircle
-              isDisabled={pending || !input.trim()}
-              onPress={() => sendMessage()}
-              aria-label="Send message"
-            >
-              <ArrowUpIcon />
-            </Button>
-            <TooltipContent>Send</TooltipContent>
-          </Tooltip>
+          {isStreaming ? (
+            <Tooltip>
+              <Button
+                intent="primary"
+                size="sq-xs"
+                isCircle
+                onPress={() => stop()}
+                aria-label="Stop generating"
+              >
+                <StopIcon />
+              </Button>
+              <TooltipContent>Stop</TooltipContent>
+            </Tooltip>
+          ) : (
+            <Tooltip>
+              <Button
+                intent="primary"
+                size="sq-xs"
+                isCircle
+                isDisabled={!input.trim()}
+                onPress={() => onSend()}
+                aria-label="Send message"
+              >
+                <ArrowUpIcon />
+              </Button>
+              <TooltipContent>Send</TooltipContent>
+            </Tooltip>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
+/** No-op subscribe — getSnapshot is re-evaluated on each render, which is
+ *  enough for our needs since EmptyState re-renders when the questionnaire
+ *  modal opens/closes (it consumes that state via useQuiz). */
+const NOOP_SUBSCRIBE = () => () => {};
+
 function EmptyState({ onChipClick }: { onChipClick: (prompt: string) => void }) {
+  const quiz = useQuiz();
+  // `loadQuizAnswers` reads localStorage, which only exists on the client.
+  // useSyncExternalStore lets us return `false` on the server (matching what
+  // SSR will paint) and the real value on the client without triggering a
+  // hydration mismatch.
+  const hasProfile = useSyncExternalStore(
+    NOOP_SUBSCRIBE,
+    () => loadQuizAnswers() !== null,
+    () => false,
+  );
+
   return (
-    <div className="flex h-full flex-col justify-end gap-3 pb-2 pt-6">
-      <p className="text-center text-xs text-muted-fg">Try a question to get started</p>
-      <div className="flex flex-col gap-1.5">
-        {SUGGESTED_PROMPTS.map((prompt) => (
-          <button
-            key={prompt}
-            type="button"
-            onClick={() => onChipClick(prompt)}
-            className="rounded-lg border border-border bg-muted/20 px-3 py-2.5 text-left text-xs text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+    <div className="flex h-full flex-col gap-4 pb-2 pt-6">
+      {!hasProfile ? (
+        <div className="rounded-xl border border-border bg-muted/20 px-3.5 py-3">
+          <p className="text-xs font-medium text-fg">Tailor responses to what you’re looking for</p>
+          <p className="mt-0.5 text-xs text-muted-fg">
+            Take our short questionnaire so the guide can weight recommendations to your stage, industry, and goals.
+          </p>
+          <Button
+            intent="primary"
+            size="xs"
+            onPress={quiz.open}
+            className="mt-2.5"
           >
-            {prompt}
-          </button>
-        ))}
+            <SparklesIcon />
+            Take questionnaire
+          </Button>
+        </div>
+      ) : null}
+      <div className="mt-auto flex flex-col gap-3">
+        <p className="text-center text-xs text-muted-fg">Try a question to get started</p>
+        <div className="flex flex-col gap-1.5">
+          {SUGGESTED_PROMPTS.map((prompt) => (
+            <button
+              key={prompt}
+              type="button"
+              onClick={() => onChipClick(prompt)}
+              className="rounded-lg border border-border bg-muted/20 px-3 py-2.5 text-left text-xs text-muted-fg transition-colors hover:bg-muted hover:text-fg"
+            >
+              {prompt}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -237,12 +288,28 @@ function ThinkingDots() {
   );
 }
 
-function ChatBubble({ message, onExport }: { message: ChatMessage; onExport: () => void }) {
+function ChatBubble({
+  message,
+  streaming,
+  onExport,
+}: {
+  message: GuideUIMessage;
+  streaming: boolean;
+  onExport: () => void;
+}) {
   const isUser = message.role === "user";
-  const isCompleted = !isUser && !message.pending;
+  const rawText = message.parts
+    .filter((p): p is { type: 'text'; text: string } => p.type === 'text')
+    .map((p) => p.text)
+    .join('');
+  const sources = message.metadata?.sources ?? [];
+  const text = useSmoothText(rawText);
+
+  const showThinking = !isUser && streaming && rawText.length === 0;
+  const isCompleted = !isUser && !streaming && rawText.length > 0;
 
   const copyMessage = () => {
-    void navigator.clipboard.writeText(message.content);
+    void navigator.clipboard.writeText(rawText);
   };
 
   return (
@@ -250,13 +317,15 @@ function ChatBubble({ message, onExport }: { message: ChatMessage; onExport: () 
       <p className="mb-1.5 text-[10px] font-semibold uppercase tracking-widest text-muted-fg">
         {isUser ? "You" : "Guide"}
       </p>
-      {!isUser && message.pending ? (
+      {showThinking ? (
         <ThinkingDots />
+      ) : isUser ? (
+        <p className="whitespace-pre-wrap text-sm leading-relaxed">{rawText}</p>
       ) : (
-        <p className="whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
+        <AssistantMarkdown text={text} sources={sources} />
       )}
-      {isCompleted && message.context.length > 0 ? (
-        <ContextDisclosure items={message.context} />
+      {!isUser && !streaming && sources.length > 0 ? (
+        <ContextDisclosure items={sources} />
       ) : null}
       {isCompleted ? (
         <div className="mt-2 flex items-center gap-0.5">
@@ -289,7 +358,7 @@ function ContextDisclosure({ items }: { items: GuideContextItem[] }) {
       </summary>
       <ul className="space-y-1.5 px-3 pb-3">
         {items.map((c) => (
-          <li key={c.resourceId} className="text-xs">
+          <li key={c.slug} className="text-xs">
             <Link href={`/resources/${c.slug}`} className="font-medium text-fg hover:underline">
               {c.title}
             </Link>

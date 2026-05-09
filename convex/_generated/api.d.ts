@@ -18,6 +18,7 @@ import type * as investors from "../investors.js";
 import type * as lib_adminAuth from "../lib/adminAuth.js";
 import type * as lib_facetTypes from "../lib/facetTypes.js";
 import type * as lib_geocode from "../lib/geocode.js";
+import type * as lib_guideQuery from "../lib/guideQuery.js";
 import type * as lib_matchResources from "../lib/matchResources.js";
 import type * as lib_resourceHelpers from "../lib/resourceHelpers.js";
 import type * as me from "../me.js";
@@ -48,6 +49,7 @@ declare const fullApi: ApiFromModules<{
   "lib/adminAuth": typeof lib_adminAuth;
   "lib/facetTypes": typeof lib_facetTypes;
   "lib/geocode": typeof lib_geocode;
+  "lib/guideQuery": typeof lib_guideQuery;
   "lib/matchResources": typeof lib_matchResources;
   "lib/resourceHelpers": typeof lib_resourceHelpers;
   me: typeof me;
