@@ -16,6 +16,7 @@ import { fileURLToPath } from 'node:url';
 import Papa from 'papaparse';
 
 import { sanitizeContactEmail } from '../convex/lib/resourceHelpers';
+import { assignCategory } from '../lib/resources/migration-rules';
 
 const scriptDir = path.dirname(fileURLToPath(import.meta.url));
 const CSV_PATH_DEFAULT = path.resolve(scriptDir, '..', 'data', 'resources-builder-day.csv');
@@ -42,6 +43,13 @@ type CsvRow = {
   email?: string;
 };
 
+function splitPipe(value: string | undefined): string[] {
+  return (value ?? '')
+    .split('|')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
+
 function chunk<T>(arr: T[], size: number): T[][] {
   const out: T[][] = [];
   for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
@@ -60,19 +68,33 @@ async function main() {
 
   const rows = parsed.data
     .filter((r) => Boolean(r.Title?.trim() && String(r.id) && r.link?.trim()))
-    .map((r) => ({
-      sourceId: String(r.id),
-      title: String(r.Title).trim(),
-      description: (r.description ?? '').trim(),
-      url: String(r.link).trim(),
-      contactEmail: sanitizeContactEmail(r.email?.trim()),
-      communitiesRaw: r.Communities,
-      industriesRaw: r.Industries,
-      locationsRaw: r.Locations,
-      topicsRaw: r.Topics,
-    }));
+    .map((r) => {
+      const title = String(r.Title).trim();
+      const { category } = assignCategory({ title, topics: splitPipe(r.Topics) });
+      return {
+        sourceId: String(r.id),
+        title,
+        description: (r.description ?? '').trim(),
+        url: String(r.link).trim(),
+        contactEmail: sanitizeContactEmail(r.email?.trim()),
+        communitiesRaw: r.Communities,
+        industriesRaw: r.Industries,
+        locationsRaw: r.Locations,
+        tagsRaw: r.Topics,
+        category,
+      };
+    });
 
-  console.log(`Parsed ${rows.length} CSV rows → importInternal in chunks of ${CHUNK_ROWS}…\n`);
+  const categoryCounts = rows.reduce<Record<string, number>>((acc, r) => {
+    acc[r.category] = (acc[r.category] ?? 0) + 1;
+    return acc;
+  }, {});
+  console.log(`Parsed ${rows.length} CSV rows → importInternal in chunks of ${CHUNK_ROWS}…`);
+  console.log('  category distribution:');
+  for (const [key, n] of Object.entries(categoryCounts).sort((a, b) => b[1] - a[1])) {
+    console.log(`    ${n.toString().padStart(4)}  ${key}`);
+  }
+  console.log('');
 
   let appliedChunks = 0;
   let failed = 0;
