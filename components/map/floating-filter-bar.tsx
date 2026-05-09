@@ -98,16 +98,16 @@ export function FloatingFilterBar({
         // (Don't keep `w-fit` here: with content that wraps, fit-content
         // grows to fill whatever max-width allows, defeating the lock.)
         //
-        // The width is set by the top row's three controls:
-        //   search 380 + gap 8 + filter ~100 + gap 8 + layers ~100 +
-        //   px-2.5 padding 20 ≈ 616px → 648 leaves slack for the count
-        //   badge that pops out of the Filter button's top-right corner.
-        // Adjust both values together if another top-row control lands.
-        // The viewport clamp keeps narrow windows safe; mobile drops
-        // both bounds entirely.
+        // The width is set by the top row's four controls:
+        //   sparkle 36 + gap 8 + search 380 + gap 8 + filter ~36 + gap 8 +
+        //   layers ~36 + px-2.5 padding 20 ≈ 532px (sq-md is 36px square,
+        //   not the larger Button text width). Cap at 700 to leave slack
+        //   for the count badges that pop out of the Filter/Layers
+        //   buttons' top-right corners. Adjust both values together if
+        //   another top-row control lands.
         panelOpen
-          ? 'w-[648px] max-w-[calc(100vw-1.5rem)]'
-          : 'w-fit max-w-[min(700px,calc(100vw-1.5rem))]',
+          ? 'w-[700px] max-w-[calc(100vw-1.5rem)]'
+          : 'w-fit max-w-[min(720px,calc(100vw-1.5rem))]',
         'max-md:left-2 max-md:right-2 max-md:w-auto max-md:min-w-0 max-md:max-w-none',
         // Single fixed corner radius. `rounded-full` reads as a pill
         // at the FilterBar's collapsed height, but its 9999px value

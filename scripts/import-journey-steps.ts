@@ -14,6 +14,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { resolveSeedTarget } from './lib/seed-target';
+
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(scriptDir, '..');
 const CONTENT = resolve(REPO_ROOT, 'startup-utah-content');
@@ -145,7 +147,10 @@ type ImportRow = {
 };
 
 function main() {
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) throw new Error('NEXT_PUBLIC_CONVEX_URL is not set.');
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
+  const { target, convexRunFlags } = resolveSeedTarget();
 
   const rows: ImportRow[] = STEPS.map(({ step, file, stageTags, tags }) => {
     const absPath = resolve(CONTENT, 'pages', file);
@@ -167,12 +172,12 @@ function main() {
     };
   });
 
-  console.log(`Importing ${rows.length} journey steps via guidesInternal:importInternal…\n`);
+  console.log(`[target=${target}] Importing ${rows.length} journey steps via guidesInternal:importInternal…\n`);
 
   try {
     execFileSync(
       'pnpm',
-      ['exec', 'convex', 'run', 'guidesInternal:importInternal', JSON.stringify({ rows })],
+      ['exec', 'convex', 'run', ...convexRunFlags, 'guidesInternal:importInternal', JSON.stringify({ rows })],
       { cwd: REPO_ROOT, stdio: 'inherit', env: process.env },
     );
   } catch (err) {

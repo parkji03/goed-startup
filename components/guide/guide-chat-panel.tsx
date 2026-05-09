@@ -4,8 +4,9 @@ import { useChat } from '@ai-sdk/react';
 import { ArrowDownTrayIcon, ArrowUpIcon, ClipboardDocumentIcon, SparklesIcon, StopIcon } from "@heroicons/react/20/solid";
 import { DefaultChatTransport } from 'ai';
 import { useLocale, useTranslations } from "next-intl";
-import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { AssistantMarkdown } from "@/components/guide/assistant-markdown";
+import { useMapQuiz } from "@/components/map/map-quiz-provider";
 import { useQuiz } from "@/components/quiz/quiz-provider";
 import { Button } from "@/components/ui/button";
 import { Link as UiLink } from "@/components/ui/link";
@@ -88,10 +89,53 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
   const t = useTranslations("Guide");
   const rawLocale = useLocale();
   const locale: 'en' | 'es' = rawLocale === 'es' ? 'es' : 'en';
+  // Single chat panel, two transports. The default route is `/api/chat`,
+  // which retrieves Utah resources for general questions. When the user
+  // submits the *map* questionnaire, we redirect that one request to
+  // `/api/map-recommend` with a different body shape — but the response
+  // stream is still UIMessageChunk format, so it merges into this same
+  // `messages` array seamlessly. The chat UI doesn't need to know which
+  // route produced a given assistant bubble.
+  const transport = useMemo(
+    () =>
+      new DefaultChatTransport<GuideUIMessage>({
+        api: '/api/chat',
+        prepareSendMessagesRequest: ({ messages, body, headers, credentials, api }) => {
+          const b = (body ?? {}) as Record<string, unknown>;
+          const mapRecommend = b.mapRecommend as
+            | { persona: string; answers: unknown; candidates: unknown[] }
+            | undefined;
+          if (mapRecommend) {
+            return {
+              api: '/api/map-recommend',
+              body: {
+                persona: mapRecommend.persona,
+                answers: mapRecommend.answers,
+                candidates: mapRecommend.candidates,
+              },
+              headers,
+              credentials,
+            };
+          }
+          // Default path — same shape /api/chat already accepts (messages
+          // + optional founderProfile). Forwarding the body via spread so
+          // future call-sites that pass extra fields don't lose them.
+          return {
+            api,
+            body: { messages, ...b },
+            headers,
+            credentials,
+          };
+        },
+      }),
+    [],
+  );
+
   const { messages, sendMessage, status, stop, error } = useChat<GuideUIMessage>({
-    transport: new DefaultChatTransport({ api: '/api/chat' }),
+    transport,
   });
   const { pendingPrompt, setPendingPrompt } = useQuiz();
+  const { pendingQuiz, consumePendingQuiz, selectEntity } = useMapQuiz();
 
   const [input, setInput] = useState(initialQuery);
   const isStreaming = status === 'submitted' || status === 'streaming';
@@ -119,6 +163,35 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
       { body: { founderProfile: loadQuizAnswers() ?? undefined, locale } },
     );
   }, [pendingPrompt, messages.length, isStreaming, sendMessage, setPendingPrompt, locale]);
+
+  // Map questionnaire submission. When a quiz payload appears, dispatch a
+  // synthesized user turn ("Looking for ...") with the mapRecommend body,
+  // which the transport reroutes to /api/map-recommend. The submissionId
+  // ref makes this idempotent across StrictMode double-effects and any
+  // re-renders before consumePendingQuiz commits the cleared state.
+  const lastSubmissionIdRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (!pendingQuiz || isStreaming) return;
+    if (pendingQuiz.submissionId === lastSubmissionIdRef.current) return;
+    lastSubmissionIdRef.current = pendingQuiz.submissionId;
+    const userText =
+      pendingQuiz.persona === 'founder'
+        ? 'Looking for investors that match my preferences from the map.'
+        : 'Looking for startups that match my thesis from the map.';
+    sendMessage(
+      { text: userText },
+      {
+        body: {
+          mapRecommend: {
+            persona: pendingQuiz.persona,
+            answers: pendingQuiz.answers,
+            candidates: pendingQuiz.candidates,
+          },
+        },
+      },
+    );
+    consumePendingQuiz();
+  }, [pendingQuiz, isStreaming, sendMessage, consumePendingQuiz]);
 
   const onSend = (overrideText?: string) => {
     if (isStreaming) return;
@@ -175,6 +248,7 @@ export function GuideChatPanel({ initialQuery = "", onCollapse }: Props) {
                 message={m}
                 streaming={isStreaming && m === messages.at(-1)}
                 onExport={exportAll}
+                onEntitySelect={selectEntity}
               />
             ))}
           </div>
@@ -313,10 +387,12 @@ function ChatBubble({
   message,
   streaming,
   onExport,
+  onEntitySelect,
 }: {
   message: GuideUIMessage;
   streaming: boolean;
   onExport: () => void;
+  onEntitySelect?: (entityId: string, kind: 'company' | 'investor') => void;
 }) {
   const t = useTranslations("Guide");
   const isUser = message.role === "user";
@@ -345,7 +421,12 @@ function ChatBubble({
       ) : isUser ? (
         <p className="whitespace-pre-wrap text-sm leading-relaxed">{rawText}</p>
       ) : (
-        <AssistantMarkdown text={text} sources={sources} guides={guides} />
+        <AssistantMarkdown
+          text={text}
+          sources={sources}
+          guides={guides}
+          onEntitySelect={onEntitySelect}
+        />
       )}
       {!isUser && !streaming && (sources.length > 0 || guides.length > 0) ? (
         <ContextDisclosure resources={sources} guides={guides} />

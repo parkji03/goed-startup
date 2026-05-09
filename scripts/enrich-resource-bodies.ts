@@ -17,6 +17,8 @@ import { readFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
+import { resolveSeedTarget } from './lib/seed-target';
+
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const REPO_ROOT = resolve(scriptDir, '..');
 const INPUT = resolve(REPO_ROOT, 'data', 'resource-bodies.json');
@@ -28,14 +30,15 @@ type BodyEntry = {
 };
 
 function main() {
-  if (!process.env.NEXT_PUBLIC_CONVEX_URL) {
-    throw new Error(
-      'NEXT_PUBLIC_CONVEX_URL is not set. Populate .env.local (see .env.example) and link Convex.',
-    );
-  }
+  // CLI-only script: Convex CLI handles deployment resolution
+  // (CONVEX_DEPLOYMENT / .convex/ / --prod). NEXT_PUBLIC_CONVEX_URL is for
+  // ConvexHttpClient and is not required here.
+  const { target, convexRunFlags } = resolveSeedTarget();
 
   const entries: BodyEntry[] = JSON.parse(readFileSync(INPUT, 'utf-8'));
-  console.log(`Patching ${entries.length} resource bodies via internal.resourceInternal:patchBody…\n`);
+  console.log(
+    `[target=${target}] Patching ${entries.length} resource bodies via internal.resourceInternal:patchBody…\n`,
+  );
 
   let patched = 0;
   let missing = 0;
@@ -51,7 +54,7 @@ function main() {
     try {
       const out = execFileSync(
         'pnpm',
-        ['exec', 'convex', 'run', 'resourceInternal:patchBody', payload],
+        ['exec', 'convex', 'run', ...convexRunFlags, 'resourceInternal:patchBody', payload],
         {
           cwd: REPO_ROOT,
           stdio: ['ignore', 'pipe', 'inherit'],

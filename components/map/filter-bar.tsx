@@ -5,6 +5,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { useQuery } from 'convex/react';
 import { FunnelIcon, RectangleStackIcon } from '@heroicons/react/24/outline';
+import { SparklesIcon } from '@heroicons/react/20/solid';
 import { Dialog } from 'react-aria-components/Dialog';
 import { DialogTrigger } from 'react-aria-components/Dialog';
 import { Popover as PopoverPrimitive } from 'react-aria-components/Popover';
@@ -42,6 +43,7 @@ import { FilterChip } from '@/components/ui/filter-chip';
 import { ListBox, ListBoxItem } from '@/components/ui/list-box';
 import { Button } from '@/components/ui/button';
 import { Tooltip, TooltipContent } from '@/components/ui/tooltip';
+import { useMapQuiz } from '@/components/map/map-quiz-provider';
 
 type Option<Id extends string> = { id: Id; name: string };
 
@@ -244,12 +246,31 @@ export function FilterBar({
     ? tFilters('toggle.hide')
     : tFilters('toggle.show');
 
+  const mapQuiz = useMapQuiz();
+  const quizTriggerLabel = 'Take questionnaire';
+
   return (
     <div className="flex flex-col">
       {/* Top row: search + filter toggle. Search is fixed-width so the
           toggle button stays anchored to the right edge regardless of
           search content; flex-nowrap so they never wrap. */}
       <div className="flex flex-nowrap items-center gap-2">
+        {/* Sparkle "Take questionnaire" — opens the map quiz modal whose
+            answers stream a ranked list into the AI guide sidebar.
+            Same `sq-md` footprint as Filter/Layers so the row stays
+            visually balanced. */}
+        <Tooltip>
+          <Button
+            aria-label={quizTriggerLabel}
+            intent="primary"
+            size="sq-md"
+            onPress={mapQuiz.open}
+            className="shrink-0"
+          >
+            <SparklesIcon />
+          </Button>
+          <TooltipContent>{quizTriggerLabel}</TooltipContent>
+        </Tooltip>
         <div className="w-[380px] shrink-0">
           <SearchField
             aria-label={tFilters('search.placeholder')}

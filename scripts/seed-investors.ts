@@ -17,6 +17,7 @@ import { ConvexHttpClient } from 'convex/browser';
 
 import { api } from '../convex/_generated/api';
 import { geocodeWorldwide, type WorldwideGeocodeResult } from './lib/geocode';
+import { resolveConvexHttpUrl, resolveSeedTarget } from './lib/seed-target';
 
 const XLSX_PATH = path.resolve(__dirname, '..', 'Oct 2025 - OpenVC.xlsx');
 const SHEET_NAME = 'Oct 2025 - OpenVC';
@@ -27,12 +28,11 @@ const GEOCODE_CACHE_PATH = path.resolve(
   'investor-geocode-cache.json',
 );
 
-const CONVEX_URL = process.env.NEXT_PUBLIC_CONVEX_URL;
-if (!CONVEX_URL) {
-  throw new Error(
-    'NEXT_PUBLIC_CONVEX_URL is not set. Make sure `npx convex dev` has run and .env.local is populated.',
-  );
-}
+// Resolve target + URL up front so a misconfigured prod attempt fails before
+// we read the xlsx. resolveSeedTarget() throws if CONVEX_TARGET=prod without
+// SEED_CONFIRM_PROD=1.
+const SEED_TARGET = resolveSeedTarget();
+const CONVEX_URL = resolveConvexHttpUrl(SEED_TARGET.target);
 
 // ---- CLI args -------------------------------------------------------------
 
@@ -257,7 +257,8 @@ async function main() {
 
   // ---- Upsert via Convex -------------------------------------------------
 
-  const client = new ConvexHttpClient(CONVEX_URL!);
+  console.log(`[target=${SEED_TARGET.target}] Using Convex URL: ${CONVEX_URL}\n`);
+  const client = new ConvexHttpClient(CONVEX_URL);
   let inserted = 0;
   let updated = 0;
   const failures: Array<{ slug: string; error: string }> = [];

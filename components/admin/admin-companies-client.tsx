@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { useQuery } from "convex/react";
 import { useTranslations } from "next-intl";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { api } from "@/convex/_generated/api";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +15,19 @@ import { Label } from "@/components/ui/field";
 import { Link } from "@/i18n/navigation";
 import { Text } from "@/components/ui/text";
 import { TextField } from "@/components/ui/text-field";
+
+const PAGE_SIZE = 30;
+
+/** Walk up the DOM to find the nearest scrollable ancestor (overflow auto/scroll). */
+function findScrollParent(el: HTMLElement | null): HTMLElement | null {
+  let parent = el?.parentElement ?? null;
+  while (parent) {
+    const { overflowY } = getComputedStyle(parent);
+    if (overflowY === "auto" || overflowY === "scroll") return parent;
+    parent = parent.parentElement;
+  }
+  return null;
+}
 
 /** Same denied-reason copy as the inbox client. Kept inline since this is
  * the only other admin page that needs it; can be lifted into a shared
@@ -58,6 +71,37 @@ export function AdminCompaniesClient() {
     });
   }, [allCompanies, search]);
 
+  // Windowed render: mount only the first PAGE_SIZE rows, then bump the
+  // window each time the bottom sentinel scrolls into view. Mirrors the
+  // map's EntityList so DOM weight stays bounded as the dataset grows.
+  const [visible, setVisible] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLLIElement | null>(null);
+  const total = filtered?.length ?? 0;
+  const hasMore = visible < total;
+
+  // Reset the window whenever the filtered set changes (new search, fresh data).
+  useEffect(() => {
+    setVisible(PAGE_SIZE);
+  }, [filtered]);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const root = findScrollParent(sentinel);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setVisible((v) => Math.min(v + PAGE_SIZE, total));
+        }
+      },
+      { root, rootMargin: "200px 0px" },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [hasMore, total]);
+
   if (result?.access === "denied") {
     return (
       <div className="space-y-2 rounded-xl border border-border bg-muted/30 p-4">
@@ -92,7 +136,7 @@ export function AdminCompaniesClient() {
         <Text className="text-muted-fg text-sm">No matches.</Text>
       ) : (
         <ul className="divide-y divide-border rounded-xl border border-border">
-          {filtered.map((c) => (
+          {filtered.slice(0, visible).map((c) => (
             <li
               key={c._id}
               className="flex flex-wrap items-center gap-3 px-4 py-3"
@@ -126,6 +170,7 @@ export function AdminCompaniesClient() {
               </Link>
             </li>
           ))}
+          {hasMore && <li ref={sentinelRef} aria-hidden="true" className="h-px" />}
         </ul>
       )}
     </div>
