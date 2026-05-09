@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
 import { useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
@@ -24,16 +25,23 @@ import {
   type ResourceCategoryKey,
 } from "@/lib/resources/categories";
 
+const ALL_CATEGORY_KEYS = RESOURCE_CATEGORIES.map((c) => c.key);
+
+function sectionDomId(key: ResourceCategoryKey): string {
+  return `resource-section-${key}`;
+}
+
+function scrollToCategory(key: ResourceCategoryKey) {
+  const el = typeof document !== "undefined" ? document.getElementById(sectionDomId(key)) : null;
+  if (!el) return;
+  el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 export function ResourcesBrowseClient() {
   const grouped = useQuery(api.resources.listGroupedByCategory, { limitPerCategory: 50 });
-  const [activeCategory, setActiveCategory] = useState<ResourceCategoryKey | null>(null);
   const [quizOpen, setQuizOpen] = useState(false);
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
-
-  const visibleCategories = activeCategory
-    ? RESOURCE_CATEGORIES.filter((c) => c.key === activeCategory)
-    : RESOURCE_CATEGORIES;
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
@@ -116,22 +124,15 @@ export function ResourcesBrowseClient() {
 
       <section className="space-y-3">
         <Heading level={2} className="text-lg">
-          Categories
+          Jump to
         </Heading>
         <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            intent={activeCategory === null ? "primary" : "secondary"}
-            onPress={() => setActiveCategory(null)}
-          >
-            All resources
-          </Button>
           {RESOURCE_CATEGORIES.map((c) => (
             <Button
               key={c.key}
               size="sm"
-              intent={activeCategory === c.key ? "primary" : "secondary"}
-              onPress={() => setActiveCategory(c.key)}
+              intent="secondary"
+              onPress={() => scrollToCategory(c.key)}
             >
               {c.label}
             </Button>
@@ -144,25 +145,37 @@ export function ResourcesBrowseClient() {
           <Text className="text-muted-fg">Loading resources…</Text>
         ) : (
           <>
-            {/* Desktop: grouped collapsible rows */}
+            {/* Desktop: grouped collapsible rows. allowsMultipleExpanded keeps every
+                section open by default and lets the user toggle them independently. */}
             <div className="hidden md:block">
-              <DisclosureGroup defaultExpandedKeys={visibleCategories.map((c) => c.key)}>
-                {visibleCategories.map((c) => {
+              <DisclosureGroup
+                allowsMultipleExpanded
+                defaultExpandedKeys={ALL_CATEGORY_KEYS}
+              >
+                {RESOURCE_CATEGORIES.map((c) => {
                   const list = grouped[c.key] ?? [];
                   if (list.length === 0) return null;
                   return (
                     <Disclosure key={c.key} id={c.key}>
-                      <DisclosureTrigger>
-                        <span className="font-medium">{c.label}</span>
-                        <span className="text-muted-fg ml-2 text-sm">{list.length}</span>
-                      </DisclosureTrigger>
-                      <DisclosurePanel>
-                        <div className="rounded-lg border border-border bg-overlay">
-                          {list.map((r) => (
-                            <ResourceRow key={String(r._id)} resource={r} />
-                          ))}
-                        </div>
-                      </DisclosurePanel>
+                      <div id={sectionDomId(c.key)} className="scroll-mt-24">
+                        <DisclosureTrigger triggerIndicator={false}>
+                          <ChevronDownIcon
+                            aria-hidden
+                            className="size-4 shrink-0 -rotate-90 transition-transform duration-200 group-expanded/disclosure-item:rotate-0"
+                          />
+                          <span className="font-medium">{c.label}</span>
+                          <span className="ml-auto text-muted-fg text-sm tabular-nums">
+                            {list.length}
+                          </span>
+                        </DisclosureTrigger>
+                        <DisclosurePanel>
+                          <div className="rounded-lg border border-border bg-overlay">
+                            {list.map((r) => (
+                              <ResourceRow key={String(r._id)} resource={r} />
+                            ))}
+                          </div>
+                        </DisclosurePanel>
+                      </div>
                     </Disclosure>
                   );
                 })}
@@ -171,14 +184,21 @@ export function ResourcesBrowseClient() {
 
             {/* Mobile: cards under category headings */}
             <div className="md:hidden space-y-6">
-              {visibleCategories.map((c) => {
+              {RESOURCE_CATEGORIES.map((c) => {
                 const list = grouped[c.key] ?? [];
                 if (list.length === 0) return null;
                 return (
-                  <div key={c.key} className="space-y-3">
-                    <Heading level={3} className="text-base">
-                      {c.label}
-                    </Heading>
+                  <div
+                    key={c.key}
+                    id={sectionDomId(c.key)}
+                    className="space-y-3 scroll-mt-24"
+                  >
+                    <div className="flex items-baseline justify-between">
+                      <Heading level={3} className="text-base">
+                        {c.label}
+                      </Heading>
+                      <Text className="text-muted-fg text-sm tabular-nums">{list.length}</Text>
+                    </div>
                     <div className="grid gap-4">
                       {list.map((r) => (
                         <ResourceCard key={String(r._id)} resource={r} />
