@@ -18,6 +18,7 @@ type Item = {
     | '/admin'
     | '/admin/submissions'
     | '/admin/companies'
+    | '/admin/resources'
     | '/admin/access-management';
   label: string;
   /** When true, only an exact path match is considered active (used for
@@ -35,6 +36,10 @@ const items: Item[] = [
   // row, claimed or not. Each row deep-links into the owner dashboard
   // (which lets admins through).
   { href: '/admin/companies', label: 'Companies' },
+  // Resources is the curatorial surface for the public-facing programs
+  // grid on /. Admins edit existing resources or add brand-new ones
+  // without going through the public submission queue.
+  { href: '/admin/resources', label: 'Resources' },
   // Access Management surfaces claimers + the revoke list. Sits last in
   // the rail because it's a less-frequent action.
   { href: '/admin/access-management', label: 'Access Management' },

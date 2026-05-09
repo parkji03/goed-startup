@@ -76,8 +76,10 @@ function FacetSection({ label, options, value, onChange, divider }: FacetSection
             else onChange(Array.from(keys) as string[]);
           }}
           items={options}
-          // Override the default border + bg so sections blend into the popover.
-          className="max-h-44 w-full grid-cols-[auto_1fr] border-0 bg-transparent p-0"
+          // Override the default border + bg so sections blend into the popover,
+          // and unset the base ListBox `max-h-96 overflow-y-auto` so the popover
+          // wrapper provides a single outer scrollbar instead of one per facet.
+          className="max-h-none w-full grid-cols-[auto_1fr] overflow-visible border-0 bg-transparent p-0"
         >
           {(item) => (
             <ListBoxItem id={item.id} textValue={item.name}>

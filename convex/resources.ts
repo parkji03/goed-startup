@@ -194,7 +194,10 @@ type GroupedCategory = { items: GroupedItem[]; total: number };
 export const listGroupedByCategory = query({
   args: { limitPerCategory: v.optional(v.number()) },
   handler: async (ctx, { limitPerCategory }) => {
-    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 200);
+    // Cap chosen to fit the entire current published catalog in every
+    // category (largest is ~70). Reads are still bounded by the
+    // `.take(1000)` below if the corpus ever grows past this.
+    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 500);
     const results = Object.fromEntries(
       RESOURCE_CATEGORY_KEYS.map((k) => [k, { items: [], total: 0 } as GroupedCategory]),
     ) as Record<ResourceCategoryKey, GroupedCategory>;

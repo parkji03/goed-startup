@@ -2,7 +2,6 @@
 
 import { TrashIcon } from "@heroicons/react/20/solid";
 import { useTranslations } from "next-intl";
-import { Form } from "react-aria-components";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -208,7 +207,7 @@ export function DashboardInvestorBriefSection({ state, onChange }: Props) {
         />
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="brief-customers">{t("notableCustomers")}</Label>
+          <Label>{t("notableCustomers")}</Label>
           <TagField
             // Re-key on the size of the underlying list so a programmatic
             // reset (e.g. revert) re-mounts the input with the new defaults.
@@ -220,6 +219,7 @@ export function DashboardInvestorBriefSection({ state, onChange }: Props) {
                 sel === "all" ? [] : Array.from(sel).map(String),
               )
             }
+            aria-label={t("notableCustomers")}
           />
           <Description>{t("notableCustomersHint")}</Description>
         </div>
@@ -230,7 +230,7 @@ export function DashboardInvestorBriefSection({ state, onChange }: Props) {
         />
 
         <div className="flex flex-col gap-2">
-          <Label htmlFor="brief-integrations">{t("integrations")}</Label>
+          <Label>{t("integrations")}</Label>
           <TagField
             key={`integrations-${state.integrations.length}`}
             defaultValue={state.integrations}
@@ -240,6 +240,7 @@ export function DashboardInvestorBriefSection({ state, onChange }: Props) {
                 sel === "all" ? [] : Array.from(sel).map(String),
               )
             }
+            aria-label={t("integrations")}
           />
           <Description>{t("integrationsHint")}</Description>
         </div>
@@ -323,25 +324,21 @@ function FoundersField({
               className="flex flex-col gap-3 rounded-lg border border-border p-3"
             >
               <div className="grid gap-3 sm:grid-cols-2">
-                <Form>
-                  <TextField
-                    value={f.name}
-                    onChange={(name) => update(i, { name })}
-                    isRequired
-                  >
-                    <Label>{t("founderName")}</Label>
-                    <Input />
-                  </TextField>
-                </Form>
-                <Form>
-                  <TextField
-                    value={f.title}
-                    onChange={(title) => update(i, { title })}
-                  >
-                    <Label>{t("founderTitle")}</Label>
-                    <Input />
-                  </TextField>
-                </Form>
+                <TextField
+                  value={f.name}
+                  onChange={(name) => update(i, { name })}
+                  isRequired
+                >
+                  <Label>{t("founderName")}</Label>
+                  <Input />
+                </TextField>
+                <TextField
+                  value={f.title}
+                  onChange={(title) => update(i, { title })}
+                >
+                  <Label>{t("founderTitle")}</Label>
+                  <Input />
+                </TextField>
               </div>
               <div className="flex flex-col gap-2">
                 <Label>{t("founderPriorCompanies")}</Label>
@@ -354,6 +351,7 @@ function FoundersField({
                         sel === "all" ? [] : Array.from(sel).map(String),
                     })
                   }
+                  aria-label={t("founderPriorCompanies")}
                 />
               </div>
               <div className="flex justify-end">
@@ -401,24 +399,20 @@ function KeyMetricsField({
               key={i}
               className="grid gap-3 rounded-lg border border-border p-3 sm:grid-cols-[1fr_1fr_auto]"
             >
-              <Form>
-                <TextField
-                  value={m.metric}
-                  onChange={(metric) => update(i, { metric })}
-                >
-                  <Label>{t("metricLabel")}</Label>
-                  <Input placeholder="ARR" />
-                </TextField>
-              </Form>
-              <Form>
-                <TextField
-                  value={m.value}
-                  onChange={(value) => update(i, { value })}
-                >
-                  <Label>{t("metricValue")}</Label>
-                  <Input placeholder="$10M" />
-                </TextField>
-              </Form>
+              <TextField
+                value={m.metric}
+                onChange={(metric) => update(i, { metric })}
+              >
+                <Label>{t("metricLabel")}</Label>
+                <Input placeholder="ARR" />
+              </TextField>
+              <TextField
+                value={m.value}
+                onChange={(value) => update(i, { value })}
+              >
+                <Label>{t("metricValue")}</Label>
+                <Input placeholder="$10M" />
+              </TextField>
               <div className="flex items-end">
                 <Button
                   size="xs"

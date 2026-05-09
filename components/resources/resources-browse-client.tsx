@@ -42,7 +42,10 @@ function scrollToCategory(key: ResourceCategoryKey) {
 }
 
 export function ResourcesBrowseClient() {
-  const grouped = useQuery(api.resources.listGroupedByCategory, { limitPerCategory: 50 });
+  // 500 fits today's largest category (~70) with headroom — anything below
+  // the true count silently hides admin-added rows because they sort to the
+  // tail of `by_category` (newest `_creationTime`).
+  const grouped = useQuery(api.resources.listGroupedByCategory, { limitPerCategory: 500 });
   const [submitOpen, setSubmitOpen] = useState(false);
   const { toggleSidebar } = useSidebar();
   const quiz = useQuiz();

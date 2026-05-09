@@ -3,6 +3,7 @@
 import {
   ArrowTopRightOnSquareIcon,
   BuildingOffice2Icon,
+  LightBulbIcon,
   ShieldCheckIcon,
 } from "@heroicons/react/20/solid";
 import { useAction, useMutation, useQuery } from "convex/react";
@@ -12,7 +13,19 @@ import { api } from "@/convex/_generated/api";
 import type { Doc, Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
+import { splitSuggestedTags } from "@/lib/forms/resource-submit";
+import {
+  RESOURCE_CATEGORIES,
+  categoryLabel,
+  type ResourceCategoryKey,
+} from "@/lib/resources/categories";
 
 /** Copy for the admin-gate denied panel — same reason set as
  * `resourceSubmissions:listPendingForAdmin`. */
@@ -48,13 +61,16 @@ export function AdminInboxClient() {
   const registrationsQuery = useQuery(
     api.companyOnboarding.listPendingRegistrationsForAdmin,
   );
+  const resourcesQuery = useQuery(api.resourceSubmissions.listPendingForAdmin);
 
   const accessDeniedReason =
     claimsQuery?.access === "denied"
       ? claimsQuery.reason
       : registrationsQuery?.access === "denied"
         ? registrationsQuery.reason
-        : null;
+        : resourcesQuery?.access === "denied"
+          ? resourcesQuery.reason
+          : null;
 
   if (accessDeniedReason) {
     return (
@@ -75,11 +91,14 @@ export function AdminInboxClient() {
     registrationsQuery?.access === "allowed"
       ? registrationsQuery.submissions
       : null;
+  const resourceSubs =
+    resourcesQuery?.access === "allowed" ? resourcesQuery.submissions : null;
 
   return (
     <div className="space-y-10">
       <ClaimsSection claims={claims} />
       <RegistrationsSection registrations={registrations} />
+      <ResourceSubmissionsSection submissions={resourceSubs} />
     </div>
   );
 }
@@ -469,6 +488,291 @@ function RegistrationCard({
           intent="primary"
           isDisabled={busy !== null}
           onPress={() => run("approve", () => onApprove(approveNote))}
+        >
+          {busy === "approve" ? "Approving…" : "Approve"}
+        </Button>
+        <Button
+          intent="outline"
+          isDisabled={busy !== null || rejectNote.trim().length === 0}
+          onPress={() => run("reject", () => onReject(rejectNote))}
+        >
+          {busy === "reject" ? "Rejecting…" : "Reject"}
+        </Button>
+        {error ? (
+          <Text className="text-danger-subtle-fg text-sm">{error}</Text>
+        ) : null}
+      </div>
+    </li>
+  );
+}
+
+function ResourceSubmissionsSection({
+  submissions,
+}: {
+  submissions: Doc<"resourceSubmissions">[] | null;
+}) {
+  const approve = useMutation(api.resourceSubmissions.approve);
+  const reject = useMutation(api.resourceSubmissions.reject);
+
+  return (
+    <section className="space-y-4">
+      <div className="flex items-center gap-2">
+        <LightBulbIcon aria-hidden className="size-5 text-muted-fg" />
+        <Heading level={2} className="text-xl tracking-tight">
+          Resource submissions
+        </Heading>
+        {submissions ? (
+          <Text className="text-muted-fg text-sm">({submissions.length})</Text>
+        ) : null}
+      </div>
+
+      {submissions === null ? (
+        <Text className="text-muted-fg text-sm">Loading…</Text>
+      ) : submissions.length === 0 ? (
+        <Text className="text-muted-fg text-sm">No pending resource submissions.</Text>
+      ) : (
+        <ul className="space-y-3">
+          {submissions.map((s) => (
+            <ResourceSubmissionCard
+              key={s._id}
+              row={s}
+              onApprove={(args) => approve({ submissionId: s._id, ...args })}
+              onReject={(reason) => reject({ submissionId: s._id, reason })}
+            />
+          ))}
+        </ul>
+      )}
+    </section>
+  );
+}
+
+type ResourceApproveArgs = {
+  category: ResourceCategoryKey;
+  tags: string[];
+  communities: string[];
+  stageTags: string[];
+};
+
+function ResourceSubmissionCard({
+  row,
+  onApprove,
+  onReject,
+}: {
+  row: Doc<"resourceSubmissions">;
+  onApprove: (args: ResourceApproveArgs) => Promise<unknown>;
+  onReject: (reason: string) => Promise<unknown>;
+}) {
+  const [category, setCategory] = useState<ResourceCategoryKey | null>(
+    row.suggestedCategory ?? null,
+  );
+  const [tagsRaw, setTagsRaw] = useState((row.suggestedTags ?? []).join(", "));
+  const [communitiesRaw, setCommunitiesRaw] = useState(
+    row.suggestedCommunities.join(", "),
+  );
+  const [stageTagsRaw, setStageTagsRaw] = useState("");
+  const [rejectNote, setRejectNote] = useState("");
+  const [busy, setBusy] = useState<"approve" | "reject" | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const run = async (which: "approve" | "reject", fn: () => Promise<unknown>) => {
+    setBusy(which);
+    setError(null);
+    try {
+      await fn();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+    } finally {
+      setBusy(null);
+    }
+  };
+
+  const submitted = new Date(row.createdAt).toLocaleString();
+  const urlHref = /^https?:\/\//i.test(row.url) ? row.url : `https://${row.url}`;
+
+  return (
+    <li className="space-y-4 rounded-xl border border-border p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <Heading level={3} className="text-lg">
+            {row.title}
+          </Heading>
+          <a
+            href={urlHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-xs text-muted-fg hover:text-fg"
+          >
+            {row.url}
+            <ArrowTopRightOnSquareIcon className="size-3" aria-hidden />
+          </a>
+        </div>
+        <Text className="text-muted-fg text-xs">Submitted {submitted}</Text>
+      </div>
+
+      <Text className="text-sm whitespace-pre-wrap">{row.description}</Text>
+
+      <dl className="grid gap-3 text-sm sm:grid-cols-2">
+        <div>
+          <dt className="text-muted-fg text-xs uppercase tracking-wide">
+            Submitter
+          </dt>
+          <dd className="mt-0.5">
+            {row.submitterName}{" "}
+            <a
+              href={`mailto:${row.submitterEmail}`}
+              className="text-muted-fg hover:text-fg"
+            >
+              ({row.submitterEmail})
+            </a>
+          </dd>
+        </div>
+        {row.organization ? (
+          <div>
+            <dt className="text-muted-fg text-xs uppercase tracking-wide">
+              Organization
+            </dt>
+            <dd className="mt-0.5">{row.organization}</dd>
+          </div>
+        ) : null}
+        {row.suggestedCategory ? (
+          <div>
+            <dt className="text-muted-fg text-xs uppercase tracking-wide">
+              Suggested category
+            </dt>
+            <dd className="mt-0.5">{categoryLabel(row.suggestedCategory)}</dd>
+          </div>
+        ) : null}
+        {row.suggestedIndustries.length > 0 ? (
+          <div>
+            <dt className="text-muted-fg text-xs uppercase tracking-wide">
+              Industries
+            </dt>
+            <dd className="mt-0.5">{row.suggestedIndustries.join(", ")}</dd>
+          </div>
+        ) : null}
+        {row.suggestedLocations.length > 0 ? (
+          <div>
+            <dt className="text-muted-fg text-xs uppercase tracking-wide">
+              Locations
+            </dt>
+            <dd className="mt-0.5">{row.suggestedLocations.join(", ")}</dd>
+          </div>
+        ) : null}
+        {row.suggestedTopics.length > 0 ? (
+          <div>
+            <dt className="text-muted-fg text-xs uppercase tracking-wide">
+              Topics
+            </dt>
+            <dd className="mt-0.5">{row.suggestedTopics.join(", ")}</dd>
+          </div>
+        ) : null}
+        {row.notes ? (
+          <div className="sm:col-span-2">
+            <dt className="text-muted-fg text-xs uppercase tracking-wide">
+              Notes to reviewers
+            </dt>
+            <dd className="mt-0.5 whitespace-pre-wrap">{row.notes}</dd>
+          </div>
+        ) : null}
+      </dl>
+
+      <div className="grid gap-4 md:grid-cols-2">
+        <div>
+          <label className="block text-sm font-medium text-fg" htmlFor={`category-${row._id}`}>
+            Category *
+          </label>
+          <Select
+            className="mt-1"
+            placeholder="Pick a category"
+            selectedKey={category}
+            onSelectionChange={(key) => setCategory((key as ResourceCategoryKey) ?? null)}
+          >
+            <SelectTrigger />
+            <SelectContent items={RESOURCE_CATEGORIES}>
+              {(c) => (
+                <SelectItem id={c.key} textValue={c.label}>
+                  {c.label}
+                </SelectItem>
+              )}
+            </SelectContent>
+          </Select>
+        </div>
+        <div>
+          <label
+            className="block text-sm font-medium text-fg"
+            htmlFor={`tags-${row._id}`}
+          >
+            Tags (comma-separated)
+          </label>
+          <input
+            id={`tags-${row._id}`}
+            value={tagsRaw}
+            onChange={(e) => setTagsRaw(e.target.value)}
+            placeholder="AI, women-led, climate"
+            className="mt-1 w-full rounded-lg border border-input bg-muted/20 px-3 py-2 text-sm outline-none placeholder:text-muted-fg focus-visible:border-ring/70 focus-visible:ring-3 focus-visible:ring-ring/20"
+          />
+        </div>
+        <div>
+          <label
+            className="block text-sm font-medium text-fg"
+            htmlFor={`communities-${row._id}`}
+          >
+            Communities (comma-separated)
+          </label>
+          <input
+            id={`communities-${row._id}`}
+            value={communitiesRaw}
+            onChange={(e) => setCommunitiesRaw(e.target.value)}
+            placeholder="Latina founders, veterans"
+            className="mt-1 w-full rounded-lg border border-input bg-muted/20 px-3 py-2 text-sm outline-none placeholder:text-muted-fg focus-visible:border-ring/70 focus-visible:ring-3 focus-visible:ring-ring/20"
+          />
+        </div>
+        <div>
+          <label
+            className="block text-sm font-medium text-fg"
+            htmlFor={`stage-${row._id}`}
+          >
+            Stage tags (optional — derived from tags if blank)
+          </label>
+          <input
+            id={`stage-${row._id}`}
+            value={stageTagsRaw}
+            onChange={(e) => setStageTagsRaw(e.target.value)}
+            placeholder="pre-seed, seed, series A"
+            className="mt-1 w-full rounded-lg border border-input bg-muted/20 px-3 py-2 text-sm outline-none placeholder:text-muted-fg focus-visible:border-ring/70 focus-visible:ring-3 focus-visible:ring-ring/20"
+          />
+        </div>
+        <div className="md:col-span-2">
+          <label
+            className="block text-sm font-medium text-fg"
+            htmlFor={`reject-note-${row._id}`}
+          >
+            Rejection reason
+          </label>
+          <textarea
+            id={`reject-note-${row._id}`}
+            placeholder="Required when rejecting…"
+            value={rejectNote}
+            onChange={(e) => setRejectNote(e.target.value)}
+            className="mt-1 min-h-20 w-full rounded-lg border border-input bg-muted/20 px-3 py-2 text-sm outline-none placeholder:text-muted-fg focus-visible:border-ring/70 focus-visible:ring-3 focus-visible:ring-ring/20"
+          />
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Button
+          intent="primary"
+          isDisabled={busy !== null || category === null}
+          onPress={() =>
+            run("approve", () =>
+              onApprove({
+                category: category as ResourceCategoryKey,
+                tags: splitSuggestedTags(tagsRaw),
+                communities: splitSuggestedTags(communitiesRaw),
+                stageTags: splitSuggestedTags(stageTagsRaw),
+              }),
+            )
+          }
         >
           {busy === "approve" ? "Approving…" : "Approve"}
         </Button>
