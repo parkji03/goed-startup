@@ -232,18 +232,15 @@ export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
             </Button>
           ) : null}
           {step < 5 ? (
-            <Button intent="primary" size="sm" onPress={() => setStep((s) => s + 1)}>
+            <Button intent="primary" size="sm" className="ms-auto" onPress={() => setStep((s) => s + 1)}>
               {t("buttons.continue")}
             </Button>
           ) : null}
           {step === 5 ? (
-            <Button intent="primary" size="sm" onPress={finish}>
+            <Button intent="primary" size="sm" className="ms-auto" onPress={finish}>
               {t("buttons.finish")}
             </Button>
           ) : null}
-          <Button intent="outline" size="sm" className="ms-auto" onPress={close}>
-            {onComplete ? t("buttons.close") : t("buttons.skip")}
-          </Button>
         </div>
       ) : null}
     </div>
