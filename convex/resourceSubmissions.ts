@@ -4,6 +4,7 @@ import { mutation, query } from './_generated/server';
 import { checkAdminGate, requireAdmin } from './lib/adminAuth';
 import {
   adminAccessDeniedReasonValidator,
+  resourceCategoryValidator,
   resourceSubmissionDocValidator,
 } from './resourceValidators';
 
@@ -15,10 +16,12 @@ export const submit = mutation({
     submitterName: v.string(),
     submitterEmail: v.string(),
     organization: v.optional(v.string()),
+    suggestedCategory: v.optional(resourceCategoryValidator),
     suggestedCommunities: v.array(v.string()),
     suggestedIndustries: v.array(v.string()),
     suggestedLocations: v.array(v.string()),
     suggestedTopics: v.array(v.string()),
+    suggestedTags: v.optional(v.array(v.string())),
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -30,10 +33,12 @@ export const submit = mutation({
       submitterName: args.submitterName.trim(),
       submitterEmail: args.submitterEmail.trim().toLowerCase(),
       organization: args.organization?.trim(),
+      suggestedCategory: args.suggestedCategory,
       suggestedCommunities: args.suggestedCommunities,
       suggestedIndustries: args.suggestedIndustries,
       suggestedLocations: args.suggestedLocations,
       suggestedTopics: args.suggestedTopics,
+      suggestedTags: args.suggestedTags ?? [],
       notes: args.notes?.trim(),
       status: 'pending',
       createdAt: now,
