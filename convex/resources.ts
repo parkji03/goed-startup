@@ -14,9 +14,8 @@ function projectReco(
       slug: string;
       description: string;
       url: string;
-      category?: ResourceCategoryKey;
-      tags?: string[];
-      topics: string[];
+      category: ResourceCategoryKey;
+      tags: string[];
       stageTags: string[];
       industries: string[];
       communities: string[];
@@ -31,8 +30,7 @@ function projectReco(
     description: doc.description,
     url: doc.url,
     category: doc.category,
-    tags: doc.tags ?? [],
-    topics: doc.topics,
+    tags: doc.tags,
     stageTags: doc.stageTags,
     industries: doc.industries,
     communities: doc.communities,

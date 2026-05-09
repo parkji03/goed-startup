@@ -81,7 +81,7 @@ export function ResourceDetailClient({ slug }: Props) {
         </div>
       </div>
       <div className="rounded-xl border border-border bg-muted/30 p-4">
-        <ChipRow label="Tags" values={resource.tags ?? resource.topics} />
+        <ChipRow label="Tags" values={resource.tags} />
         <ChipRow label="Communities / audiences" values={resource.communities} />
         <ChipRow label="Industries" values={resource.industries} />
         <ChipRow label="Coverage" values={resource.locations} />

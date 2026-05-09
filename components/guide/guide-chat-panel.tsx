@@ -18,7 +18,7 @@ type GuideContextItem = {
   slug: string;
   url: string;
   description: string;
-  topics: string[];
+  tags: string[];
   industries: string[];
   communities: string[];
 };

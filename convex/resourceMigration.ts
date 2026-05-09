@@ -1,87 +1,18 @@
 import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import { internalMutation } from './_generated/server';
-import { assignCategory, cleanTags } from '../lib/resources/migration-rules';
 import {
   buildSearchText,
   facetsFromResourceFields,
-  inferStageTagsFromTopics,
+  inferStageTagsFromTags,
 } from './lib/resourceHelpers';
 import { resourceCategoryValidator } from './resourceValidators';
 
-export const backfillCategoriesAndTags = internalMutation({
-  args: {
-    /** When true, skip resources that already have a category. Default: true. */
-    skipAlreadyCategorized: v.optional(v.boolean()),
-    /** Number of resources to process this run. Default: 40 — keeps facet reads under the 4096-per-mutation limit. */
-    batchSize: v.optional(v.number()),
-  },
-  handler: async (ctx, { skipAlreadyCategorized = true, batchSize = 40 }) => {
-    const all = await ctx.db.query('resources').take(5000);
-    const candidates = skipAlreadyCategorized ? all.filter((r) => !r.category) : all;
-    const resources = candidates.slice(0, batchSize);
-    let updated = 0;
-    let lowConfidence = 0;
-    for (const r of resources) {
-      if (skipAlreadyCategorized && r.category) continue;
-
-      const { category, confidence } = assignCategory({
-        title: r.title,
-        topics: r.topics,
-      });
-      const tags = cleanTags(r.topics);
-      const stageTags = inferStageTagsFromTopics(r.topics);
-
-      const searchText = buildSearchText({
-        title: r.title,
-        description: r.description,
-        url: r.url,
-        contactEmail: r.contactEmail,
-        category,
-        communities: r.communities,
-        industries: r.industries,
-        locations: r.locations,
-        tags,
-        topics: r.topics,
-        stageTags,
-      });
-
-      await ctx.db.patch(r._id, {
-        category,
-        tags,
-        stageTags,
-        searchText,
-        lastSyncedAt: Date.now(),
-      });
-
-      const facetRows = facetsFromResourceFields({
-        category,
-        communities: r.communities,
-        industries: r.industries,
-        locations: r.locations,
-        tags,
-        topics: r.topics,
-        stageTags,
-      });
-      await ctx.runMutation(internal.resourceInternal.replaceFacets, {
-        resourceId: r._id,
-        status: r.status,
-        facetRows,
-      });
-
-      // Re-run embedding so the new category text lands in the vector.
-      await ctx.scheduler.runAfter(0, internal.resourceEmbeddingsNode.embedResource, {
-        resourceId: r._id,
-      });
-
-      updated += 1;
-      if (confidence === 'low') lowConfidence += 1;
-    }
-    const remaining = candidates.length - resources.length;
-    return { updated, lowConfidence, scanned: resources.length, remaining };
-  },
-});
-
+/**
+ * Per-resource override for low-confidence migrations or post-publish
+ * recategorization. Recomputes searchText, replaces facets, reschedules
+ * the embedding.
+ */
 export const setCategoryById = internalMutation({
   args: {
     resourceId: v.id('resources'),
@@ -90,7 +21,8 @@ export const setCategoryById = internalMutation({
   handler: async (ctx, { resourceId, category }) => {
     const r = await ctx.db.get(resourceId);
     if (!r) throw new Error('Resource not found');
-    const tags = r.tags ?? cleanTags(r.topics);
+    const tags = r.tags;
+    const stageTags = inferStageTagsFromTags(tags);
     const searchText = buildSearchText({
       title: r.title,
       description: r.description,
@@ -101,17 +33,19 @@ export const setCategoryById = internalMutation({
       industries: r.industries,
       locations: r.locations,
       tags,
-      topics: r.topics,
-      stageTags: r.stageTags,
+      stageTags,
     });
-    await ctx.db.patch(resourceId, { category, tags, searchText, lastSyncedAt: Date.now() });
+    await ctx.db.patch(resourceId, {
+      category,
+      searchText,
+      lastSyncedAt: Date.now(),
+    });
     const facetRows = facetsFromResourceFields({
       category,
       communities: r.communities,
       industries: r.industries,
       locations: r.locations,
       tags,
-      topics: r.topics,
       stageTags: r.stageTags,
     });
     await ctx.runMutation(internal.resourceInternal.replaceFacets, {

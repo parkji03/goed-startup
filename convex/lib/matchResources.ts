@@ -3,7 +3,7 @@ import type { FounderProfileConvex } from '../founderProfile';
 
 type ResourceTags = Pick<
   Doc<'resources'>,
-  'communities' | 'industries' | 'locations' | 'topics' | 'tags' | 'stageTags' | 'category'
+  'communities' | 'industries' | 'locations' | 'tags' | 'stageTags' | 'category'
 >;
 
 const WEIGHTS = {
@@ -36,7 +36,7 @@ export function scoreResourceForProfile(
     }
   }
 
-  const tagPool = [...(resource.tags ?? []), ...resource.topics];
+  const tagPool = resource.tags;
 
   for (const g of profile.goals) {
     if (

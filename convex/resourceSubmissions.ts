@@ -108,7 +108,6 @@ export const approve = mutation({
         communitiesRaw: communities.join('|'),
         industriesRaw: sub.suggestedIndustries.join('|'),
         locationsRaw: sub.suggestedLocations.join('|'),
-        topicsRaw: '',
         tagsRaw: tags.join('|'),
         category,
         status: 'published',
@@ -116,7 +115,7 @@ export const approve = mutation({
       },
     });
 
-    // upsertResource derives stageTags from topics; admin overrides win.
+    // upsertResource derives stageTags from tags; admin overrides win.
     if (stageTags.length > 0) {
       const created = await ctx.db
         .query('resources')

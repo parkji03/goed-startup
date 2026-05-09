@@ -82,7 +82,7 @@ function GlobalCommandMenu({
         kind: "resource" as const,
         id: r._id,
         title: r.title,
-        subtitle: r.topics.slice(0, 2).join(" · "),
+        subtitle: r.tags.slice(0, 2).join(" · "),
         slug: r.slug,
       })) ?? []
     );

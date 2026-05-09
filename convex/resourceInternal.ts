@@ -10,7 +10,7 @@ import {
 import {
   buildSearchText,
   facetsFromResourceFields,
-  inferStageTagsFromTopics,
+  inferStageTagsFromTags,
   makeResourceSlug,
   sanitizeContactEmail,
   splitPipeList,
@@ -55,9 +55,8 @@ const upsertRowValidator = v.object({
   communitiesRaw: v.optional(v.string()),
   industriesRaw: v.optional(v.string()),
   locationsRaw: v.optional(v.string()),
-  topicsRaw: v.optional(v.string()),
   tagsRaw: v.optional(v.string()),
-  category: v.optional(resourceCategoryValidator),
+  category: resourceCategoryValidator,
   status: resourceStatusValidator,
   submissionId: v.optional(v.id('resourceSubmissions')),
 });
@@ -71,9 +70,8 @@ export const upsertResource = internalMutation({
     const communities = splitPipeList(row.communitiesRaw);
     const industries = splitPipeList(row.industriesRaw);
     const locations = splitPipeList(row.locationsRaw);
-    const topics = splitPipeList(row.topicsRaw);
     const tags = splitPipeList(row.tagsRaw);
-    const stageTags = inferStageTagsFromTopics([...topics, ...tags]);
+    const stageTags = inferStageTagsFromTags(tags);
     const category = row.category;
     const searchText = buildSearchText({
       title: row.title,
@@ -85,7 +83,6 @@ export const upsertResource = internalMutation({
       industries,
       locations,
       tags,
-      topics,
       stageTags,
     });
     const slug = makeResourceSlug(row.title, row.sourceId);
@@ -107,7 +104,6 @@ export const upsertResource = internalMutation({
         communities,
         industries,
         locations,
-        topics,
         tags,
         category,
         stageTags,
@@ -127,7 +123,6 @@ export const upsertResource = internalMutation({
         communities,
         industries,
         locations,
-        topics,
         tags,
         category,
         stageTags,
@@ -144,7 +139,6 @@ export const upsertResource = internalMutation({
       industries,
       locations,
       tags,
-      topics,
       stageTags,
     });
     await ctx.runMutation(internal.resourceInternal.replaceFacets, {

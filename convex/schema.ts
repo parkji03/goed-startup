@@ -146,18 +146,10 @@ export default defineSchema({
     communities: v.array(v.string()),
     industries: v.array(v.string()),
     locations: v.array(v.string()),
-    topics: v.array(v.string()),
-    /**
-     * Curated, single-value category. Drives section grouping on /resources
-     * and the primary filter chips. Optional during the migration window —
-     * tightened to required after backfill (see Task 14 in the plan).
-     */
-    category: v.optional(resourceCategoryValidator),
-    /**
-     * Free-form-ish secondary descriptors. After migration this replaces the
-     * `topics[]` field. Optional during the migration window.
-     */
-    tags: v.optional(v.array(v.string())),
+    /** Curated, single-value category. Drives section grouping on /resources. */
+    category: resourceCategoryValidator,
+    /** Free-form-ish secondary descriptors. */
+    tags: v.array(v.string()),
     stageTags: v.array(v.string()),
     searchText: v.string(),
     status: resourceStatusValidator,

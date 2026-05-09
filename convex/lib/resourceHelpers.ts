@@ -45,8 +45,6 @@ export function buildSearchText(parts: {
   industries: string[];
   locations: string[];
   tags: string[];
-  /** Kept during the migration window; safe to drop once `topics` is removed. */
-  topics: string[];
   stageTags: string[];
 }): string {
   const chunks = [
@@ -59,7 +57,6 @@ export function buildSearchText(parts: {
     ...parts.industries,
     ...parts.locations,
     ...parts.tags,
-    ...parts.topics,
     ...parts.stageTags,
   ];
   return chunks.filter(Boolean).join(' | ');
@@ -76,8 +73,6 @@ export function facetsFromResourceFields(args: {
   industries: string[];
   locations: string[];
   tags: string[];
-  /** Kept during the migration window; dropped once `topics` is removed. */
-  topics: string[];
   stageTags: string[];
 }): FacetRowInput[] {
   const out: FacetRowInput[] = [];
@@ -86,7 +81,6 @@ export function facetsFromResourceFields(args: {
   for (const value of args.industries) out.push({ facetType: 'industry', value });
   for (const value of args.locations) out.push({ facetType: 'location', value });
   for (const value of args.tags) out.push({ facetType: 'tag', value });
-  for (const value of args.topics) out.push({ facetType: 'topic', value });
   for (const value of args.stageTags) out.push({ facetType: 'stage', value });
   return out;
 }
@@ -106,9 +100,9 @@ const STAGE_KEYWORDS = [
   'scale',
 ] as const;
 
-export function inferStageTagsFromTopics(topics: string[]): string[] {
+export function inferStageTagsFromTags(tags: string[]): string[] {
   const found = new Set<string>();
-  for (const t of topics) {
+  for (const t of tags) {
     const lower = t.toLowerCase();
     for (const kw of STAGE_KEYWORDS) {
       if (lower.includes(kw)) {
@@ -125,7 +119,6 @@ export function embeddingSourceText(parts: {
   description: string;
   category?: ResourceCategoryKey;
   tags: string[];
-  topics: string[];
   industries: string[];
   communities: string[];
   locations: string[];
@@ -134,7 +127,7 @@ export function embeddingSourceText(parts: {
     `Title: ${parts.title}`,
     `Description: ${parts.description}`,
     parts.category ? `Category: ${categoryLabel(parts.category)}` : '',
-    `Tags: ${[...parts.tags, ...parts.topics].join('; ')}`,
+    `Tags: ${parts.tags.join('; ')}`,
     `Industries: ${parts.industries.join('; ')}`,
     `Communities: ${parts.communities.join('; ')}`,
     `Locations: ${parts.locations.join('; ')}`,

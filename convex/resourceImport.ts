@@ -12,9 +12,8 @@ const importRow = v.object({
   communitiesRaw: v.optional(v.string()),
   industriesRaw: v.optional(v.string()),
   locationsRaw: v.optional(v.string()),
-  topicsRaw: v.optional(v.string()),
   tagsRaw: v.optional(v.string()),
-  category: v.optional(resourceCategoryValidator),
+  category: resourceCategoryValidator,
 });
 
 /**

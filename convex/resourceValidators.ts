@@ -21,7 +21,6 @@ export const facetTypeValidator = v.union(
   v.literal('community'),
   v.literal('industry'),
   v.literal('location'),
-  v.literal('topic'),
   v.literal('tag'),
   v.literal('stage'),
   v.literal('category'),
