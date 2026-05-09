@@ -3,10 +3,11 @@ import type { FounderProfileConvex } from '../founderProfile';
 
 type ResourceTags = Pick<
   Doc<'resources'>,
-  'communities' | 'industries' | 'locations' | 'topics' | 'stageTags'
+  'communities' | 'industries' | 'locations' | 'topics' | 'tags' | 'stageTags' | 'category'
 >;
 
 const WEIGHTS = {
+  category: 6,
   goal: 5,
   industry: 4,
   county: 4,
@@ -25,9 +26,21 @@ export function scoreResourceForProfile(
   profile: FounderProfileConvex,
 ): number {
   let score = 0;
+
+  // Category match: profile goals contain words from the category key.
+  if (resource.category) {
+    const catWords = resource.category.split('-');
+    const goalText = profile.goals.join(' ').toLowerCase();
+    if (catWords.some((w) => goalText.includes(w))) {
+      score += WEIGHTS.category;
+    }
+  }
+
+  const tagPool = [...(resource.tags ?? []), ...resource.topics];
+
   for (const g of profile.goals) {
     if (
-      resource.topics.some(
+      tagPool.some(
         (t) => t.toLowerCase().includes(g.toLowerCase()) || g.toLowerCase().includes(t.toLowerCase()),
       )
     ) {
@@ -63,14 +76,14 @@ export function scoreResourceForProfile(
     }
   }
   for (const st of profile.stages) {
-    if (has(resource.stageTags, st) || resource.topics.some((t) => t.toLowerCase().includes(st.toLowerCase()))) {
+    if (has(resource.stageTags, st) || tagPool.some((t) => t.toLowerCase().includes(st.toLowerCase()))) {
       score += WEIGHTS.stage;
     }
   }
   if (profile.freeText?.trim()) {
     const q = profile.freeText.toLowerCase();
     const hay = [
-      ...resource.topics,
+      ...tagPool,
       ...resource.industries,
       ...resource.communities,
       ...resource.locations,
