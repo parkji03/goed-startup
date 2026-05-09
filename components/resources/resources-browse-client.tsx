@@ -20,10 +20,7 @@ import { Heading } from "@/components/ui/heading";
 import { ModalBody, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
 import { useSidebar } from "@/components/ui/sidebar";
-import {
-  RESOURCE_CATEGORIES,
-  type ResourceCategoryKey,
-} from "@/lib/resources/categories";
+import { RESOURCE_CATEGORIES, type ResourceCategoryKey } from "@/lib/resources/categories";
 
 const ALL_CATEGORY_KEYS = RESOURCE_CATEGORIES.map((c) => c.key);
 
@@ -47,35 +44,30 @@ export function ResourcesBrowseClient() {
     <div className="mx-auto flex max-w-6xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-10">
       <section className="space-y-6">
         <div className="max-w-3xl">
-          <Text className="text-muted-fg">Resource Library</Text>
           <Heading level={1} className="mt-2 text-4xl tracking-tight sm:text-5xl">
             Utah founder resources
           </Heading>
-          <Text className="mt-4 max-w-2xl text-lg text-muted-fg">
-            Curated partners and programs sourced from Startup Utah Builder Day. Filter by
-            category, search from the top bar, or ask the AI guide for a recommended path.
-          </Text>
         </div>
 
         <div className="grid gap-4 md:grid-cols-3">
           <Card className="bg-overlay">
             <CardHeader
-              title="Get matched"
+              title="Not sure where to start?"
               description="Take the founder quiz to tune recommendations."
             />
             <CardFooter>
-              <Button intent="outline" size="sm" onPress={() => setQuizOpen(true)}>
+              <Button intent="primary" size="sm" onPress={() => setQuizOpen(true)}>
                 Start quiz
               </Button>
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
             <CardHeader
-              title="Ask the guide"
+              title="Ask the Utah AI startup guide"
               description="Open the AI chat for funding and program questions."
             />
             <CardFooter>
-              <Button intent="outline" size="sm" onPress={toggleSidebar}>
+              <Button intent="primary" size="sm" onPress={toggleSidebar}>
                 Ask AI guide
               </Button>
             </CardFooter>
@@ -83,10 +75,10 @@ export function ResourcesBrowseClient() {
           <Card className="bg-overlay">
             <CardHeader
               title="Add a resource"
-              description="Submit a partner or program for review."
+              description="Have something to contribute? Submit a partner or program for review."
             />
             <CardFooter>
-              <Button intent="outline" size="sm" onPress={() => setSubmitOpen(true)}>
+              <Button intent="primary" size="sm" onPress={() => setSubmitOpen(true)}>
                 Submit
               </Button>
             </CardFooter>
@@ -148,10 +140,7 @@ export function ResourcesBrowseClient() {
             {/* Desktop: grouped collapsible rows. allowsMultipleExpanded keeps every
                 section open by default and lets the user toggle them independently. */}
             <div className="hidden md:block">
-              <DisclosureGroup
-                allowsMultipleExpanded
-                defaultExpandedKeys={ALL_CATEGORY_KEYS}
-              >
+              <DisclosureGroup allowsMultipleExpanded defaultExpandedKeys={ALL_CATEGORY_KEYS}>
                 {RESOURCE_CATEGORIES.map((c) => {
                   const list = grouped[c.key] ?? [];
                   if (list.length === 0) return null;
@@ -194,11 +183,7 @@ export function ResourcesBrowseClient() {
                 const list = grouped[c.key] ?? [];
                 if (list.length === 0) return null;
                 return (
-                  <div
-                    key={c.key}
-                    id={sectionDomId(c.key)}
-                    className="space-y-3 scroll-mt-24"
-                  >
+                  <div key={c.key} id={sectionDomId(c.key)} className="space-y-3 scroll-mt-24">
                     <div className="flex items-baseline justify-between">
                       <Heading level={3} className="text-base">
                         {c.label}
