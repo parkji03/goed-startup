@@ -1,0 +1,169 @@
+{
+  "missing": [
+    {
+      "stem": "the-nucleus-institute-helping-innovative-tech-flourish-in-utah",
+      "title": "The Nucleus Institute: Helping Innovative Tech Flourish in Utah",
+      "primary_url": "https://www.nucleusutah.org/",
+      "path": "startup-utah-content/resources/the-nucleus-institute-helping-innovative-tech-flourish-in-utah.md"
+    },
+    {
+      "stem": "the-office-of-regulatory-relief-helping-utah-businesses-overcome-burdensome-regulations",
+      "title": "Office of Regulatory Relief: Helping Utahns Overcome Burdensome Regulations",
+      "primary_url": "https://business.utah.gov/regulatory-relief/",
+      "path": "startup-utah-content/state-programs/the-office-of-regulatory-relief-helping-utah-businesses-overcome-burdensome-regulations.md"
+    },
+    {
+      "stem": "economic-assistance-grant-makes-available-4-5m-for-industry-and-community-development",
+      "title": "Economic Assistance Grant Makes Available $4.5M for Industry and Community Development",
+      "primary_url": "https://business.utah.gov/grants/economic-assistance-grant/",
+      "path": "startup-utah-content/funding/economic-assistance-grant-makes-available-4-5m-for-industry-and-community-development.md"
+    },
+    {
+      "stem": "utah-supports-economic-growth-with-post-performance-tax-program",
+      "title": "Utah Supports Economic Growth with Post-Performance Tax Program",
+      "primary_url": "https://business.utah.gov/business-recruitment/",
+      "path": "startup-utah-content/funding/utah-supports-economic-growth-with-post-performance-tax-program.md"
+    },
+    {
+      "stem": "utah-startups-apply-now-for-walmarts-open-call-pitch-competition",
+      "title": "Utah Startups: Apply Now for Walmart\u2019s Open Call Pitch Competition",
+      "primary_url": "https://corporate.walmart.com/suppliers/investing-in-american-jobs/events/annual-open-call",
+      "path": "startup-utah-content/funding/utah-startups-apply-now-for-walmarts-open-call-pitch-competition.md"
+    },
+    {
+      "stem": "two-utah-startups-named-winners-in-morgan-stanleys-pitch-competition",
+      "title": "Two Utah Startups Named Winners in Morgan Stanley\u2019s Pitch Competition",
+      "primary_url": "https://www.morganstanley.com/",
+      "path": "startup-utah-content/funding/two-utah-startups-named-winners-in-morgan-stanleys-pitch-competition.md"
+    },
+    {
+      "stem": "university-of-utah-supports-innovation-for-remote-and-austere-areas",
+      "title": "University of Utah Supports Innovation for Remote and Austere Areas",
+      "primary_url": "https://utah.infoready4.com/#freeformCompetitionDetail/1925709:~:text=Grand%20Challenge%20Format",
+      "path": "startup-utah-content/resources/university-of-utah-supports-innovation-for-remote-and-austere-areas.md"
+    },
+    {
+      "stem": "level-up-your-career-with-uvus-professional-education-courses",
+      "title": "Level Up Your Career with UVU\u2019s Professional Education Courses",
+      "primary_url": "https://www.uvu.edu/ce/professional-education/index.html",
+      "path": "startup-utah-content/resources/level-up-your-career-with-uvus-professional-education-courses.md"
+    },
+    {
+      "stem": "sba-certifications-that-could-fast-track-your-startups-growth",
+      "title": "SBA Certifications That Could Fast-Track Your Startup\u2019s Growth",
+      "primary_url": "https://certifications.sba.gov/",
+      "path": "startup-utah-content/resources/sba-certifications-that-could-fast-track-your-startups-growth.md"
+    },
+    {
+      "stem": "business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene",
+      "title": "Business Elevated Podcast Showcases Utah\u2019s Thriving Entrepreneurial Scene",
+      "primary_url": "https://business.utah.gov/category/podcast/",
+      "path": "startup-utah-content/resources/business-elevated-podcast-showcases-utahs-thriving-entrepreneurial-scene.md"
+    },
+    {
+      "stem": "helping-utah-startups-thrive-the-power-of-incubators-and-accelerators",
+      "title": "Helping Utah Startups Thrive: The Power of Incubators and Accelerators",
+      "primary_url": "",
+      "path": "startup-utah-content/resources/helping-utah-startups-thrive-the-power-of-incubators-and-accelerators.md"
+    }
+  ],
+  "maybe": [],
+  "exists": [
+    {
+      "stem": "sbir-and-sttr-programs-grant-funding-to-innovative-deep-tech-products",
+      "title": "SBIR and STTR Programs Grant Funding To Innovative Deep-Tech Products",
+      "primary_url": "https://nucleusutah.org/",
+      "evidence": [
+        "name='Utah Innovation Center' \u2192 #2654 Utah Innovation Center"
+      ]
+    },
+    {
+      "stem": "ihub-utah-empowering-the-next-generation-of-entrepreneurs",
+      "title": "iHub Utah: Empowering the Next Generation of Entrepreneurs",
+      "primary_url": "https://www.ihubutah.org/",
+      "evidence": [
+        "name='iHub' \u2192 #2620 iHub",
+        "url-match \u2192 #2620 iHub"
+      ]
+    },
+    {
+      "stem": "ihubs-ase-program-is-turning-student-ambition-into-viable-ventures",
+      "title": "iHub\u2019s ASE Program Is Turning Student Ambition Into Viable Ventures",
+      "primary_url": "https://www.ihubutah.org/",
+      "evidence": [
+        "name='iHub' \u2192 #2620 iHub",
+        "url-match \u2192 #2620 iHub"
+      ]
+    },
+    {
+      "stem": "baugh-family-donation-fuels-next-generation-of-entrepreneurs-at-uvu",
+      "title": "Baugh Family Donation Fuels Next Generation of Entrepreneurs at UVU",
+      "primary_url": "https://www.uvu.edu/woodbury/entrepreneurship/about/index.html",
+      "evidence": [
+        "name='Woodbury' \u2192 #2554 Utah Valley University (UVU) E",
+        "url-match \u2192 #2554 Utah Valley University (UVU) E"
+      ]
+    },
+    {
+      "stem": "how-the-lassonde-entrepreneur-institute-is-driving-student-innovation-in-utah",
+      "title": "How the Lassonde Entrepreneur Institute Is Driving Student Innovation in Utah",
+      "primary_url": "https://eccles.utah.edu/",
+      "evidence": [
+        "name='Lassonde Entrepreneur' \u2192 #2582 University of Utah Lassonde En"
+      ]
+    },
+    {
+      "stem": "empowering-utah-entrepreneurs-with-sbdc-entrepreneur-academy",
+      "title": "Empowering Utah Entrepreneurs with SBDC Entrepreneur Academy",
+      "primary_url": "https://online.utahsbdc.org/home",
+      "evidence": [
+        "name='Small Business Development Center' \u2192 #2647 Small Business Development Cen",
+        "name='Small Business Development Center' \u2192 #2723 Emery County Economic Developm"
+      ]
+    },
+    {
+      "stem": "locally-grown-locally-owned-the-power-of-utahs-farmers-markets",
+      "title": "Locally Grown, Locally Owned: The Power of Utah\u2019s Farmers Markets",
+      "primary_url": "https://www.slcfarmersmarket.org/about",
+      "evidence": [
+        "name='Farmers Market' \u2192 #2683 St George Downtown Farmers Mar",
+        "name='Farmers Market' \u2192 #2684 Utah Farmers Market Network"
+      ]
+    },
+    {
+      "stem": "usbci-bridging-the-gap-between-banks-and-disadvantaged-communities",
+      "title": "USBCI: Bridging the Gap Between Accessible Funding and Disadvantaged Communities",
+      "primary_url": "https://business.utah.gov/usbci/",
+      "evidence": [
+        "name='Utah Small Business Credit' \u2192 #2592 Utah Small Business Credit Ini",
+        "url-match \u2192 #2592 Utah Small Business Credit Ini"
+      ]
+    },
+    {
+      "stem": "goeo-providing-startup-assistance-for-any-industry-at-every-stage",
+      "title": "GOEO: Providing Startup Assistance for Any Industry at Every Stage",
+      "primary_url": "https://business.utah.gov/accolades/",
+      "evidence": [
+        "name='Governor's Office of Economic Opportunity' \u2192 #2592 Utah Small Business Credit Ini",
+        "name='Governor's Office of Economic Opportunity' \u2192 #2649 StartUp State"
+      ]
+    },
+    {
+      "stem": "pitch-your-startup-at-the-one-utah-summit-with-50k-in-cash-prizes",
+      "title": "Pitch Your Startup at the One Utah Summit With $50K in Cash Prizes",
+      "primary_url": "https://www.suu.edu/business/entrepreneurship/state-bank-business-challenge/rules-and-entry.html",
+      "evidence": [
+        "name='One Utah Summit' \u2192 #2629 EVENT: One Utah Summit",
+        "url-match \u2192 #2555 Southern Utah University (SUU)"
+      ]
+    },
+    {
+      "stem": "utah-center-for-rural-development-fuels-economic-growth-across-the-state",
+      "title": "Utah Center for Rural Development Fuels Economic Growth Across the State",
+      "primary_url": "http://business.utah.gov/rural",
+      "evidence": [
+        "name='Utah Center for Rural Development' \u2192 #2682 Utah Center for Rural Developm"
+      ]
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
+import { guideCategoryValidator } from './guideValidators';
 import {
   facetTypeValidator,
   resourceCategoryValidator,
@@ -172,6 +173,13 @@ export default defineSchema({
     /** Free-form-ish secondary descriptors. */
     tags: v.array(v.string()),
     stageTags: v.array(v.string()),
+    /**
+     * Long-form markdown body — populated by P2.3 enrichment for rows that
+     * have a startup.utah.gov article behind them. Optional; CSV-only rows
+     * have no body. Indexed via `searchText` (lexical), NOT via embeddings —
+     * see comment in `embeddingSourceText` for why.
+     */
+    body: v.optional(v.string()),
     searchText: v.string(),
     status: resourceStatusValidator,
     submissionId: v.optional(v.id('resourceSubmissions')),
@@ -187,6 +195,59 @@ export default defineSchema({
       filterFields: ['status'],
       staged: false,
     }),
+
+  /**
+   * Educational/how-to content — articles and the 19-step founder journey.
+   * Distinct from `resources` (which are programs you apply to or use):
+   * a guide is *the content itself*, not a pointer to a program. The agent
+   * cites guides as `/guides/<slug>` and treats them as "further reading"
+   * separately from program citations.
+   *
+   * No embeddings table — retrieval is lexical-only across both collections.
+   */
+  guides: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    description: v.string(),
+    /** Required — guides are the content. Always populated at insert. */
+    body: v.string(),
+    /** Original startup.utah.gov article URL — for "Read original" attribution. */
+    sourceUrl: v.string(),
+    category: guideCategoryValidator,
+    tags: v.array(v.string()),
+    stageTags: v.array(v.string()),
+    /** 1–19 for journey-step guides, null otherwise. Drives ordering on the journey view. */
+    journeyStep: v.optional(v.number()),
+    searchText: v.string(),
+    status: resourceStatusValidator,
+    sourceId: v.optional(v.string()),
+    lastSyncedAt: v.optional(v.number()),
+  })
+    .index('by_slug', ['slug'])
+    .index('by_status', ['status'])
+    .index('by_sourceId', ['sourceId'])
+    .index('by_category', ['category', 'status'])
+    .index('by_journeyStep', ['journeyStep', 'status'])
+    .searchIndex('search_guides', {
+      searchField: 'searchText',
+      filterFields: ['status'],
+      staged: false,
+    }),
+
+  /**
+   * Facet rows for guides — parallel to resourceFacets. Lighter facet set:
+   * just category, tag, and stage. No community/industry/location since
+   * guides are educational, not program-bound.
+   */
+  guideFacets: defineTable({
+    guideId: v.id('guides'),
+    facetType: v.union(v.literal('category'), v.literal('tag'), v.literal('stage')),
+    value: v.string(),
+    status: resourceStatusValidator,
+  })
+    .index('by_guideId', ['guideId'])
+    .index('by_facetType_and_status', ['facetType', 'status'])
+    .index('by_facetType_and_value_and_status', ['facetType', 'value', 'status']),
 
   resourceFacets: defineTable({
     resourceId: v.id('resources'),

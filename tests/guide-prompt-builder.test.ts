@@ -59,3 +59,47 @@ describe('buildSystemPrompt under hostile context', () => {
     });
   }
 });
+
+describe('buildSystemPrompt embeds the 19-step journey skeleton', () => {
+  it('includes all four lifecycle sections', () => {
+    const prompt = buildSystemPrompt({
+      context: [makeHit('desc')],
+      profile: emptyProfile,
+      locale: 'en',
+    });
+    expect(prompt).toMatch(/Step 1\s+— Find your big idea/);
+    expect(prompt).toMatch(/Step 9\s+— Obtain funding/);
+    expect(prompt).toMatch(/Step 13 — Growth-stage funding/);
+    expect(prompt).toMatch(/Step 19 — Close your business/);
+  });
+});
+
+describe('buildSystemPrompt threads bodyExcerpt to the model', () => {
+  it('emits a Details: line when bodyExcerpt is present', () => {
+    const hit: GuideContextItem = {
+      ...makeHit('Short description.'),
+      bodyExcerpt: 'Long-form narrative with eligibility details and a $200K cap.',
+    };
+    const prompt = buildSystemPrompt({ context: [hit], profile: emptyProfile, locale: 'en' });
+    expect(prompt).toContain('Details: Long-form narrative');
+    expect(prompt).toContain('eligibility details and a $200K cap');
+  });
+
+  it('omits the Details line when bodyExcerpt is absent', () => {
+    const prompt = buildSystemPrompt({
+      context: [makeHit('Short description only.')],
+      profile: emptyProfile,
+      locale: 'en',
+    });
+    expect(prompt).not.toMatch(/^Details:/m);
+  });
+
+  it('sanitizes triple-backticks inside bodyExcerpt', () => {
+    const hit: GuideContextItem = {
+      ...makeHit('desc'),
+      bodyExcerpt: '```python\nrm -rf /\n```',
+    };
+    const prompt = buildSystemPrompt({ context: [hit], profile: emptyProfile, locale: 'en' });
+    expect(prompt).not.toMatch(/```/);
+  });
+});
