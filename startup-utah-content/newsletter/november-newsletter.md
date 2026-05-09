@@ -1,0 +1,81 @@
+---
+title: "November Newsletter"
+url: https://startup.utah.gov/november-newsletter/
+category: newsletter
+all_categories: ["archived", "news", "newsletter"]
+type: post
+date: 2025-11-07T10:28:49
+modified: 2026-04-13T14:11:30
+---
+
+# November Newsletter
+
+Source: <https://startup.utah.gov/november-newsletter/>
+
+![](https://startup.utah.gov/wp-content/uploads/hannah-busing-Zyx1bK9mqmA-unsplash-1024x568.jpg)
+
+**How Industry Organizations Power Utah’s Entrepreneurs**
+
+Across Utah, industry organizations are helping entrepreneurs find their place — and their people — in the state’s growing innovation economy. From 47G’s work uniting aerospace and manufacturing to Silicon Slopes’ support for tech founders, these networks connect businesses with the mentors, resources, and advocacy they need to grow. Whether building software, growing crops, or advancing new technologies, Utah’s industry associations help turn connections into opportunity.
+
+[Read More](https://startup.utah.gov/support-your-business-with-industry-organizations/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.13.02 AM-1024x165.png)
+
+**Purifry — Cleaner, Safer Kitchens for Restaurants**
+
+After years in the restaurant industry, Stefano Gatto witnessed firsthand how fryer maintenance and oil disposal generated waste and posed safety risks. That insight led to Purifry, a system that collects used cooking oil directly from the fryer, eliminates the need for outdoor barrels, reduces waste, and improves food quality. Gatto’s story serves as a reminder that entrepreneurship thrives on grit, adaptability, and a drive to make a meaningful impact.
+
+[Read More](https://startup.utah.gov/featured-founders-streamlining-work-management-and-keeping-kitchens-clean/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.47 AM-1024x167.png)
+
+**Funding, Support, and Momentum for Utah Startups**
+
+Utah’s startup ecosystem thrives on collaboration, and the Governor’s Office of Economic Opportunity helps founders turn ideas into impact. Through programs that expand access to capital, foster innovation, and strengthen rural economies, GOEO gives entrepreneurs the tools to start, scale, and succeed. From financing partnerships and rural grants to regulatory innovation and mentorship, each initiative helps power Utah’s growing innovation economy. In Utah, starting up isn’t just about launching a company — it’s about building the future together.
+
+[Read More](https://startup.utah.gov/goeo-providing-startup-assistance-for-any-industry-at-every-stage/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/NewsletterHeader_FundingOpp_2_FIN-1-1024x170.jpg)
+
+Utah is home to a wide range of grants and programs that connect entrepreneurs, startups, and nonprofits with the funding they need to grow and succeed. Whether launching a new venture or expanding your impact, explore what’s available:
+
+[**Rural Employment Development Incentive**](https://business.utah.gov/rural/redi/)
+
+Application Due Nov. 15, 2025
+
+![](https://startup.utah.gov/wp-content/uploads/unnamed-4-1024x170.jpg)
+
+**October Winners**
+
+From Moab to Vernal, Utah’s newest entrepreneurs are turning ideas into action. Congratulations to last month’s Get Started winners: Aritoku by MoabMall, Honey Bee Cookies, TenX Teaching, True Origin Skincare, Vernal Vineyard, and Wayward Shades.
+
+Learn about each winner and join Utah’s vibrant startup community.
+
+[Read More](https://startup.utah.gov/meet-octobers-get-started-business-idea-challenge-winners/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.32 AM-1024x169.png)
+
+  * [Helping Utah Startups Thrive: The Power of Incubators and Accelerators](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuzHd-2FDBHnBZP1-2BxJ9m31AdQhCdkafXoPFl-2FxDVEIq7vKQF6zrnZE2TRfvR2Dp8b4w-2BwIA-2BFyRrqvuq3X729JDVTRAZD05stmorf8WEr35BpBA-3D-3DiwGW_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU-2BGqCsSxbpuwh8I-2Bo4XOzFt9Oyd-2FxSCeZf4BBaxZKVzdj3UwxXu1WXcRq-2B-2BT149njPOtypb2XegnoIJi0HzhVwnDNKsXGiklukf8fTx7fxcd-2FP7Tn7IJ3GUqnKNgQWYqP19Wc62-2FyICtNoyoKWOx7-2F0AZaaUnYoffJJdlKNFbipu6Qrihr3tQbqSQIZJL8uLAHD-2BsaLvg5PERQwObTjMDWs-3D)
+  * [Meet October’s Get Started: Business Idea Challenge Winners](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuwMGgrkfqtqn8ywv4NMvsO1uoR-2BlZHKMZtsb5U8cJ15ti5ZBBb4i3Z1v5odf8TSfi5ObHlokB82SH26es67hXa4jv40_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU-2F66YwyDq3cBaI-2BGFtFTTQVK8yHMeL9WQJQDtpZPIchpf8g9NA1qpBQTJxXcXT0gHYTp-2BNhHrmBk76sKDwd0mdT8L20xQJfyTldp7iIMm73lUF3TDOEkNmUh0FDcs6l7wgJz-2BXBQ9fkksLOc2u4aRZQrHyD1DZYRzUZ9hm0Vyj0AOcJZQKHqo5PvOp3-2B9UjjcDB0F-2FG-2B0rEIjO3DeY5WRtM-3D)
+  * [Featured Founders: Empathetic Marketing and Supporting Mental Health With Hiking](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuxISQ16L4mAfz7EIekJdGd-2BPx1Sc-2FSKlLZsizWxNxG8y2WQas0kyTJGyln58xO2XBsEvIdARRS5BCOErnSgmTTgFYXJAwjlikpDrfjSC-2FYeTZwboHw2p8WNENmlQSSns-2BM-3Do8cr_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU-2FoviR3YIz4FwYDQmd2C-2F8xTY4GeCyNo3Dn9RtG6uNvbeSbk9prKwLkRKWGNt-2BUVFXStg6nEGsQpDcyTcx2OFZYyZrjB6Xh9Le3QudVPSs7WCjPI53NU0RPsAzYC3Q23Clb4wTy7M-2Fgp1WPpl3tui1RbPJYKzyjfpefSiquSTUN5-2FkC-2BSFbXKYV0mR9b3lvzbIhNCyPUxKDR7U6VQ966K9M-3D)
+  * [Support Your Business With Industry Organizations](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuzN2ncLUf07QN0X6yTfjSbOSugMnaedGRQfLxEVu8w-2BnZlrXVoi40OGdTpOa6uWhk6a8ZB2VBmyaVanH2rXiZmhumT8_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU292ZIjGAvdl08G07jRnAp3zbMlquqzLL90FeRULyvWFk-2BQxAY1ATkFdbWIcEFjJLdrGMuzrkKs8PGKpZLMh6TbRGj59jOcoS8-2BI7X7CKSzU3i8gsXg5ZvZk08BK9gVPzgbOHAaZRpGT6MNYP7Xi0jUkRjmvCZ6Ug-2BnxySoMT0laKTead4lqFBVC86F1NmDhvwY3-2F8hCAtuM0qurUG9OZ-2BY-3D)
+  * ICYMI: [October’s Newsletter](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuyf-2F7KrvcbwVVMQq2QnhGcdcd2i5VD5JOOU9MBAo8p-2FKg-3D-3DLNCV_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU5at-2F2BLNmF7C98TKvnAJudxr0hzmOo0ZuMwyi8uV3tOsU-2F64nst02ZRdvvGQO-2BwVDHUZ-2Fw4uCcYM-2FPy6OzG-2Fas9X5vjFvTXAZKSlsEMjsA2-2FHTHylPIw98Dx-2Bt3L1oGD2H2OxmzxFAn1J-2BZT1Ic8BY6pEyiM4jW1FcGv4r3IOixaZ6ysjOj-2BILRPuQuIbKNlLIsk3fflO-2BTiigVSEDsI1w-3D)
+
+
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.13.36 AM-1-1024x281.png)
+
+Thank you to [SunPeak Digital](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSHclVU9o7xQfetsdY7c7-2BI3GE8Cx20kIKE6wvpvu7yAkIkVA_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfUxDdPPtvkl06c3Q3stiIz7oGUHy4vJw11JqEbOY-2FPA0bpBzoPe1HPBS16Ysyh8n0lGQ6OKRaTrKZrTfldMJ87-2BueQ799pP67wRSraDv-2FTJOx1mARGMWgksVjgLXW6xc5odwd3JZ-2FYeuB4cG0-2B-2Febrp3k-2BEqjuXRBKu06RZKg6tq5Aofb3s-2BXEC0lnBXti4-2FB72TEB-2FDEsA1h-2F5gpM6MMSh8-3D) for being a part of Utah’s startup community. [Share your story](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSIdlyHF5-2FsrWdCPLgBYjiRqryLPVQnQMjI-2F41Vm66-2BKufABppXfUsO6oAn7cQlOxu6dhxoryQR6uwxSunBwrufZkBkDKCEawoD074pr5gIcL7dar8Ohg2LpgcZFCf6Zbyw-3D-3DB7v9_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU3oX6MXo2-2BodZ6ObKEouSHPax61joCQVKrdiM2Cdn8LlXlNoYhAK4aqORJhDBL9tJpH1x4UQCmDUzlMDzOPHwt-2FcNKgyK7dXGNxzAl7dFlUuB5GzTsud2WisuoStO137c0B7e-2BiYKkM1Tc6hqoMBTuIoZN-2Bb6KK93y4-2FVmaqX-2FjeFRELaEiVWOO8f7Gcej-2Fe86uxjvu5aZzNle7xjvqhwaE-3D) with us for the chance to have your company featured. 
+
+Want this sent right to your inbox? [Subscribe](https://cdn.forms-content.sg-form.com/e0698968-5266-11ee-86fd-fece7756f525) to the Startup State Initiative newsletter so you can receive monthly updates on entrepreneur resources, tips, events, and more.

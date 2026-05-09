@@ -1,0 +1,92 @@
+---
+title: "January 2026 Newsletter"
+url: https://startup.utah.gov/january-2026-newsletter/
+category: newsletter
+all_categories: ["archived", "news", "newsletter"]
+type: post
+date: 2026-01-02T10:00:00
+modified: 2026-04-13T14:11:30
+---
+
+# January 2026 Newsletter
+
+Source: <https://startup.utah.gov/january-2026-newsletter/>
+
+![](https://startup.utah.gov/wp-content/uploads/4-2-1024x478.png)
+
+**Expand Your Network in Southern Utah**
+
+A new recurring event is coming to Utah. Launching among the red rocks of St. George, Builder Day will bring together some of the state’s top business leaders to support Southern Utah founders with practical insights, meaningful connections, potential funding, and fresh perspectives on venture capital.
+
+The packed day of programming will also include the return of the Startup State Initiative’s [Get Started: Business Idea Challenge](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuxlWuFIPi9FkkuC5bweKjdFmvrgcMQ0Vtj-2BiGiXnYCeBw-3D-3Dppgu_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPp6kRmstSOaXzrPwyvNAS8RlL7-2FoLoKKDcnrb3Hsu7GYjW6Trg2kJn9efGFpo-2BjAhHVZUBvcSONtuRAwsV-2FXe4AQS7rYS54WKiB5eYIAo4LSq2v0Tnya8FVyWhUUU5p7XGl8rcwuVw70ZcB4PJYnyjqlbln8GoMrKUW7W9eOJoxrvIU-2FDYLHxT6Yp1iGv6KdA), offering funding to help ideas gain initial traction. Hosted by the Nucleus Institute in partnership with the Governor’s Office of Economic Opportunity (GOEO), Builder Day is a must-attend event for entrepreneurs and builders in southern Utah.
+
+[Learn More](https://luma.com/alv03x5l)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.47 AM-1024x167.png)
+
+**The Nucleus Institute**
+
+Utah’s rise as a national tech and innovation hub is being accelerated by [The Nucleus Institute](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSOSVUsZKMVN-2F0-2FnqgcfklJtMmAO8G-2FKOROFIpI3faaWF1t4j_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPI9Sop6EafkISQ2S98UPRdwOxFfb-2BbQ6ttaPUhIqgwLH-2FY7OKbzfGWU62EP4dPlenSKWkeFM1voUgE-2Fn59N8W8N9tT1mqM9mKQAfkXBbWKSknne9ToFmb8n1F5zywBNvVRkW8t2vkps2jvnkeyucVY7NTbrehQkYH-2F8lHS9kHYZIFbyN3H0tW1lmQyPp30pWK), a state-backed initiative that turns ideas generated in Utah into real-world impact. The Institute launched earlier this year to convene universities, entrepreneurs, and Utah leaders in a shared effort to advance deep-tech innovation and long-term economic growth. Through its five key pillars of connections, commercialization, funding, solutions, and spaces, Nucleus helps innovators move from concept to company.
+
+Programs like Nucleus ProLab and Nucleus Catalysts strengthen the state’s talent and collaboration pipeline, while the [Nucleus Fund](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSCJzVU0s4pv9hrU8cTOhs55dMKOP14QJUcI73mZtFZ1cLMJM_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPsUplTsTYKcTREvftz696tLOhSiFPW8VyRKWrVRw57hliy9HOVsZeH5kyhF3QgFtrY8YdeK6ZKsahLlhTXg5Jsq5fpNd2-2FMfZpD2Otwa2F59lfT4T-2F6hDC-2Bb4xNz-2Ft8MbsKuIlbtixoSraU6TmdXEf9RWKxkvpfOR2cyWrNsJiTTIIjZVg0ldI8mo2b-2B1ps4R) and [Nucleus Grow](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSOSVUsZKMVN-2F0-2FnqgcfklJsbxpZLde8mTAi3M3yX9FF4pYJy_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPRqZXz2wMzMNqtvcqAD-2F5bt-2FRRcQts4hUcDgP0I-2F1f1BOVZDG-2Fay2SlSvruoXFUgbu4RDUtd0BhDRb10-2BoIFa09MuWbjP53RP4cvuu4SgSRqgMrAb9YrdcjvKRQe06pq-2Bydg-2BtCuu258XK44LNBLWu-2BkcWx0vW7ZDA1VlFUaPT8-2BkwIc3yHuIB3srfA9SNg9X) close early-stage funding gaps and support deep-tech founders through commercialization and SBIR/STTR readiness. Together, these efforts mark a pivotal moment for Utah, positioning the state for its next chapter of innovation-led economic growth.
+
+[Read More](https://startup.utah.gov/the-nucleus-institute-helping-innovative-tech-flourish-in-utah/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.47 AM-1024x167.png)
+
+**FailedFest**
+
+[FailedFest](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSPF2xjyMj63eQkmGq2J-2BvVr3EzuhNawXnI-2BkBN-2FpcfgFimsk_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPUrmt5P-2FpiArziptBZh8KCqXLmnyhqeNufI74lUnPBvsWRMaAfsYy43L5vckrcBxA7E4LfVOu4xDtivX4cfIz8jXPiBIG7NWAyJsxFMUZnxteZuuUhI8YAXZug1-2FwKFY5lDZQKAtGRlczUqMB6kklNJlm0V5DdTa1Ch5zzhc-2FQiJ7Ntgsz730p1uNEAIBzopW) is flipping the script on entrepreneurship by celebrating the lessons that come from what didn’t work. Held on Jan. 9, 2026, the event gathers founders, creatives, and operators for raw “Dead Talks,” thoughtful panels, and immersive activations that unpack the real stories behind entrepreneurial setbacks.
+
+With workshops, networking, and plenty of honesty, FailedFest turns failure from a taboo into a tool — and proves that every misstep can move you closer to what works.
+
+[Read More](https://startup.utah.gov/celebrate-failing-forward-at-ivie-leagues-upcoming-event/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/NewsletterHeader_FundingOpp_2_FIN-1-1024x170.jpg)
+
+Utah is home to a wide range of grants and programs that connect entrepreneurs, startups, and nonprofits with the funding they need to grow and succeed. Whether launching a new venture or expanding your impact, explore what’s available:
+
+[**[**Everyday Entrepreneur Pitch Competition**](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSBJqq9-2FkS-2FwUsSul7b5bUq486lECFw1SH8UcQ4RZJ4ggC32duCHG9OUNkxu2n3FIixF9MvP4Vkqs-2BXNo5SkKKDI-3D9WT1_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPGXYtlzJikhGmdAhl5WF3k15ZRntizg-2BtZ-2FIu1EeHRaAH0tFWAoehCKrpO88B6WSPkyVQEQDVCtfU-2F6reowceXf0nbSvvi8AshTjQ-2BzCu47OXLW3vLdU6FBU7BXuPkTX70099ZFAyH4hduJ-2B-2FG-2F9J2o68KFZx8UtC2Kc9NY7M3LCVRoGUZC4pfJIyOEKBb2Z2)**](https://business.utah.gov/rural/redi/)
+
+Application Due Jan. 9, 2026
+
+As part of its mission to provide access to entrepreneurial education and funding for rural communities, the Everyday Entrepreneur Program is gearing up for its upcoming pitch competition. With $30,000 in prizes on the line, this is a great opportunity to secure early capital and validate business concepts.
+
+[Read More](https://startup.utah.gov/acquire-early-capital-with-the-everyday-entrepreneur-pitch-competition/)
+
+![](https://startup.utah.gov/wp-content/uploads/unnamed-4-1024x170.jpg)
+
+**Get Started Update**
+
+Do you have a business idea you’re ready to bring to life? Utah’s [Get Started Business Idea Challenge](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuxlWuFIPi9FkkuC5bweKjdFjkWvZudcg49GygAchz8khA-3D-3DiKqq_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPp6kRmstSOaXzrPwyvNAS8a-2FP-2FNciJ78Pzsw1fSURYifpbvd63pN92kLEBCsezjuhpd1edsbL88xF-2Fd2sRv4M3BDglnajJ7jUGlD4VZEDtRyjh7quqgqiVPpGkRrso2IjH9sq-2BpQL0WdUfHU-2FXeSRsBrw1s1mZnxer5BTBKGuEsQxGTkI8JLuwere5bGq2WtS) is back with an exciting new format designed to better support aspiring entrepreneurs.
+
+This revamped version moves pitches from remote to in-person, creating stronger connections, richer feedback, and a more dynamic experience overall. Applications are now open, with participants selected based on proximity to each event, kicking off with Builder Day in St. George.
+
+In the meantime, read about past winners and learn how you can join Utah’s dynamic startup community.
+
+[Read More](https://startup.utah.gov/category/get-started/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.32 AM-1024x169.png)
+
+  * [Acquire Early Capital With the Everyday Entrepreneur Pitch Competition](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuzDhccRZCwUKQKppGC-2FqOgcUTy4JYkUT1LBap-2BzztwYvHtXjOk5ZWZEsIdTvGyZsk-2BxM1HncZEHsKX3uqWm2Bsk5N2c0ZSmifehdkNUGZy6fw-3D-3DuaaG_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPp6kRmstSOaXzrPwyvNAS8TiVsHLetxBLkPVx3fHaSM0-2FtajMY1idmd1TeuNwHf65bZYA1vo-2BQjhi3Lz-2FBD07f-2BC9g6JAZSHiqWW8fDw5DER-2BsnDe2HMPfpbA-2Fq5yKwiIgOjGwzT1-2BmTC0eqo7h9hNe-2BlKGlaqt66-2BrDM499SkxVcpSNvkEXXp-2FwP4TOF9WMf)
+  * [Celebrate Failing Forward at Ivie League’s Upcoming Event](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuxoSAA2j6bLG3cowvRLUg83QaAG-2F9i31ciITxLHTzmzPh-2FgSUZ-2B-2FdcmSoGdWvHRIj98sL8BlQ8DNxLhmR1k-2BDRMtCAg_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPp6kRmstSOaXzrPwyvNAS8V-2BSIZZCy3bsT-2BkS0JmPY9SyWYndNBha9mImridRyC2wdtGy9Meligs92X6ZYhDOj-2BDW-2BGn-2F1R4jJY6-2F5by1PyverOBP-2Bllla4l1E9wR-2Fwl0ZUrzucxW7CMBSMpQEWbG-2FsCAq4VL9-2BLGrBb9xA4bUWNyniRL5MI-2FizxaZiE8mvLH)
+  * [The Nucleus Institute: Helping Innovative Tech Flourish in Utah](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuzWrlBff7D-2B-2FBTXnzWisvNyC0A2-2B2hoc-2FIoguigaJ9ADIRqgYklbJok-2B85f2arwP48L7F9kEBmqsgEBXKq7x96uY5eMfItnQBZ1svk69B1mGg-3D-3D8Eer_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPp6kRmstSOaXzrPwyvNAS8e3UmsI3eGw5-2F3EsHkdkiWOHBYYDS9P9xkxSVu0zDGrcd-2FhimRJ76jqmrjyymFRJZihm9wgHcDCYNy20kz1sVUGTUZEEv3gmH5CoFJyqxaPXK2mJJ-2BQv1dKPsse4hf-2BJoT1BvJCbqJKFHtYCKj-2FSqzkd-2BqiXEQbLFvsALEkdhoVx)
+  * ICYMI: [December Newsletter](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuxjlq3bC1ay-2BzY-2BbvbXu8pudEeQbmOPwCMvrnvsHkZXXQ-3D-3D1dLl_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPp6kRmstSOaXzrPwyvNAS8V2VptWJK1TPqE6da55x9mpz-2Bn4hV869zynvm-2BKaRRnupgGsF9B1b6WXu-2F6rqlvnET-2Ff6bHip7SzMbmnX-2BSLT6Ej3-2FWiaBQt4-2B2n4amW7ka68g-2BILJDSkhUk-2FgBPTpe8JSdkkxTcvFc7idvfhvunXqxepMqkomQEDPwtF-2BxbQtEh)
+
+
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.13.36 AM-1-1024x281.png)
+
+Thank you to [Musicbuff Inc.](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSFA0ix3guFZpzRXijythVuM-3DvL18_IyWeEEL5Sut3L-2BBZ-2B-2FYmLjzDuiAlIt8XoBstm10p39GwqtgGFTmiEvsqQPSYPDKDgq5bI0vrlaqAHdFO4ct32ty7Zwpm8x220rjFtsvHxNgIuF5SKmEaIZ3eEC2clQpjOQOw3gv7PRIT4KxEClOjzdeKk0noCR5b1v5OjR0UPfYvtOtzKbKG5Sc8lL6xTGdKpZxLMrzQCvLoWPZWElagPjLnAPOPPUln3GyPLEAcjhgRujoV36FiLvHX1Il5sfeIw8q8ImGJJdM0yWMXAoVCnZ2uiLk3hOrL35hxjJPY8QlzsuGI8EdB43UEeXV-2FFb6rCENEEYXq1a5vzK5cqsdBJ-2Fx73gmUVPwDa4hlr2-2FBLGrPvADIaj18QDm-2FeoabSW6ReKFOt9zLNBgOMFN2BGiqs8dI473uL3RgbywwuVsEK60mbt6n2lUX1pDIapFymxSOb8TkImURUve52RlvxSP3v9lBChaKEvpcf5vxHYGe8SoCncRYr6gY-2FzZHGneExMLPts-2FknGR3dPIFVh3inMVsCJo11gGR3pr1llH6oXvPUfbYpfKy1B3wZKqUH-2F3U3zABh3-2F-2BlbzKDM3q4hKZq5ToszvBnTWStO-2BO-2B3nYfmFGWbMP5HRS3lcR-2B2BYi6EPMztwtL325Dey96a-2BY-2F5Q1yQCz9tdQ-2FzVo8SdRKqejegbMt-2FOIfbZU0XmvCcZ0SRSWEyH) for being a part of Utah’s startup community. Share your story with us for the chance to have your company featured.
+
+Want this sent right to your inbox? [Subscribe](https://cdn.forms-content.sg-form.com/e0698968-5266-11ee-86fd-fece7756f525) to the Startup State Initiative newsletter so you can receive monthly updates on entrepreneur resources, tips, events, and more.

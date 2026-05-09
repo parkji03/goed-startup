@@ -1,0 +1,33 @@
+# Company Spotlights
+
+Profiles of Utah-based companies and founders.
+
+_27 pages_
+
+- `2025-10-17` [Featured Founders: Empathetic Marketing and Supporting Mental Health With Hiking](./featured-founders-empathetic-marketing-and-supporting-mental-health-with-hiking.md) — [source](https://startup.utah.gov/featured-founders-empathetic-marketing-and-supporting-mental-health-with-hiking/)
+- `2025-09-25` [Featured Founders: Streamlining Work Management and Keeping Kitchens Clean](./featured-founders-streamlining-work-management-and-keeping-kitchens-clean.md) — [source](https://startup.utah.gov/featured-founders-streamlining-work-management-and-keeping-kitchens-clean/)
+- `2025-09-04` [Featured Founders: Neural Biocomputers and Streamlining Home Services](./founder-roundup-neural-biocomputers-and-streamlining-home-services.md) — [source](https://startup.utah.gov/founder-roundup-neural-biocomputers-and-streamlining-home-services/)
+- `2025-07-30` [July Founder Feature Spotlights](./july-founder-feature-spotlights.md) — [source](https://startup.utah.gov/july-founder-feature-spotlights/)
+- `2025-07-09` [PinPark\u2019s Mission To Make Parking More Efficient](./pinparks-mission-to-make-parking-more-efficient.md) — [source](https://startup.utah.gov/pinparks-mission-to-make-parking-more-efficient/)
+- `2025-07-03` [VirtuSpect Brings Efficiency and Accuracy to the Inspection Process](./virtuspect-brings-efficiency-and-accuracy-to-the-inspection-process.md) — [source](https://startup.utah.gov/virtuspect-brings-efficiency-and-accuracy-to-the-inspection-process/)
+- `2025-06-25` [ViewPoint Simulations: A Utah Professor\u2019s Mission To Redefine Learning](./viewpoint-simulations-a-utah-professors-mission-to-redefine-learning.md) — [source](https://startup.utah.gov/viewpoint-simulations-a-utah-professors-mission-to-redefine-learning/)
+- `2025-06-11` [How SandBar Turned a Beach Sport into a Year-Round Utah Business](./how-sandbar-turned-a-beach-sport-into-a-year-round-utah-business.md) — [source](https://startup.utah.gov/how-sandbar-turned-a-beach-sport-into-a-year-round-utah-business/)
+- `2025-05-29` [A Life for Seniors Is Helping Families Find the Right Care for Loved Ones](./a-life-for-seniors-is-helping-families-find-the-right-care-for-loved-ones.md) — [source](https://startup.utah.gov/a-life-for-seniors-is-helping-families-find-the-right-care-for-loved-ones/)
+- `2025-05-09` [SadieB\u2019s Journey From a Student\u2019s Passion to Nationwide Brand](./sadiebs-journey-from-a-students-passion-to-nationwide-brand.md) — [source](https://startup.utah.gov/sadiebs-journey-from-a-students-passion-to-nationwide-brand/)
+- `2025-04-30` [April Founder Feature Spotlights](./april-founder-feature-spotlights.md) — [source](https://startup.utah.gov/april-founder-feature-spotlights/)
+- `2025-04-23` [The Piano Place: Making More Than Musicians](./the-piano-place-making-more-than-musicians.md) — [source](https://startup.utah.gov/the-piano-place-making-more-than-musicians/)
+- `2025-04-03` [Anatomy Boxing: Building Strength, Confidence, and Community](./anatomy-boxing-building-strength-confidence-and-community.md) — [source](https://startup.utah.gov/anatomy-boxing-building-strength-confidence-and-community/)
+- `2025-03-26` [March Founder Feature Spotlights](./march-founder-feature-spotlights.md) — [source](https://startup.utah.gov/march-founder-feature-spotlights/)
+- `2025-03-19` [Savvy Productions\u2019 Award-Winning Success in Utah\u2019s Film Industry](./savvy-productions-award-winning-success-in-utahs-film-industry.md) — [source](https://startup.utah.gov/savvy-productions-award-winning-success-in-utahs-film-industry/)
+- `2025-02-26` [Sips Club: Protein and Veggies Made Fun](./sips-club-protein-and-veggies-made-fun.md) — [source](https://startup.utah.gov/sips-club-protein-and-veggies-made-fun/)
+- `2025-02-20` [February Founder Feature Spotlights](./february-founder-feature-spotlights.md) — [source](https://startup.utah.gov/february-founder-feature-spotlights/)
+- `2025-02-13` [How Sunshine Buns Grew From a Family Recipe to a Thriving Business](./how-sunshine-buns-grew-from-a-family-recipe-to-a-thriving-business.md) — [source](https://startup.utah.gov/how-sunshine-buns-grew-from-a-family-recipe-to-a-thriving-business/)
+- `2025-02-13` [Hale Centre Theatre: Building Community Culture and Economic Growth](./hale-centre-theatre-building-community-culture-and-economic-growth.md) — [source](https://startup.utah.gov/hale-centre-theatre-building-community-culture-and-economic-growth/)
+- `2025-02-06` [How Ovation\u2019s Feedback Strategy is Helping Restaurants Win and Keep Customers](./how-ovations-feedback-strategy-is-helping-restaurants-win-and-keep-customers.md) — [source](https://startup.utah.gov/how-ovations-feedback-strategy-is-helping-restaurants-win-and-keep-customers/)
+- `2025-01-09` [Food and Meat Co-Op: Turning a Family Need Into a Thriving Community](./food-and-meat-co-op-turning-a-family-necessity-into-a-thriving-community.md) — [source](https://startup.utah.gov/food-and-meat-co-op-turning-a-family-necessity-into-a-thriving-community/)
+- `2025-01-02` [North Star Recovery & Wellness \u2014 Building Purpose-Driven Change in Behavioral Health](./north-star-recovery-wellness-building-purpose-driven-change-in-behavioral-health.md) — [source](https://startup.utah.gov/north-star-recovery-wellness-building-purpose-driven-change-in-behavioral-health/)
+- `2024-12-12` [Revolutionizing Wallets: How Thread Wove Personality Into Practicality](./revolutionizing-wallets-how-thread-wove-personality-into-practicality.md) — [source](https://startup.utah.gov/revolutionizing-wallets-how-thread-wove-personality-into-practicality/)
+- `2024-12-04` [Utah-Based Strider Technologies Hits Milestone with Japan Expansion](./utah-based-strider-technologies-hits-milestone-with-japan-expansion.md) — [source](https://startup.utah.gov/utah-based-strider-technologies-hits-milestone-with-japan-expansion/)
+- `2024-11-14` [Zia Zensations Brings Unique Essential Oil Blends to Utah\u2019s Wellness Scene](./zia-zensations-brings-unique-essential-oil-blends-to-utahs-wellness-scene.md) — [source](https://startup.utah.gov/zia-zensations-brings-unique-essential-oil-blends-to-utahs-wellness-scene/)
+- `2024-11-14` [Consolve Empowers Startups To Grow Faster, Smarter, and With Confidence](./consolve-empowers-startups-to-grow-faster-smarter-and-with-confidence.md) — [source](https://startup.utah.gov/consolve-empowers-startups-to-grow-faster-smarter-and-with-confidence/)
+- `2024-10-10` [Utah\u2019s Hockey Heritage Meets Zamboni\u2019s Innovation](./utahs-hockey-heritage-meets-zambonis-innovation.md) — [source](https://startup.utah.gov/utahs-hockey-heritage-meets-zambonis-innovation/)

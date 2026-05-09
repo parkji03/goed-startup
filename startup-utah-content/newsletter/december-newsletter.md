@@ -1,0 +1,70 @@
+---
+title: "December Newsletter"
+url: https://startup.utah.gov/december-newsletter/
+category: newsletter
+all_categories: ["archived", "newsletter"]
+type: post
+date: 2025-12-05T10:02:14
+modified: 2026-04-13T14:11:30
+---
+
+# December Newsletter
+
+Source: <https://startup.utah.gov/december-newsletter/>
+
+![](https://startup.utah.gov/wp-content/uploads/vitaly-gariev-jPLvaZ06uy0-unsplash-1024x576.jpg)
+
+**The Power of Incubators and Accelerators**
+
+Utah’s startup ecosystem is strengthened by a network of incubators and accelerators that help founders move from idea to traction to scale. Incubators like iHub and The Mill guide early-stage entrepreneurs through the “big ideas stage” with mentorship, shared workspace, and hands-on workshops. Accelerators such as APEX and Altitude Lab help growth-stage startups scale with funding pathways, focused programming, and specialized resources. Together, these programs create critical on-ramps for Utah founders and fuel a stronger statewide innovation ecosystem.
+
+[Read More](https://startup.utah.gov/helping-utah-startups-thrive-the-power-of-incubators-and-accelerators/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.13.02 AM-1024x165.png)
+
+**SunPeak Digital**
+
+Founded by Charlie Jensen, SunPeak Digital was established to provide small businesses with a more transparent and affordable alternative to traditional marketing agencies. After running his own business and spending months testing outreach methods, Jensen created a scalable system grounded in client feedback. Inspired by an entrepreneurial family and his own early challenges, he focuses on leveling the playing field for local companies. Through his work, Jensen also encourages others in the marketing field to lead with openness and the belief that “there is enough business to go around.”
+
+[Read More](https://startup.utah.gov/featured-founders-empathetic-marketing-and-supporting-mental-health-with-hiking/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.47 AM-1024x167.png)
+
+**iHub: Turning Student Ambition Into Viable Ventures**
+
+The Innovation Hub of Utah offers early-stage founders free office space, access to capital, and mentorship from experienced leaders. Its Aspiring Student Entrepreneurs program pairs developed business ideas with motivated student founders. Through Shark Tank–style pitch events, students have already advanced dozens of ideas, showing how being in the right room at the right moment can create real opportunity.
+
+[Read More](https://startup.utah.gov/ihubs-ase-program-is-turning-student-ambition-into-viable-ventures/)
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/unnamed-4-1024x170.jpg)
+
+**Get Started Update**
+
+Get Started encourages prospective entrepreneurs to transform ideas into thriving businesses. As the next application window opens in January, founders have time to refine concepts and gather materials. In its first eight months, Get Started reached nearly all of Utah’s 29 counties and awarded $40,000 to early-stage entrepreneurs across the state. Many awardees are already finalizing their products and generating revenue.
+
+Visit the [Startup State Newsroom](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuzRpaVJcc-2BXHyB-2Br4n3G9NOxanAljzwW2JSYDiklM3q-2Fw-3D-3DMauM_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJZhtYOlzyuL4owinabBSOCIRu-2BTAa8NqJM8bzK7ULagOylv9QFy3t77NzudlzVI9J9G45qUUOdhbh0IKkfO7Yt5QuH8x-2Bp8gQBJwlrTXbqHytOJa-2Bj1WWJqRPHFH6fkw9Xty9jKE0-2B2Y-2Fe6IRkyfeNgw11UN3zwEZwj44vgdwWPYgYdU-2BAK6Sihl-2FFdFOJO3kPoHpqZlzYCsvj-2FQJ89Qv869GktXuuvX5FABxvMVTC3sIJR-2Fnu8oVXEIrsWIuOyeoPEaCredsgYCpxaQP0DEKGJ733TC56jdjQAgmr6XOnZf59RICWqemuPS7iUGmhh6PJtWcyfSl0-2Fspo5z3ObpNbOjD9oHev3wqeyX8NCJEE1vqFjZrWduWaVi92nLlZMceUc2g3SdHEYg6JABi4ZX1QmyBkgPhssOoqE5KkRSSdGwWZJE4QdQ6tGH9e2TXCLE-2B87evhQM6UwqgPa1JEo7ewcr3YQFzuCaquplCsoT0FVGOTLTmrjhC9uMDoklqFgtxT06w5bVdLTpEiUB6es11kAvOc5z8NIV4La-2FPgewqblbZpLUL-2FrNKUzcLf52MbSN-2BvyoeIJA-2BEZkg7Hq9GxKz0DoGHqrb76CcmFObQCd5a04OtAjgZc3avQ7chW0GGGJIxqHk-2FmcBh7xsAPyHK23OZCcOYINS174Alb8e877GK8M6Lb-2Flh3zqOTC2qCFZds9683Sm4vBU6lOMaYQtVHYLKxdaOPjJb1jlzcxd1ItMpLeP7k4xjnKur45QDsnCSnDARrlJzzT6nmvzUH2xHObEib1EncFR74P370G7CVG7pE-2BQK8f5prIt0uLbyYgzCbo9DxLCUBEEULdSUiXMhXiYNYV3XYEaRxH0-2B7OJpXwp0X-2B9iiRy0wXXpK-2Fnawyb-2F2YgDmXzlgGWxYZ-2BT1bNNeEMQI-3D) to see past awardees and learn what strong early-stage applications look like.
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.12.32 AM-1024x169.png)
+
+  * [iHub’s ASE Program Is Turning Student Ambition Into Viable Ventures](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuyFe05G2ECFpO4eOTp8wpp6HU4QPFm2wqBOY3vMlm4tyZvYcMjdfg4mvrGPbp-2FbLM0GXj6AhZsA6oIo2f7UA59TFeBA5eCJpgJKMw1636zyCA-3D-3D1MMg_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJZhtYOlzyuL4owinabBSOCIRu-2BTAa8NqJM8bzK7ULagOylv9QFy3t77NzudlzVI9J9G45qUUOdhbh0IKkfO7Yt5QuH8x-2Bp8gQBJwlrTXbqHytOJa-2Bj1WWJqRPHFH6fkw9Xty9jKE0-2B2Y-2Fe6IRkyfeNgw11UN3zwEZwj44vgdwWPYgYdU-2BAK6Sihl-2FFdFOJO3kPoHpqZlzYCsvj-2FQJ89Qv869GktXuuvX5FABxvMVTC3sIJR-2Fnu8oVXEIrsWIuOyeoPEaCredsgYCpxaQP0DEKGJ733TC56jdjQAgmr6XOnZf59RICWqemuPS7iUGmhh6PJtWcyfSl0-2Fspo5z3ObpNbOjD9oHev3wqeyX8NCJEE1vqFjZrWduWaVi92nLlZMceUc2g3SdHEYg6JABi4ZX1QmyBkgPhssOoqE5KkRSSdGwWZJE4QdQ6tGH9e2TXCLE-2B87evhQM6UwqgPa1JEo7ewcr3YQFzuCaquplCsoT0FVGOTLTmrjhC9uMDoklqFgtxT06w5bVdLTpEiUB6es11kAvOc5z8NIV4La-2FPgewqblbZpLUL-2FrNKUzcLf52MbSN-2BvyoeIJA-2BEZkg7Hq9GxKz0DoGHqrb76CcmFObQCd5a04OtAjgZc3avQ7chW0GGGJIxqHk-2FmcBh7xsAPyHK23OZCcOYINS174Alb8e877GK8M6Lb-2Flh3zqOTC2qCFZds96zOb7ap-2BpADPnnjwggHIUfic57txLxCLgiIAQdI6yBwyLxcNmbVle4m6yqNmlAaBVp4e-2FWWCCZDL0WdkHLnK8htzeJOlLFJvoRMzRQo-2FeTvF1w6aenmQdYvIU0g9lrpizuh23frfsbTWIjIvJWwLlG0Rpv8BNyqAUZb-2B172Hbn3n9KqxGKTojdJTa5kwOFe-2BqFbM9RNyNwB6PYiUtrEuakU-3D)
+  * [Experience Equity-Free Acceleration With Convoi Ventures](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuya-2BTKcI88jXkqeXxhmg5T5gdHuBSG7coTLfqizq2O-2B4YQiOQDJISockWMe8r8eyhDTKzRYob1fnDctsSd2yWWJR1YC_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJZhtYOlzyuL4owinabBSOCIRu-2BTAa8NqJM8bzK7ULagOylv9QFy3t77NzudlzVI9J9G45qUUOdhbh0IKkfO7Yt5QuH8x-2Bp8gQBJwlrTXbqHytOJa-2Bj1WWJqRPHFH6fkw9Xty9jKE0-2B2Y-2Fe6IRkyfeNgw11UN3zwEZwj44vgdwWPYgYdU-2BAK6Sihl-2FFdFOJO3kPoHpqZlzYCsvj-2FQJ89Qv869GktXuuvX5FABxvMVTC3sIJR-2Fnu8oVXEIrsWIuOyeoPEaCredsgYCpxaQP0DEKGJ733TC56jdjQAgmr6XOnZf59RICWqemuPS7iUGmhh6PJtWcyfSl0-2Fspo5z3ObpNbOjD9oHev3wqeyX8NCJEE1vqFjZrWduWaVi92nLlZMceUc2g3SdHEYg6JABi4ZX1QmyBkgPhssOoqE5KkRSSdGwWZJE4QdQ6tGH9e2TXCLE-2B87evhQM6UwqgPa1JEo7ewcr3YQFzuCaquplCsoT0FVGOTLTmrjhC9uMDoklqFgtxT06w5bVdLTpEiUB6es11kAvOc5z8NIV4La-2FPgewqblbZpLUL-2FrNKUzcLf52MbSN-2BvyoeIJA-2BEZkg7Hq9GxKz0DoGHqrb76CcmFObQCd5a04OtAjgZc3avQ7chW0GGGJIxqHk-2FmcBh7xsAPyHK23OZCcOYINS174Alb8e877GK8M6Lb-2Flh3zqOTC2qCFZds9665kZ4dDELCdtA98-2Bhme8Sw-2Fr6W0zsk8EISmKl1durvp5o15XoAo9KRAEmKP5nqeurGLTRlfg5sQrHhQ43-2BZd9rn-2BMu-2BjYjrtpghMJfZS51tyHKzA3eoW1Umqje64a5KgUmnVPrhOAALnU6R3AeT3SrnwMJ1QMZPvmGUM51-2FBCHE83TmbjE27qBxEaYtNfYW9YGrw8oRT3xywy3dErpGePc-3D)
+  * [2025 AI Summit: See How Utah is Championing Pro-Human Leadership](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuyVdjHv8PUu2cGJHp3Iau96Uslpng2xoPBDqUiTdIGRjunFo83-2F5Qxy0Vg2C0frTW8cBahRZ4aELgg4iM-2FHetHD4DtSIytGXcr6B4xmqM4RAw-3D-3DeN4w_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJZhtYOlzyuL4owinabBSOCIRu-2BTAa8NqJM8bzK7ULagOylv9QFy3t77NzudlzVI9J9G45qUUOdhbh0IKkfO7Yt5QuH8x-2Bp8gQBJwlrTXbqHytOJa-2Bj1WWJqRPHFH6fkw9Xty9jKE0-2B2Y-2Fe6IRkyfeNgw11UN3zwEZwj44vgdwWPYgYdU-2BAK6Sihl-2FFdFOJO3kPoHpqZlzYCsvj-2FQJ89Qv869GktXuuvX5FABxvMVTC3sIJR-2Fnu8oVXEIrsWIuOyeoPEaCredsgYCpxaQP0DEKGJ733TC56jdjQAgmr6XOnZf59RICWqemuPS7iUGmhh6PJtWcyfSl0-2Fspo5z3ObpNbOjD9oHev3wqeyX8NCJEE1vqFjZrWduWaVi92nLlZMceUc2g3SdHEYg6JABi4ZX1QmyBkgPhssOoqE5KkRSSdGwWZJE4QdQ6tGH9e2TXCLE-2B87evhQM6UwqgPa1JEo7ewcr3YQFzuCaquplCsoT0FVGOTLTmrjhC9uMDoklqFgtxT06w5bVdLTpEiUB6es11kAvOc5z8NIV4La-2FPgewqblbZpLUL-2FrNKUzcLf52MbSN-2BvyoeIJA-2BEZkg7Hq9GxKz0DoGHqrb76CcmFObQCd5a04OtAjgZc3avQ7chW0GGGJIxqHk-2FmcBh7xsAPyHK23OZCcOYINS174Alb8e877GK8M6Lb-2Flh3zqOTC2qCFZds96-2B8FmFQ5-2BQ5Zo81hW7xEZc2zZAaV73MGL1MhCajQ-2FhdFTgHknnGd7GXgwgM-2BcLERb3V5zA4W3cb6GkjID6X-2Fm-2FpU323J4MbXir8YfB7v-2FAKVZgq8s1GTxl3lahC5H-2FiDMjS4tTaMkM92uWVxGBSoiV7Vij4zRqoSQgA0d7YN6dkLqgfRICksSnzONhyXnvE7h4t0x01iC6L5jsofZhssFn4-3D)
+  * ICYMI: [November Newsletter](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSGWhr7ko71ul-2FwbDCIvZCuwcNpJMYHsfvPKqHFv3IGuphX2wLjstIODBm0UUW6g6Og-3D-3Dsqgm_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJZhtYOlzyuL4owinabBSOCIRu-2BTAa8NqJM8bzK7ULagOylv9QFy3t77NzudlzVI9J9G45qUUOdhbh0IKkfO7Yt5QuH8x-2Bp8gQBJwlrTXbqHytOJa-2Bj1WWJqRPHFH6fkw9Xty9jKE0-2B2Y-2Fe6IRkyfeNgw11UN3zwEZwj44vgdwWPYgYdU-2BAK6Sihl-2FFdFOJO3kPoHpqZlzYCsvj-2FQJ89Qv869GktXuuvX5FABxvMVTC3sIJR-2Fnu8oVXEIrsWIuOyeoPEaCredsgYCpxaQP0DEKGJ733TC56jdjQAgmr6XOnZf59RICWqemuPS7iUGmhh6PJtWcyfSl0-2Fspo5z3ObpNbOjD9oHev3wqeyX8NCJEE1vqFjZrWduWaVi92nLlZMceUc2g3SdHEYg6JABi4ZX1QmyBkgPhssOoqE5KkRSSdGwWZJE4QdQ6tGH9e2TXCLE-2B87evhQM6UwqgPa1JEo7ewcr3YQFzuCaquplCsoT0FVGOTLTmrjhC9uMDoklqFgtxT06w5bVdLTpEiUB6es11kAvOc5z8NIV4La-2FPgewqblbZpLUL-2FrNKUzcLf52MbSN-2BvyoeIJA-2BEZkg7Hq9GxKz0DoGHqrb76CcmFObQCd5a04OtAjgZc3avQ7chW0GGGJIxqHk-2FmcBh7xsAPyHK23OZCcOYINS174Alb8e877GK8M6Lb-2Flh3zqOTC2qCFZds9697YvEc0juA9tOiNwPsdHSjVjlGEE-2FkdfqMt-2Ff8SGUPpVrvn124DoVB5pWsCTdXUYtt6beQCDnL4V8GQ-2B30uALvN-2BQ1AzSqTjqkStQCGlXAOA-2BMDZ-2FziD5pY4bF7W3jWfKKN7Ds-2Bd18ekVzafzX3InTtb3sMJwOq8kdMuM8QdxCY6Scw9l6kmrwMID9I3KeKwEJBHmbylQbVelldytz4DUg-3D)
+
+
+
+* * *
+
+![](https://startup.utah.gov/wp-content/uploads/Screenshot-2025-03-06-at-10.13.36 AM-1-1024x281.png)
+
+Thank you to the dynamic companies that help build Utah’s startup community. Want to be featured in a future spotlight? [Share your story](http://url9183.utah.gov/ls/click?upn=u001.1fKuPnTFVv2n-2FIwaslfkSIdlyHF5-2FsrWdCPLgBYjiRqryLPVQnQMjI-2F41Vm66-2BKufABppXfUsO6oAn7cQlOxu6dhxoryQR6uwxSunBwrufZkBkDKCEawoD074pr5gIcL7dar8Ohg2LpgcZFCf6Zbyw-3D-3DB7v9_JlfBqMfJ-2FssluUjqhGH4NdRNgSTjhgyexCEHfxmo1u5aVPRmysVeqMOEpfXSqvOklHk-2BmI1Aux2LFp4aBx9nIFef3xPj-2FfSwLD2OqZ6HG-2FDUsGe1RlAqeb-2BX3P8XqOKkp68IuGt7zgDYwUTQsH6qJQf-2BIkv8UBGl8ptYsIya87K-2F9Sl4i0n7S-2FLVnmjnrZYRSqi2-2Bbat1FpjodF3wga2dt6CHuM11OYsA5HGQxcAfPK8sEbNG1mQRMIwBujfU3ptH18od2aZV60HGeOFwUSO5W2Eg8Xu2w520k8NqULXDR9NmLwZkBD6mEIuPKzsAeizyFpQ570yzp29jp-2BEIyyWKlmf8ZeKQd0lbPj8O1HHPQ-2B-2BHJqe-2BquBrjA6mnAnuXClj-2B6A4HkQXv-2Fi0xEpO1SFW8ucqay2IJtcxb-2ByHAcU9MGGeRdQ-2BnkZ0npQ5-2BOE6tIR2abiS1a-2BfXI7iAxvVohZoyj1-2F1775NVxtnHwev6asW0hwFSDbycCT-2BLpi4-2Bb30L3jxv1QTQhRBIuTmSy-2FkBttIzozrsx4iKWffopLOdVxd8-2FjvRYa8p-2BKNzlk3CR4v3YFPo12zouV5y6I9uUuejHrM8gkto3ux1QYkBnbgjyloPegUa3f8ztUEzt42Ra1fxai8NmqVVW8rg7PxnRESS1K49CYgMYiHPiWHc-2Fae6MmfBe4YrJscS-2BSOmlUERh7XBZdZ127vqeqME6PZzdPZr6t4lY7jMmjb81dOwRzSdCGD4LwH-2FfVziMgp4Y0ehGsS2021OdJO1JRelDfSA7M6UWl845es5J6USUF5pBwx-2FEh6raIamyIgfSwBR9HPvG9E2iigg3Rrux-2Bf-2BUW4jEA1XfU3oX6MXo2-2BodZ6ObKEouSHPax61joCQVKrdiM2Cdn8LlXlNoYhAK4aqORJhDBL9tJpH1x4UQCmDUzlMDzOPHwt-2FcNKgyK7dXGNxzAl7dFlUuB5GzTsud2WisuoStO137c0B7e-2BiYKkM1Tc6hqoMBTuIoZN-2Bb6KK93y4-2FVmaqX-2FjeFRELaEiVWOO8f7Gcej-2Fe86uxjvu5aZzNle7xjvqhwaE-3D) with us for the chance to have your company featured. 
+
+Want this sent right to your inbox? [Subscribe](https://cdn.forms-content.sg-form.com/e0698968-5266-11ee-86fd-fece7756f525) to the Startup State Initiative newsletter so you can receive monthly updates on entrepreneur resources, tips, events, and more.
