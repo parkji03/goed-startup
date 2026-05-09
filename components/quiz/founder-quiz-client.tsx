@@ -17,6 +17,11 @@ import { Input } from "@/components/ui/input";
 import { Text } from "@/components/ui/text";
 import { Link, useRouter } from "@/i18n/navigation";
 
+type FounderQuizClientProps = {
+  /** Called on skip or when finished — closes modal instead of navigating. */
+  onComplete?: () => void;
+};
+
 const STAGES = ["Idea / discovery", "Building MVP", "Early revenue", "Growth / scale"] as const;
 
 const COUNTIES_SAMPLE = [
@@ -67,7 +72,7 @@ function toggle(arr: string[], value: string) {
   return [...set];
 }
 
-export function FounderQuizClient() {
+export function FounderQuizClient({ onComplete }: FounderQuizClientProps = {}) {
   const router = useRouter();
   const [step, setStep] = useState(0);
 
@@ -193,12 +198,9 @@ export function FounderQuizClient() {
                 <RecoBlock title="Explore deeper" rows={recos.explore} />
               </>
             )}
-            <Link
-              href="/guide"
-              className="inline-flex rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-            >
-              Open AI guide (profile saved locally)
-            </Link>
+            <Text className="text-muted-fg text-xs">
+              Profile saved locally — the AI guide in the sidebar will use your answers.
+            </Text>
           </div>
         );
       default:
@@ -236,8 +238,8 @@ export function FounderQuizClient() {
             See recommendations
           </Button>
         ) : null}
-        <Button intent="outline" size="sm" className="ms-auto" onPress={() => router.push("/resources")}>
-          Skip quiz
+        <Button intent="outline" size="sm" className="ms-auto" onPress={() => onComplete ? onComplete() : router.push("/resources")}>
+          {onComplete ? "Close" : "Skip quiz"}
         </Button>
       </div>
     </div>

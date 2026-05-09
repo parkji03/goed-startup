@@ -4,6 +4,8 @@ import { usePaginatedQuery, useQuery } from "convex/react";
 import { useState } from "react";
 import { api } from "@/convex/_generated/api";
 import { Link } from "@/i18n/navigation";
+import { FounderQuizClient } from "@/components/quiz/founder-quiz-client";
+import { ResourceSubmitForm } from "@/components/resources/resource-submit-form";
 import { Button, buttonStyles } from "@/components/ui/button";
 import {
   Card,
@@ -14,11 +16,16 @@ import {
 } from "@/components/ui/card";
 import { Heading } from "@/components/ui/heading";
 import { Link as UiLink } from "@/components/ui/link";
+import { ModalBody, ModalContent, ModalHeader, ModalTitle } from "@/components/ui/modal";
 import { Text } from "@/components/ui/text";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export function ResourcesBrowseClient() {
   const topics = useQuery(api.resources.facetValues, { facetType: "topic", limit: 40 });
   const [topicFilter, setTopicFilter] = useState<string | null>(null);
+  const [quizOpen, setQuizOpen] = useState(false);
+  const [submitOpen, setSubmitOpen] = useState(false);
+  const { toggleSidebar } = useSidebar();
 
   const filtered = useQuery(
     api.resources.listByFacet,
@@ -49,28 +56,46 @@ export function ResourcesBrowseClient() {
           <Card className="bg-overlay">
             <CardHeader title="Get matched" description="Take the founder quiz to tune recommendations." />
             <CardFooter>
-              <Link href="/quiz" className={buttonStyles({ intent: "outline", size: "sm" })}>
+              <Button intent="outline" size="sm" onPress={() => setQuizOpen(true)}>
                 Start quiz
-              </Link>
+              </Button>
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
             <CardHeader title="Ask the guide" description="Open the AI chat for funding and program questions." />
             <CardFooter>
-              <Link href="/guide" className={buttonStyles({ intent: "outline", size: "sm" })}>
-                Open guide
-              </Link>
+              <Button intent="outline" size="sm" onPress={toggleSidebar}>
+                Ask AI guide
+              </Button>
             </CardFooter>
           </Card>
           <Card className="bg-overlay">
             <CardHeader title="Add a resource" description="Submit a partner or program for review." />
             <CardFooter>
-              <Link href="/resources/submit" className={buttonStyles({ intent: "outline", size: "sm" })}>
+              <Button intent="outline" size="sm" onPress={() => setSubmitOpen(true)}>
                 Submit
-              </Link>
+              </Button>
             </CardFooter>
           </Card>
         </div>
+
+        <ModalContent isOpen={quizOpen} onOpenChange={setQuizOpen} size="2xl" aria-label="Founder quiz">
+          <ModalHeader>
+            <ModalTitle>Founder quiz</ModalTitle>
+          </ModalHeader>
+          <ModalBody className="pb-6">
+            <FounderQuizClient onComplete={() => setQuizOpen(false)} />
+          </ModalBody>
+        </ModalContent>
+
+        <ModalContent isOpen={submitOpen} onOpenChange={setSubmitOpen} size="xl" aria-label="Submit a resource">
+          <ModalHeader>
+            <ModalTitle>Submit a resource</ModalTitle>
+          </ModalHeader>
+          <ModalBody className="pb-6">
+            <ResourceSubmitForm />
+          </ModalBody>
+        </ModalContent>
       </section>
 
       <section className="space-y-3">
