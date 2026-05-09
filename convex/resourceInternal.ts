@@ -2,11 +2,15 @@ import { v } from 'convex/values';
 import { internal } from './_generated/api';
 import type { Id } from './_generated/dataModel';
 import { internalMutation, internalQuery } from './_generated/server';
-import { resourceStatusValidator } from './resourceValidators';
+import {
+  facetTypeValidator,
+  resourceCategoryValidator,
+  resourceStatusValidator,
+} from './resourceValidators';
 import {
   buildSearchText,
   facetsFromResourceFields,
-  inferStageTagsFromTopics,
+  inferStageTagsFromTags,
   makeResourceSlug,
   sanitizeContactEmail,
   splitPipeList,
@@ -18,13 +22,7 @@ export const replaceFacets = internalMutation({
     status: resourceStatusValidator,
     facetRows: v.array(
       v.object({
-        facetType: v.union(
-          v.literal('community'),
-          v.literal('industry'),
-          v.literal('location'),
-          v.literal('topic'),
-          v.literal('stage'),
-        ),
+        facetType: facetTypeValidator,
         value: v.string(),
       }),
     ),
@@ -57,7 +55,8 @@ const upsertRowValidator = v.object({
   communitiesRaw: v.optional(v.string()),
   industriesRaw: v.optional(v.string()),
   locationsRaw: v.optional(v.string()),
-  topicsRaw: v.optional(v.string()),
+  tagsRaw: v.optional(v.string()),
+  category: resourceCategoryValidator,
   status: resourceStatusValidator,
   submissionId: v.optional(v.id('resourceSubmissions')),
 });
@@ -71,17 +70,19 @@ export const upsertResource = internalMutation({
     const communities = splitPipeList(row.communitiesRaw);
     const industries = splitPipeList(row.industriesRaw);
     const locations = splitPipeList(row.locationsRaw);
-    const topics = splitPipeList(row.topicsRaw);
-    const stageTags = inferStageTagsFromTopics(topics);
+    const tags = splitPipeList(row.tagsRaw);
+    const stageTags = inferStageTagsFromTags(tags);
+    const category = row.category;
     const searchText = buildSearchText({
       title: row.title,
       description: row.description,
       url: row.url,
       contactEmail,
+      category,
       communities,
       industries,
       locations,
-      topics,
+      tags,
       stageTags,
     });
     const slug = makeResourceSlug(row.title, row.sourceId);
@@ -103,7 +104,8 @@ export const upsertResource = internalMutation({
         communities,
         industries,
         locations,
-        topics,
+        tags,
+        category,
         stageTags,
         searchText,
         status: row.status,
@@ -121,7 +123,8 @@ export const upsertResource = internalMutation({
         communities,
         industries,
         locations,
-        topics,
+        tags,
+        category,
         stageTags,
         searchText,
         status: row.status,
@@ -131,10 +134,11 @@ export const upsertResource = internalMutation({
     }
 
     const facetRows = facetsFromResourceFields({
+      category,
       communities,
       industries,
       locations,
-      topics,
+      tags,
       stageTags,
     });
     await ctx.runMutation(internal.resourceInternal.replaceFacets, {

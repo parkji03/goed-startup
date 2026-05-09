@@ -9,12 +9,19 @@ import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+} from "@/components/ui/select";
 import { Text } from "@/components/ui/text";
 import {
   resourceSubmitSchema,
-  splitSuggestedTopics,
+  splitSuggestedTags,
   type ResourceSubmitValues,
 } from "@/lib/forms/resource-submit";
+import { RESOURCE_CATEGORIES } from "@/lib/resources/categories";
 
 export function ResourceSubmitForm() {
   const submit = useMutation(api.resourceSubmissions.submit);
@@ -35,6 +42,7 @@ export function ResourceSubmitForm() {
       submitterName: "",
       submitterEmail: "",
       organization: "",
+      category: undefined as unknown as ResourceSubmitValues["category"],
       tags: "",
       notes: "",
     },
@@ -51,10 +59,12 @@ export function ResourceSubmitForm() {
         submitterEmail: values.submitterEmail,
         organization: values.organization?.trim() || undefined,
         notes: values.notes?.trim() || undefined,
+        suggestedCategory: values.category,
         suggestedCommunities: [],
         suggestedIndustries: [],
         suggestedLocations: [],
-        suggestedTopics: splitSuggestedTopics(values.tags),
+        suggestedTopics: [],
+        suggestedTags: splitSuggestedTags(values.tags),
       });
       setDone(true);
       reset();
@@ -169,8 +179,37 @@ export function ResourceSubmitForm() {
             ) : null}
           </div>
           <div>
+            <label htmlFor="category" className="font-medium text-fg text-sm">
+              Category *
+            </label>
+            <Controller
+              name="category"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  className="mt-1"
+                  placeholder="Pick a category"
+                  selectedKey={field.value ?? null}
+                  onSelectionChange={(key) => field.onChange(key)}
+                >
+                  <SelectTrigger />
+                  <SelectContent items={RESOURCE_CATEGORIES}>
+                    {(c) => (
+                      <SelectItem id={c.key} textValue={c.label}>
+                        {c.label}
+                      </SelectItem>
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            {errors.category?.message ? (
+              <Text className="text-danger-subtle-fg mt-1 text-sm">{errors.category.message}</Text>
+            ) : null}
+          </div>
+          <div>
             <label htmlFor="tags" className="font-medium text-fg text-sm">
-              Suggested topics / tags
+              Suggested tags
             </label>
             <Controller
               name="tags"
@@ -180,7 +219,7 @@ export function ResourceSubmitForm() {
                   {...field}
                   id="tags"
                   className="mt-1"
-                  placeholder="Funding, Veteran, Rural (comma-separated)"
+                  placeholder="AI, women-led, climate (comma-separated)"
                 />
               )}
             />

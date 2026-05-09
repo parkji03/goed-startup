@@ -47,3 +47,6 @@ __pycache__/
 
 # clerk configuration (can include secrets)
 /.clerk/
+
+# superpowers brainstorm mockups
+.superpowers/

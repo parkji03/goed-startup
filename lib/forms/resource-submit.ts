@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RESOURCE_CATEGORY_KEYS } from "@/lib/resources/categories";
 
 function normalizeHttpsUrl(raw: string): string {
   const t = raw.trim();
@@ -29,13 +30,14 @@ export const resourceSubmitSchema = z.object({
   submitterName: z.string().trim().min(1, "Name is required"),
   submitterEmail: z.string().trim().min(1, "Email is required").pipe(z.email()),
   organization: z.string().trim().optional(),
+  category: z.enum(RESOURCE_CATEGORY_KEYS, { message: "Pick a category" }),
   tags: z.string().optional(),
   notes: z.string().trim().optional(),
 });
 
 export type ResourceSubmitValues = z.infer<typeof resourceSubmitSchema>;
 
-export function splitSuggestedTopics(tags: string | undefined): string[] {
+export function splitSuggestedTags(tags: string | undefined): string[] {
   if (!tags?.trim()) return [];
   return tags.split(/[,|;]/).map((s) => s.trim()).filter(Boolean);
 }

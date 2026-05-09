@@ -1,8 +1,10 @@
 import { paginationOptsValidator } from 'convex/server';
 import { v } from 'convex/values';
 import { query } from './_generated/server';
+import { RESOURCE_CATEGORY_KEYS, type ResourceCategoryKey } from '../lib/resources/categories';
 import { founderProfileValidator, clampFounderProfileForConvex } from './founderProfile';
 import { scoreResourceForProfile } from './lib/matchResources';
+import { facetTypeValidator } from './resourceValidators';
 
 function projectReco(
   rows: Array<{
@@ -12,7 +14,9 @@ function projectReco(
       slug: string;
       description: string;
       url: string;
-      topics: string[];
+      category: ResourceCategoryKey;
+      tags: string[];
+      stageTags: string[];
       industries: string[];
       communities: string[];
     };
@@ -25,13 +29,15 @@ function projectReco(
     slug: doc.slug,
     description: doc.description,
     url: doc.url,
-    topics: doc.topics,
+    category: doc.category,
+    tags: doc.tags,
+    stageTags: doc.stageTags,
     industries: doc.industries,
     communities: doc.communities,
     matchScore: score,
     reason:
       score > 0
-        ? 'Matches your quiz answers (topics, industry, location, or founder community).'
+        ? 'Matches your quiz answers (category, industry, location, or founder community).'
         : 'Popular starting point — add more quiz detail to personalize further.',
   }));
 }
@@ -70,7 +76,9 @@ export const listPublishedPage = query({
         slug: r.slug,
         description: r.description,
         url: r.url,
-        topics: r.topics,
+        category: r.category,
+        tags: r.tags ?? [],
+        stageTags: r.stageTags,
         industries: r.industries,
         communities: r.communities,
       })),
@@ -93,13 +101,7 @@ export const bySlug = query({
 
 export const listByFacet = query({
   args: {
-    facetType: v.union(
-      v.literal('community'),
-      v.literal('industry'),
-      v.literal('location'),
-      v.literal('topic'),
-      v.literal('stage'),
-    ),
+    facetType: facetTypeValidator,
     value: v.string(),
     limit: v.number(),
   },
@@ -120,7 +122,9 @@ export const listByFacet = query({
       slug: string;
       description: string;
       url: string;
-      topics: string[];
+      category?: ResourceCategoryKey;
+      tags: string[];
+      stageTags: string[];
       industries: string[];
       communities: string[];
     }> = [];
@@ -134,7 +138,9 @@ export const listByFacet = query({
           slug: r.slug,
           description: r.description,
           url: r.url,
-          topics: r.topics,
+          category: r.category,
+          tags: r.tags ?? [],
+          stageTags: r.stageTags,
           industries: r.industries,
           communities: r.communities,
         });
@@ -148,13 +154,7 @@ export const listByFacet = query({
 
 export const facetValues = query({
   args: {
-    facetType: v.union(
-      v.literal('community'),
-      v.literal('industry'),
-      v.literal('location'),
-      v.literal('topic'),
-      v.literal('stage'),
-    ),
+    facetType: facetTypeValidator,
     limit: v.number(),
   },
   handler: async (ctx, { facetType, limit }) => {
@@ -172,6 +172,49 @@ export const facetValues = query({
       .sort((a, b) => b[1] - a[1])
       .slice(0, lim)
       .map(([value]) => value);
+  },
+});
+
+export const listGroupedByCategory = query({
+  args: { limitPerCategory: v.optional(v.number()) },
+  handler: async (ctx, { limitPerCategory }) => {
+    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 200);
+    const results: Record<
+      ResourceCategoryKey,
+      Array<{
+        _id: unknown;
+        title: string;
+        slug: string;
+        description: string;
+        url: string;
+        category: ResourceCategoryKey;
+        tags: string[];
+        stageTags: string[];
+        communities: string[];
+      }>
+    > = Object.fromEntries(RESOURCE_CATEGORY_KEYS.map((k) => [k, []])) as Record<
+      ResourceCategoryKey,
+      never[]
+    >;
+
+    for (const key of RESOURCE_CATEGORY_KEYS) {
+      const rows = await ctx.db
+        .query('resources')
+        .withIndex('by_category', (q) => q.eq('category', key).eq('status', 'published'))
+        .take(lim);
+      results[key] = rows.map((r) => ({
+        _id: r._id,
+        title: r.title,
+        slug: r.slug,
+        description: r.description,
+        url: r.url,
+        category: key,
+        tags: r.tags ?? [],
+        stageTags: r.stageTags,
+        communities: r.communities,
+      }));
+    }
+    return results;
   },
 });
 

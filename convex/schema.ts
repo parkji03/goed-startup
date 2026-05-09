@@ -2,6 +2,7 @@ import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
 import {
   facetTypeValidator,
+  resourceCategoryValidator,
   resourceStatusValidator,
   submissionStatusValidator,
 } from './resourceValidators';
@@ -145,7 +146,10 @@ export default defineSchema({
     communities: v.array(v.string()),
     industries: v.array(v.string()),
     locations: v.array(v.string()),
-    topics: v.array(v.string()),
+    /** Curated, single-value category. Drives section grouping on /resources. */
+    category: resourceCategoryValidator,
+    /** Free-form-ish secondary descriptors. */
+    tags: v.array(v.string()),
     stageTags: v.array(v.string()),
     searchText: v.string(),
     status: resourceStatusValidator,
@@ -156,6 +160,7 @@ export default defineSchema({
     .index('by_slug', ['slug'])
     .index('by_status', ['status'])
     .index('by_sourceId', ['sourceId'])
+    .index('by_category', ['category', 'status'])
     .searchIndex('search_resources', {
       searchField: 'searchText',
       filterFields: ['status'],
@@ -197,6 +202,8 @@ export default defineSchema({
     suggestedIndustries: v.array(v.string()),
     suggestedLocations: v.array(v.string()),
     suggestedTopics: v.array(v.string()),
+    suggestedTags: v.optional(v.array(v.string())),
+    suggestedCategory: v.optional(resourceCategoryValidator),
     notes: v.optional(v.string()),
     status: submissionStatusValidator,
     moderatorNote: v.optional(v.string()),

@@ -1,3 +1,5 @@
+import type { ResourceCategoryKey } from '../../lib/resources/categories';
+import { categoryLabel } from '../../lib/resources/categories';
 import type { FacetType } from './facetTypes';
 
 /** Canonical form for Convex + mailto: (no ?, &, newlines — seeds/imports only). */
@@ -38,10 +40,11 @@ export function buildSearchText(parts: {
   description: string;
   url: string;
   contactEmail?: string;
+  category?: ResourceCategoryKey;
   communities: string[];
   industries: string[];
   locations: string[];
-  topics: string[];
+  tags: string[];
   stageTags: string[];
 }): string {
   const chunks = [
@@ -49,10 +52,11 @@ export function buildSearchText(parts: {
     parts.description,
     parts.url,
     parts.contactEmail,
+    parts.category ? categoryLabel(parts.category) : undefined,
     ...parts.communities,
     ...parts.industries,
     ...parts.locations,
-    ...parts.topics,
+    ...parts.tags,
     ...parts.stageTags,
   ];
   return chunks.filter(Boolean).join(' | ');
@@ -64,28 +68,20 @@ export type FacetRowInput = {
 };
 
 export function facetsFromResourceFields(args: {
+  category?: ResourceCategoryKey;
   communities: string[];
   industries: string[];
   locations: string[];
-  topics: string[];
+  tags: string[];
   stageTags: string[];
 }): FacetRowInput[] {
   const out: FacetRowInput[] = [];
-  for (const value of args.communities) {
-    out.push({ facetType: 'community', value });
-  }
-  for (const value of args.industries) {
-    out.push({ facetType: 'industry', value });
-  }
-  for (const value of args.locations) {
-    out.push({ facetType: 'location', value });
-  }
-  for (const value of args.topics) {
-    out.push({ facetType: 'topic', value });
-  }
-  for (const value of args.stageTags) {
-    out.push({ facetType: 'stage', value });
-  }
+  if (args.category) out.push({ facetType: 'category', value: args.category });
+  for (const value of args.communities) out.push({ facetType: 'community', value });
+  for (const value of args.industries) out.push({ facetType: 'industry', value });
+  for (const value of args.locations) out.push({ facetType: 'location', value });
+  for (const value of args.tags) out.push({ facetType: 'tag', value });
+  for (const value of args.stageTags) out.push({ facetType: 'stage', value });
   return out;
 }
 
@@ -104,9 +100,9 @@ const STAGE_KEYWORDS = [
   'scale',
 ] as const;
 
-export function inferStageTagsFromTopics(topics: string[]): string[] {
+export function inferStageTagsFromTags(tags: string[]): string[] {
   const found = new Set<string>();
-  for (const t of topics) {
+  for (const t of tags) {
     const lower = t.toLowerCase();
     for (const kw of STAGE_KEYWORDS) {
       if (lower.includes(kw)) {
@@ -121,7 +117,8 @@ export function inferStageTagsFromTopics(topics: string[]): string[] {
 export function embeddingSourceText(parts: {
   title: string;
   description: string;
-  topics: string[];
+  category?: ResourceCategoryKey;
+  tags: string[];
   industries: string[];
   communities: string[];
   locations: string[];
@@ -129,9 +126,12 @@ export function embeddingSourceText(parts: {
   return [
     `Title: ${parts.title}`,
     `Description: ${parts.description}`,
-    `Topics: ${parts.topics.join('; ')}`,
+    parts.category ? `Category: ${categoryLabel(parts.category)}` : '',
+    `Tags: ${parts.tags.join('; ')}`,
     `Industries: ${parts.industries.join('; ')}`,
     `Communities: ${parts.communities.join('; ')}`,
     `Locations: ${parts.locations.join('; ')}`,
-  ].join('\n');
+  ]
+    .filter(Boolean)
+    .join('\n');
 }

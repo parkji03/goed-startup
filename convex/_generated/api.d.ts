@@ -19,6 +19,7 @@ import type * as resourceEmbeddings from "../resourceEmbeddings.js";
 import type * as resourceEmbeddingsNode from "../resourceEmbeddingsNode.js";
 import type * as resourceImport from "../resourceImport.js";
 import type * as resourceInternal from "../resourceInternal.js";
+import type * as resourceMigration from "../resourceMigration.js";
 import type * as resourceSubmissions from "../resourceSubmissions.js";
 import type * as resourceValidators from "../resourceValidators.js";
 import type * as resources from "../resources.js";
@@ -41,6 +42,7 @@ declare const fullApi: ApiFromModules<{
   resourceEmbeddingsNode: typeof resourceEmbeddingsNode;
   resourceImport: typeof resourceImport;
   resourceInternal: typeof resourceInternal;
+  resourceMigration: typeof resourceMigration;
   resourceSubmissions: typeof resourceSubmissions;
   resourceValidators: typeof resourceValidators;
   resources: typeof resources;

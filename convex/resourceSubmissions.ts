@@ -4,6 +4,7 @@ import { mutation, query } from './_generated/server';
 import { checkAdminGate, requireAdmin } from './lib/adminAuth';
 import {
   adminAccessDeniedReasonValidator,
+  resourceCategoryValidator,
   resourceSubmissionDocValidator,
 } from './resourceValidators';
 
@@ -15,10 +16,12 @@ export const submit = mutation({
     submitterName: v.string(),
     submitterEmail: v.string(),
     organization: v.optional(v.string()),
+    suggestedCategory: v.optional(resourceCategoryValidator),
     suggestedCommunities: v.array(v.string()),
     suggestedIndustries: v.array(v.string()),
     suggestedLocations: v.array(v.string()),
     suggestedTopics: v.array(v.string()),
+    suggestedTags: v.optional(v.array(v.string())),
     notes: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
@@ -30,10 +33,12 @@ export const submit = mutation({
       submitterName: args.submitterName.trim(),
       submitterEmail: args.submitterEmail.trim().toLowerCase(),
       organization: args.organization?.trim(),
+      suggestedCategory: args.suggestedCategory,
       suggestedCommunities: args.suggestedCommunities,
       suggestedIndustries: args.suggestedIndustries,
       suggestedLocations: args.suggestedLocations,
       suggestedTopics: args.suggestedTopics,
+      suggestedTags: args.suggestedTags ?? [],
       notes: args.notes?.trim(),
       status: 'pending',
       createdAt: now,
@@ -76,8 +81,14 @@ export const listPendingForAdmin = query({
 });
 
 export const approve = mutation({
-  args: { submissionId: v.id('resourceSubmissions') },
-  handler: async (ctx, { submissionId }) => {
+  args: {
+    submissionId: v.id('resourceSubmissions'),
+    category: resourceCategoryValidator,
+    tags: v.array(v.string()),
+    communities: v.array(v.string()),
+    stageTags: v.array(v.string()),
+  },
+  handler: async (ctx, { submissionId, category, tags, communities, stageTags }) => {
     const admin = await requireAdmin(ctx);
     const sub = await ctx.db.get(submissionId);
     if (!sub) throw new Error('Submission not found');
@@ -86,10 +97,6 @@ export const approve = mutation({
     }
 
     const sourceId = `submission-${submissionId}`;
-    const communitiesRaw = sub.suggestedCommunities.join('|');
-    const industriesRaw = sub.suggestedIndustries.join('|');
-    const locationsRaw = sub.suggestedLocations.join('|');
-    const topicsRaw = sub.suggestedTopics.join('|');
 
     await ctx.runMutation(internal.resourceInternal.upsertResource, {
       row: {
@@ -98,14 +105,26 @@ export const approve = mutation({
         description: sub.description,
         url: sub.url,
         contactEmail: sub.submitterEmail,
-        communitiesRaw,
-        industriesRaw,
-        locationsRaw,
-        topicsRaw,
+        communitiesRaw: communities.join('|'),
+        industriesRaw: sub.suggestedIndustries.join('|'),
+        locationsRaw: sub.suggestedLocations.join('|'),
+        tagsRaw: tags.join('|'),
+        category,
         status: 'published',
         submissionId,
       },
     });
+
+    // upsertResource derives stageTags from tags; admin overrides win.
+    if (stageTags.length > 0) {
+      const created = await ctx.db
+        .query('resources')
+        .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
+        .unique();
+      if (created) {
+        await ctx.db.patch(created._id, { stageTags });
+      }
+    }
 
     const now = Date.now();
     await ctx.db.patch(submissionId, {

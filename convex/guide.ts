@@ -31,7 +31,7 @@ const guideContextItemValidator = v.object({
   slug: v.string(),
   url: v.string(),
   description: v.string(),
-  topics: v.array(v.string()),
+  tags: v.array(v.string()),
   industries: v.array(v.string()),
   communities: v.array(v.string()),
 });
@@ -42,7 +42,7 @@ export type GuideContextItem = {
   slug: string;
   url: string;
   description: string;
-  topics: string[];
+  tags: string[];
   industries: string[];
   communities: string[];
 };
@@ -66,7 +66,7 @@ export const searchPublishedResourcesForGuide = internalQuery({
       slug: r.slug,
       url: r.url,
       description: r.description,
-      topics: r.topics,
+      tags: r.tags,
       industries: r.industries,
       communities: r.communities,
     }));
@@ -96,7 +96,7 @@ function buildStubReply(
   }
 
   const lines = hits.map((h, i) => {
-    const tags = [...h.topics, ...h.industries, ...h.communities].slice(0, 4).join(', ');
+    const tags = [...h.tags, ...h.industries, ...h.communities].slice(0, 4).join(', ');
     return [
       `[#${i + 1}] ${h.title}`,
       `Link: /resources/${h.slug} · ${h.url}`,
