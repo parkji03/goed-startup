@@ -1,7 +1,7 @@
 "use client"
 
 import { ChevronDownIcon } from "@heroicons/react/20/solid"
-import { createContext, use, useCallback, useEffect, useMemo, useRef, useState } from "react"
+import { createContext, use, useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react"
 import { type ButtonProps, Button as Trigger } from "react-aria-components/Button"
 import { composeRenderProps } from "react-aria-components/composeRenderProps"
 import type { DisclosurePanelProps, DisclosureProps } from "react-aria-components/Disclosure"
@@ -20,7 +20,7 @@ import { Tree, TreeItem, TreeItemContent } from "react-aria-components/Tree"
 import { twJoin, twMerge } from "tailwind-merge"
 import { SheetContent } from "@/components/ui/sheet"
 import { TreeIndicator } from "@/components/ui/tree"
-import { useIsMobile } from "@/hooks/use-mobile"
+const DEFAULT_SIDEBAR_MOBILE_MEDIA = "(max-width: 767px)"
 import { cx } from "@/lib/primitive"
 import { Button } from "./button"
 import { Link } from "./link"
@@ -57,6 +57,11 @@ interface SidebarProviderProps extends React.ComponentProps<"div"> {
   isOpen?: boolean
   shortcut?: string
   onOpenChange?: (open: boolean) => void
+  /**
+   * Media query that determines "mobile" mode (Sheet) vs docked panel.
+   * Defaults to `"(max-width: 767px)"` to match the Tailwind `md` breakpoint.
+   */
+  mobileMediaQuery?: string
 }
 
 const SidebarProvider = ({
@@ -67,11 +72,10 @@ const SidebarProvider = ({
   style,
   children,
   shortcut = "b",
+  mobileMediaQuery = DEFAULT_SIDEBAR_MOBILE_MEDIA,
   ref,
   ...props
 }: SidebarProviderProps) => {
-  const [openMobile, setOpenMobile] = useState(false)
-
   const [internalOpenState, setInternalOpenState] = useState(defaultOpen)
   const open = openProp ?? internalOpenState
   const setOpen = useCallback(
@@ -89,16 +93,22 @@ const SidebarProvider = ({
     [setOpenProp, open],
   )
 
-  const isMobile = useIsMobile()
-  const isMobileRef = useRef(isMobile)
-  isMobileRef.current = isMobile
+  const isMobile = useSyncExternalStore(
+    useCallback(
+      (cb: () => void) => {
+        if (typeof window === "undefined") return () => {}
+        const mq = window.matchMedia(mobileMediaQuery)
+        mq.addEventListener("change", cb)
+        return () => mq.removeEventListener("change", cb)
+      },
+      [mobileMediaQuery],
+    ),
+    () => typeof window !== "undefined" && window.matchMedia(mobileMediaQuery).matches,
+    () => false,
+  )
 
   const toggleSidebar = useCallback(() => {
-    if (isMobileRef.current) {
-      setOpenMobile((prev) => !prev)
-    } else {
-      setOpen((prev) => !prev)
-    }
+    setOpen((prev) => !prev)
   }, [setOpen])
 
   useEffect(() => {
@@ -130,17 +140,13 @@ const SidebarProvider = ({
       state,
       open,
       setOpen,
-      isMobile: isMobile ?? false,
-      isOpenOnMobile: openMobile,
-      setIsOpenOnMobile: setOpenMobile,
+      isMobile,
+      isOpenOnMobile: open,
+      setIsOpenOnMobile: setOpen,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, toggleSidebar],
+    [state, open, setOpen, isMobile, toggleSidebar],
   )
-
-  if (isMobile === undefined) {
-    return null
-  }
 
   return (
     <SidebarContext value={contextValue}>
@@ -183,7 +189,7 @@ const Sidebar = ({
   className,
   ...props
 }: SidebarProps) => {
-  const { isMobile, state, isOpenOnMobile, setIsOpenOnMobile } = useSidebar()
+  const { isMobile, state, open, setOpen } = useSidebar()
   if (collapsible === "none") {
     return (
       <div
@@ -206,13 +212,13 @@ const Sidebar = ({
       <>
         <span className="sr-only" aria-hidden data-intent={intent} />
         <SheetContent
-          isOpen={isOpenOnMobile}
-          onOpenChange={setIsOpenOnMobile}
+          isOpen={open}
+          onOpenChange={setOpen}
           closeButton={closeButton}
           aria-label="Sidebar"
           data-slot="sidebar"
           data-intent="default"
-          className="w-(--sidebar-width) entering:blur-in exiting:blur-out [--sidebar-width:18rem] has-data-[slot=calendar]:[--sidebar-width:23rem]"
+          className="w-(--sidebar-width) [--sidebar-width:18rem] has-data-[slot=calendar]:[--sidebar-width:23rem]"
           side={side}
           dir={side === "right" ? "rtl" : "ltr"}
         >

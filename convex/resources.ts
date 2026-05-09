@@ -1,8 +1,5 @@
 import { paginationOptsValidator } from 'convex/server';
 import { v } from 'convex/values';
-import { getThreadMetadata, listUIMessages, syncStreams } from '@convex-dev/agent';
-import { vStreamArgs } from '@convex-dev/agent/validators';
-import { components } from './_generated/api';
 import { query } from './_generated/server';
 import { founderProfileValidator, clampFounderProfileForConvex } from './founderProfile';
 import { scoreResourceForProfile } from './lib/matchResources';
@@ -219,32 +216,3 @@ export const recommendForProfile = query({
   },
 });
 
-// —— Guide thread UI (Convex Agent) ——
-
-export const listThreadUIMessages = query({
-  args: {
-    threadId: v.string(),
-    paginationOpts: paginationOptsValidator,
-    streamArgs: vStreamArgs,
-  },
-  handler: async (ctx, args) => {
-    const meta = await getThreadMetadata(ctx, components.agent, {
-      threadId: args.threadId,
-    });
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity?.tokenIdentifier) {
-      throw new Error('Sign in required to load guide messages.');
-    }
-    if (!meta.userId || meta.userId !== identity.tokenIdentifier) {
-      throw new Error('Unauthorized');
-    }
-
-    const paginated = await listUIMessages(ctx, components.agent, args);
-    const streams = await syncStreams(ctx, components.agent, {
-      threadId: args.threadId,
-      streamArgs: args.streamArgs,
-    });
-
-    return { ...paginated, streams };
-  },
-});

@@ -42,9 +42,9 @@ export function GlobalCommandTrigger({ className }: Props) {
           className,
         )}
       >
-        <MagnifyingGlassIcon className="size-4" />
-        <span className="hidden sm:inline">Search</span>
-        <kbd className="hidden rounded border border-border px-1 font-mono text-[10px] sm:inline">⌘K</kbd>
+        <MagnifyingGlassIcon className="size-4 shrink-0" />
+        <span className="hidden truncate sm:inline">Search</span>
+        <kbd className="ms-auto hidden h-5 items-center rounded bg-muted-fg/10 px-1 py-1 text-[12px] font-medium tracking-wider text-muted-fg sm:inline-flex">⌘K</kbd>
       </AriaButton>
 
       {open ? <GlobalCommandMenu onClose={() => setOpen(false)} /> : null}

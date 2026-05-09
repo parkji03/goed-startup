@@ -18,7 +18,7 @@ export function StartupUtahLogoLink({ className }: Props) {
       href="/"
       aria-label={t("logoAlt")}
       className={twMerge(
-        "-m-1 inline-flex shrink-0 rounded-md p-1 outline-0 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring",
+        "-m-1 inline-flex shrink-0 rounded-md p-0.5 outline-0 outline-offset-2 focus-visible:outline-2 focus-visible:outline-ring sm:p-1",
         className,
       )}
     >

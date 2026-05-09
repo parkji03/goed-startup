@@ -1,5 +1,5 @@
-import { LocaleLayoutHeader } from "@/components/locale-layout-header";
 import { Providers } from "@/components/providers";
+import { PublicSiteShell } from "@/components/public-site-shell";
 import { routing } from "@/i18n/routing";
 import { appTimeZone } from "@/i18n/time-zone";
 import type { Metadata } from "next";
@@ -35,6 +35,9 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: t("description"),
+    icons: {
+      icon: [{ url: "/icon.svg", type: "image/svg+xml" }],
+    },
   };
 }
 
@@ -66,8 +69,7 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-full flex-col">
         <Providers locale={locale} messages={messages} timeZone={timeZone}>
-          <LocaleLayoutHeader locale={locale} />
-          {children}
+          <PublicSiteShell locale={locale}>{children}</PublicSiteShell>
         </Providers>
       </body>
     </html>
