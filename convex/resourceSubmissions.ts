@@ -81,8 +81,14 @@ export const listPendingForAdmin = query({
 });
 
 export const approve = mutation({
-  args: { submissionId: v.id('resourceSubmissions') },
-  handler: async (ctx, { submissionId }) => {
+  args: {
+    submissionId: v.id('resourceSubmissions'),
+    category: resourceCategoryValidator,
+    tags: v.array(v.string()),
+    communities: v.array(v.string()),
+    stageTags: v.array(v.string()),
+  },
+  handler: async (ctx, { submissionId, category, tags, communities, stageTags }) => {
     const admin = await requireAdmin(ctx);
     const sub = await ctx.db.get(submissionId);
     if (!sub) throw new Error('Submission not found');
@@ -91,10 +97,6 @@ export const approve = mutation({
     }
 
     const sourceId = `submission-${submissionId}`;
-    const communitiesRaw = sub.suggestedCommunities.join('|');
-    const industriesRaw = sub.suggestedIndustries.join('|');
-    const locationsRaw = sub.suggestedLocations.join('|');
-    const topicsRaw = sub.suggestedTopics.join('|');
 
     await ctx.runMutation(internal.resourceInternal.upsertResource, {
       row: {
@@ -103,14 +105,27 @@ export const approve = mutation({
         description: sub.description,
         url: sub.url,
         contactEmail: sub.submitterEmail,
-        communitiesRaw,
-        industriesRaw,
-        locationsRaw,
-        topicsRaw,
+        communitiesRaw: communities.join('|'),
+        industriesRaw: sub.suggestedIndustries.join('|'),
+        locationsRaw: sub.suggestedLocations.join('|'),
+        topicsRaw: '',
+        tagsRaw: tags.join('|'),
+        category,
         status: 'published',
         submissionId,
       },
     });
+
+    // upsertResource derives stageTags from topics; admin overrides win.
+    if (stageTags.length > 0) {
+      const created = await ctx.db
+        .query('resources')
+        .withIndex('by_sourceId', (q) => q.eq('sourceId', sourceId))
+        .unique();
+      if (created) {
+        await ctx.db.patch(created._id, { stageTags });
+      }
+    }
 
     const now = Date.now();
     await ctx.db.patch(submissionId, {
