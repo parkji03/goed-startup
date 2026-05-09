@@ -24,7 +24,7 @@ import {
 export const runtime = 'nodejs'; // Need node:crypto in abuse-guards
 export const maxDuration = 30;
 
-const MODEL_ID = 'deepseek/deepseek-v4-flash';
+const MODEL_ID = 'google/gemini-3.1-flash-lite';
 const MAX_OUTPUT_TOKENS = 800;
 const TEMPERATURE = 0.3;
 
@@ -138,7 +138,9 @@ export async function POST(req: Request): Promise<Response> {
 
   const startedAt = Date.now();
   const result = streamText({
-    model: openrouter.chat(MODEL_ID),
+    model: openrouter.chat(MODEL_ID, {
+      reasoning: { effort: 'minimal' },
+    }),
     system,
     messages: modelMessages,
     maxOutputTokens: MAX_OUTPUT_TOKENS,

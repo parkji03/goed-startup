@@ -42,7 +42,7 @@ const TOP_K_GUIDES = 4;
  * exchange for letting the model cite specific eligibility, dollar amounts,
  * and program details that aren't in the 600-char description.
  */
-const BODY_EXCERPT_CHARS = 1500;
+const BODY_EXCERPT_CHARS = 800;
 
 const guideContextItemValidator = v.object({
   resourceId: v.id('resources'),
