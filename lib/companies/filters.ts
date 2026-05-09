@@ -2,7 +2,7 @@
  * URL-encoded filter state for the map.
  *
  * Persisted to the URL so views are shareable and survive refresh:
- *   ?q=lehi&sector=fintech,consumer&stage=seed,series-a&employees=11-50
+ *   ?q=lehi&sector=fintech,consumer&stage=seed,series-a&employees=11-50&city=lehi,provo
  *
  * Empty values aren't serialized at all (no `?q=&sector=`) — the URL stays
  * tidy when nothing is filtered.
@@ -22,6 +22,7 @@ export type MapFilters = {
   sectors: SectorId[];
   stages: StageId[];
   employeeCounts: EmployeeCountId[];
+  cities: string[];
 };
 
 export const EMPTY_FILTERS: MapFilters = {
@@ -29,6 +30,7 @@ export const EMPTY_FILTERS: MapFilters = {
   sectors: [],
   stages: [],
   employeeCounts: [],
+  cities: [],
 };
 
 export function isFiltersActive(f: MapFilters): boolean {
@@ -36,7 +38,8 @@ export function isFiltersActive(f: MapFilters): boolean {
     f.q.trim().length > 0 ||
     f.sectors.length > 0 ||
     f.stages.length > 0 ||
-    f.employeeCounts.length > 0
+    f.employeeCounts.length > 0 ||
+    f.cities.length > 0
   );
 }
 
@@ -69,7 +72,22 @@ export function parseFiltersFromParams(
     sectors: parseCsvParam(params.get('sector'), isSectorId),
     stages: parseCsvParam(params.get('stage'), isStageId),
     employeeCounts: parseCsvParam(params.get('employees'), isEmployeeCountId),
+    cities: parseCitiesCsv(params.get('city')),
   };
+}
+
+/**
+ * Cities are free-form strings (no closed enum), so parseCsvParam with its
+ * type-guard pattern doesn't apply — any non-empty trimmed value is valid.
+ */
+function parseCitiesCsv(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+  const seen = new Set<string>();
+  for (const part of raw.split(',')) {
+    const trimmed = part.trim();
+    if (trimmed.length > 0) seen.add(trimmed);
+  }
+  return Array.from(seen);
 }
 
 /**
@@ -84,6 +102,7 @@ export function serializeFiltersToParams(f: MapFilters): string {
   if (f.sectors.length) params.set('sector', f.sectors.join(','));
   if (f.stages.length) params.set('stage', f.stages.join(','));
   if (f.employeeCounts.length) params.set('employees', f.employeeCounts.join(','));
+  if (f.cities.length) params.set('city', f.cities.join(','));
   return params.toString();
 }
 

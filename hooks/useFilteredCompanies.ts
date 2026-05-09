@@ -82,8 +82,15 @@ export function useFilteredCompanies(
       employeeCounts: filters.employeeCounts.length
         ? filters.employeeCounts
         : undefined,
+      cities: filters.cities.length ? filters.cities : undefined,
     }),
-    [filters.q, filters.sectors, filters.stages, filters.employeeCounts],
+    [
+      filters.q,
+      filters.sectors,
+      filters.stages,
+      filters.employeeCounts,
+      filters.cities,
+    ],
   );
 
   const rows = useQuery(api.companies.searchForMap, queryArgs);

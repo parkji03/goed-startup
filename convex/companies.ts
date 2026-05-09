@@ -57,8 +57,9 @@ export const searchForMap = query({
     sectors: v.optional(v.array(sectorValidator)),
     stages: v.optional(v.array(stageValidator)),
     employeeCounts: v.optional(v.array(employeeCountValidator)),
+    cities: v.optional(v.array(v.string())),
   },
-  handler: async (ctx, { q, sectors, stages, employeeCounts }) => {
+  handler: async (ctx, { q, sectors, stages, employeeCounts, cities }) => {
     const trimmed = q?.trim() ?? '';
 
     // Cap reads at a generous bound so the map can render the entire
@@ -82,6 +83,12 @@ export const searchForMap = query({
     const employeeSet = employeeCounts && employeeCounts.length
       ? new Set(employeeCounts)
       : null;
+    // Cities are free-form strings rather than a closed enum, so match
+    // case-insensitively to avoid drifting if the seed data ever has
+    // mixed casing.
+    const citySet = cities && cities.length
+      ? new Set(cities.map((c) => c.trim().toLowerCase()))
+      : null;
 
     const filtered = rows
       .filter((c) => c.location.lat != null && c.location.lng != null)
@@ -91,6 +98,12 @@ export const searchForMap = query({
         (c) =>
           !employeeSet ||
           (c.employeeCount != null && employeeSet.has(c.employeeCount)),
+      )
+      .filter(
+        (c) =>
+          !citySet ||
+          (c.location.city != null &&
+            citySet.has(c.location.city.trim().toLowerCase())),
       );
 
     // Re-rank so company-name matches surface above website/description-only
@@ -149,6 +162,42 @@ export const mapTotalCount = query({
     return rows.filter(
       (c) => c.location.lat != null && c.location.lng != null,
     ).length;
+  },
+});
+
+/**
+ * Cities (with company counts) for the City filter chip on the map. Computed
+ * over the full published set, NOT the currently-filtered set, so the
+ * dropdown options stay stable as the user toggles other filters. Sorted by
+ * count desc so the busiest cities are at the top — investors usually scan
+ * the dense markets first.
+ *
+ * The filter chip uses `name` (display label) and `id` (URL-safe key, just
+ * the lowercase city name) to drive the multi-select.
+ */
+export const cityList = query({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db
+      .query('companies')
+      .withIndex('by_status', (q) => q.eq('status', 'published'))
+      .take(1000);
+    const counts = new Map<string, { display: string; count: number }>();
+    for (const r of rows) {
+      const city = r.location.city?.trim();
+      if (!city) continue;
+      // Skip rows the map can't actually plot — they'd never show up in
+      // the result list, so a city with only un-geocoded entries would
+      // be a dead-end filter.
+      if (r.location.lat == null || r.location.lng == null) continue;
+      const key = city.toLowerCase();
+      const entry = counts.get(key);
+      if (entry) entry.count += 1;
+      else counts.set(key, { display: city, count: 1 });
+    }
+    return Array.from(counts.entries())
+      .map(([key, { display, count }]) => ({ key, display, count }))
+      .sort((a, b) => b.count - a.count || a.display.localeCompare(b.display));
   },
 });
 
@@ -343,5 +392,31 @@ export const seedOne = mutation({
 
     const _id = await ctx.db.insert('companies', writePayload);
     return { _id, action: 'inserted' as const };
+  },
+});
+
+/**
+ * One-shot backfill for rows seeded before `hiringStatus` and `jobPostings`
+ * became required. Patches in safe defaults so schema validation passes.
+ * Idempotent — only writes when a field is missing.
+ */
+export const backfillRequiredFields = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const rows = await ctx.db.query('companies').collect();
+    let patched = 0;
+    for (const row of rows) {
+      const update: {
+        hiringStatus?: 'unknown';
+        jobPostings?: { title: string; link: string; department?: string }[];
+      } = {};
+      if (row.hiringStatus === undefined) update.hiringStatus = 'unknown';
+      if (row.jobPostings === undefined) update.jobPostings = [];
+      if (Object.keys(update).length > 0) {
+        await ctx.db.patch(row._id, update);
+        patched++;
+      }
+    }
+    return { scanned: rows.length, patched };
   },
 });

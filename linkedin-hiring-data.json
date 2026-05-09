@@ -1,0 +1,3881 @@
+{
+  "source_csv": "Map Data for Builder Day  - Sheet1.csv",
+  "scraped_at": "2026-05-08",
+  "summary": {
+    "total_companies": 220,
+    "with_linkedin": 219,
+    "flagged_no_linkedin": 1,
+    "hiring": 61,
+    "not_hiring": 158,
+    "total_listings": 304
+  },
+  "flagged_companies": [
+    "Avy"
+  ],
+  "companies": [
+    {
+      "company": "Alcomy",
+      "linkedin_url": "https://www.linkedin.com/company/alcomy/jobs/",
+      "slug": "alcomy",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "alphaMountain",
+      "linkedin_url": "https://www.linkedin.com/company/alphamountain/jobs/",
+      "slug": "alphamountain",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Altitude AI",
+      "linkedin_url": "https://www.linkedin.com/company/altitude-ai/jobs/",
+      "slug": "altitude-ai",
+      "company_id": "76183118",
+      "is_hiring": true,
+      "listing_count": 3,
+      "listings": [
+        {
+          "title": "Software Engineer",
+          "posted": "2026-01-08",
+          "job_id": "4359732592",
+          "url": "https://www.linkedin.com/jobs/view/4359732592/"
+        },
+        {
+          "title": "Account Executive",
+          "posted": "2026-01-08",
+          "job_id": "4359644677",
+          "url": "https://www.linkedin.com/jobs/view/4359644677/"
+        },
+        {
+          "title": "Business Development Representative",
+          "posted": "2026-01-08",
+          "job_id": "4359722647",
+          "url": "https://www.linkedin.com/jobs/view/4359722647/"
+        }
+      ]
+    },
+    {
+      "company": "Alysio",
+      "linkedin_url": "https://www.linkedin.com/company/alysio/jobs/",
+      "slug": "alysio",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Bracket Labs",
+      "linkedin_url": "https://www.linkedin.com/company/bracket-labs/jobs/",
+      "slug": "bracket-labs",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Crew",
+      "linkedin_url": "https://www.linkedin.com/company/trycrew/jobs/",
+      "slug": "trycrew",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Data Quality Co-Op",
+      "linkedin_url": "https://www.linkedin.com/company/data-quality-co-op/jobs/",
+      "slug": "data-quality-co-op",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "DeepPower",
+      "linkedin_url": "https://www.linkedin.com/company/deeppowerinc/jobs/",
+      "slug": "deeppowerinc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Domus Diagnostics",
+      "linkedin_url": "https://www.linkedin.com/company/domusdx/jobs/",
+      "slug": "domusdx",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "D\u00f3nde",
+      "linkedin_url": "https://www.linkedin.com/company/d\u00f3nde/jobs/",
+      "slug": "d\u00f3nde",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Dorai",
+      "linkedin_url": "https://www.linkedin.com/company/dorai-home/jobs/",
+      "slug": "dorai-home",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "dree",
+      "linkedin_url": "https://www.linkedin.com/company/joindree/jobs/",
+      "slug": "joindree",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Driven",
+      "linkedin_url": "https://www.linkedin.com/company/bemoredriven/jobs/",
+      "slug": "bemoredriven",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "EagleCorps",
+      "linkedin_url": "https://www.linkedin.com/company/eaglecorps/jobs/",
+      "slug": "eaglecorps",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Ednition",
+      "linkedin_url": "https://www.linkedin.com/company/ednition/jobs/",
+      "slug": "ednition",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Errand",
+      "linkedin_url": "https://www.linkedin.com/company/goerrand/jobs/",
+      "slug": "goerrand",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Funner",
+      "linkedin_url": "https://www.linkedin.com/company/funner/jobs/",
+      "slug": "funner",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Giddy",
+      "linkedin_url": "https://www.linkedin.com/company/giddydefi/jobs/",
+      "slug": "giddydefi",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Inherent Biosciences",
+      "linkedin_url": "https://www.linkedin.com/company/inherent-biosciences-inc/jobs/",
+      "slug": "inherent-biosciences-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Jipe",
+      "linkedin_url": "https://www.linkedin.com/company/jipejobs/jobs/",
+      "slug": "jipejobs",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Veras",
+      "linkedin_url": "https://www.linkedin.com/company/jobwise-recruiting/jobs/",
+      "slug": "jobwise-recruiting",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "KetoNatural Pet Foods",
+      "linkedin_url": "https://www.linkedin.com/company/ketonatural-pet-foods/jobs/",
+      "slug": "ketonatural-pet-foods",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Kolla",
+      "linkedin_url": "https://www.linkedin.com/company/getkolla/jobs/",
+      "slug": "getkolla",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Krado",
+      "linkedin_url": "https://www.linkedin.com/company/kradoinc/jobs/",
+      "slug": "kradoinc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Leash Bio",
+      "linkedin_url": "https://www.linkedin.com/company/leash-laboratories/jobs/",
+      "slug": "leash-laboratories",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Leeway",
+      "linkedin_url": "https://www.linkedin.com/company/leewayhq/jobs/",
+      "slug": "leewayhq",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Literal",
+      "linkedin_url": "https://www.linkedin.com/company/literalapp/jobs/",
+      "slug": "literalapp",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "LooLoo",
+      "linkedin_url": "https://www.linkedin.com/company/looloo-us/jobs/",
+      "slug": "looloo-us",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Masset",
+      "linkedin_url": "https://www.linkedin.com/company/massetai/jobs/",
+      "slug": "massetai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Mindsmith",
+      "linkedin_url": "https://www.linkedin.com/company/mindsmith1/jobs/",
+      "slug": "mindsmith1",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "NanoSpot.ai",
+      "linkedin_url": "https://www.linkedin.com/company/nanospot-ai/jobs/",
+      "slug": "nanospot-ai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Nodal Power",
+      "linkedin_url": "https://www.linkedin.com/company/nodal-power/jobs/",
+      "slug": "nodal-power",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Pageport",
+      "linkedin_url": "https://www.linkedin.com/company/pageport/jobs/",
+      "slug": "pageport",
+      "company_id": "90713203",
+      "is_hiring": true,
+      "listing_count": 4,
+      "listings": [
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2025-11-11",
+          "job_id": "4335581071",
+          "url": "https://www.linkedin.com/jobs/view/4335581071/"
+        },
+        {
+          "title": "Product Designer",
+          "posted": "2025-11-11",
+          "job_id": "4335431264",
+          "url": "https://www.linkedin.com/jobs/view/4335431264/"
+        },
+        {
+          "title": "Customer Success Manager",
+          "posted": "2026-01-16",
+          "job_id": "4363513665",
+          "url": "https://www.linkedin.com/jobs/view/4363513665/"
+        },
+        {
+          "title": "Account Executive",
+          "posted": "2026-01-12",
+          "job_id": "4361180748",
+          "url": "https://www.linkedin.com/jobs/view/4361180748/"
+        }
+      ]
+    },
+    {
+      "company": "Pale Blue",
+      "linkedin_url": "https://www.linkedin.com/company/pale-blue-earth/jobs/",
+      "slug": "pale-blue-earth",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Parakeet Financial",
+      "linkedin_url": "https://www.linkedin.com/company/parakeet-financial/jobs/",
+      "slug": "parakeet-financial",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Pyrofex",
+      "linkedin_url": "https://www.linkedin.com/company/pyrofex/jobs/",
+      "slug": "pyrofex",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SignalHero",
+      "linkedin_url": "https://www.linkedin.com/company/signalhero/jobs/",
+      "slug": "signalhero",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Roger",
+      "linkedin_url": "https://www.linkedin.com/company/iristechs/jobs/",
+      "slug": "iristechs",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Slipstream Medical",
+      "linkedin_url": "https://www.linkedin.com/company/slipstream-medical/jobs/",
+      "slug": "slipstream-medical",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "StreamOS",
+      "linkedin_url": "https://www.linkedin.com/company/stream-os/jobs/",
+      "slug": "stream-os",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "stumbl",
+      "linkedin_url": "https://www.linkedin.com/company/stumblofficial/jobs/",
+      "slug": "stumblofficial",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Swyf",
+      "linkedin_url": "https://www.linkedin.com/company/swyf-inc/jobs/",
+      "slug": "swyf-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Treads",
+      "linkedin_url": "https://www.linkedin.com/company/gettreads/jobs/",
+      "slug": "gettreads",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Upkid",
+      "linkedin_url": "https://www.linkedin.com/company/upkid/jobs/",
+      "slug": "upkid",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Viori",
+      "linkedin_url": "https://www.linkedin.com/company/viori-beauty/jobs/",
+      "slug": "viori-beauty",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Yoodlize",
+      "linkedin_url": "https://www.linkedin.com/company/yoodlize/jobs/",
+      "slug": "yoodlize",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Zaymo",
+      "linkedin_url": "https://www.linkedin.com/company/getzaymo/jobs/",
+      "slug": "getzaymo",
+      "company_id": "89712812",
+      "is_hiring": true,
+      "listing_count": 3,
+      "listings": [
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2025-09-09",
+          "job_id": "4297352723",
+          "url": "https://www.linkedin.com/jobs/view/4297352723/"
+        },
+        {
+          "title": "Account Executive",
+          "posted": "2026-04-23",
+          "job_id": "4404704052",
+          "url": "https://www.linkedin.com/jobs/view/4404704052/"
+        },
+        {
+          "title": "Founding Marketer",
+          "posted": "2026-04-23",
+          "job_id": "4404710011",
+          "url": "https://www.linkedin.com/jobs/view/4404710011/"
+        }
+      ]
+    },
+    {
+      "company": "After.com",
+      "linkedin_url": "https://www.linkedin.com/company/after-com/jobs/",
+      "slug": "after-com",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Applause",
+      "linkedin_url": "https://www.linkedin.com/company/applausehq/jobs/",
+      "slug": "applausehq",
+      "company_id": "79081444",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Senior Product Manager",
+          "posted": "2026-05-07",
+          "job_id": "4410863074",
+          "url": "https://www.linkedin.com/jobs/view/4410863074/"
+        },
+        {
+          "title": "Account Executive, Enterprise",
+          "posted": "2026-04-21",
+          "job_id": "4403990153",
+          "url": "https://www.linkedin.com/jobs/view/4403990153/"
+        }
+      ]
+    },
+    {
+      "company": "Attestiv",
+      "linkedin_url": "https://www.linkedin.com/company/attestiv/jobs/",
+      "slug": "attestiv",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Awsm",
+      "linkedin_url": "https://www.linkedin.com/company/realawsm/jobs/",
+      "slug": "realawsm",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Boostly",
+      "linkedin_url": "https://www.linkedin.com/company/goboostly/jobs/",
+      "slug": "goboostly",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Brite",
+      "linkedin_url": "https://www.linkedin.com/company/getbritehr/jobs/",
+      "slug": "getbritehr",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Brooksee",
+      "linkedin_url": "https://www.linkedin.com/company/brooksee/jobs/",
+      "slug": "brooksee",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Built for Teams",
+      "linkedin_url": "https://www.linkedin.com/company/builtforteams/jobs/",
+      "slug": "builtforteams",
+      "company_id": "18580622",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Product Manager",
+          "posted": "2026-02-17",
+          "job_id": "4373020449",
+          "url": "https://www.linkedin.com/jobs/view/4373020449/"
+        },
+        {
+          "title": "Channel Partnership Account Executive",
+          "posted": "2026-04-01",
+          "job_id": "4393047160",
+          "url": "https://www.linkedin.com/jobs/view/4393047160/"
+        }
+      ]
+    },
+    {
+      "company": "Cardagraph",
+      "linkedin_url": "https://www.linkedin.com/company/cardagraph/jobs/",
+      "slug": "cardagraph",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Cinch",
+      "linkedin_url": "https://www.linkedin.com/company/cinchplatform/jobs/",
+      "slug": "cinchplatform",
+      "company_id": "19025053",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Enterprise Customer Success Manager - CDP or SaaS",
+          "posted": "2026-03-02",
+          "job_id": "4377796844",
+          "url": "https://www.linkedin.com/jobs/view/4377796844/"
+        }
+      ]
+    },
+    {
+      "company": "Cloud Storage Security",
+      "linkedin_url": "https://www.linkedin.com/company/cloud-storage-security/jobs/",
+      "slug": "cloud-storage-security",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Continuum",
+      "linkedin_url": "https://www.linkedin.com/company/joincontinuum/jobs/",
+      "slug": "joincontinuum",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Droplet",
+      "linkedin_url": "https://www.linkedin.com/company/dropletforms/jobs/",
+      "slug": "dropletforms",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Elements",
+      "linkedin_url": "https://www.linkedin.com/company/getelements/jobs/",
+      "slug": "getelements",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Ember",
+      "linkedin_url": "https://www.linkedin.com/company/emberhome/jobs/",
+      "slug": "emberhome",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Flowell",
+      "linkedin_url": "https://www.linkedin.com/company/flowell-inc/jobs/",
+      "slug": "flowell-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "FluentWorlds",
+      "linkedin_url": "https://www.linkedin.com/company/fluentworlds/jobs/",
+      "slug": "fluentworlds",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Gauge",
+      "linkedin_url": "https://www.linkedin.com/company/sellgauge/jobs/",
+      "slug": "sellgauge",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Halda",
+      "linkedin_url": "https://www.linkedin.com/company/heyhalda/jobs/",
+      "slug": "heyhalda",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Halosight",
+      "linkedin_url": "https://www.linkedin.com/company/halosight/jobs/",
+      "slug": "halosight",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Leland",
+      "linkedin_url": "https://www.linkedin.com/company/joinleland/jobs/",
+      "slug": "joinleland",
+      "company_id": "77895939",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "AI Coach / Consultant",
+          "posted": "2026-03-09",
+          "job_id": "4381848854",
+          "url": "https://www.linkedin.com/jobs/view/4381848854/"
+        },
+        {
+          "title": "Founding Account Manager",
+          "posted": null,
+          "job_id": "4398328483",
+          "url": "https://www.linkedin.com/jobs/view/4398328483/"
+        },
+        {
+          "title": "Strategy & Ops, Courses",
+          "posted": "2026-04-17",
+          "job_id": "4403522415",
+          "url": "https://www.linkedin.com/jobs/view/4403522415/"
+        },
+        {
+          "title": "GMAT Tutor (Contract)",
+          "posted": null,
+          "job_id": "4370104896",
+          "url": "https://www.linkedin.com/jobs/view/4370104896/"
+        },
+        {
+          "title": "AI Education Intern",
+          "posted": "2026-04-25",
+          "job_id": "4406811289",
+          "url": "https://www.linkedin.com/jobs/view/4406811289/"
+        },
+        {
+          "title": "FP&A Coach (Contract)",
+          "posted": null,
+          "job_id": "4387474959",
+          "url": "https://www.linkedin.com/jobs/view/4387474959/"
+        },
+        {
+          "title": "Growth Manager, Organic",
+          "posted": "2025-11-24",
+          "job_id": "4338814843",
+          "url": "https://www.linkedin.com/jobs/view/4338814843/"
+        },
+        {
+          "title": "Consumer Account Executive",
+          "posted": "2025-10-22",
+          "job_id": "4318508164",
+          "url": "https://www.linkedin.com/jobs/view/4318508164/"
+        },
+        {
+          "title": "AI for Sales & Marketing Coach (Contract)",
+          "posted": null,
+          "job_id": "4387478835",
+          "url": "https://www.linkedin.com/jobs/view/4387478835/"
+        },
+        {
+          "title": "Head of Sales",
+          "posted": null,
+          "job_id": "4400291371",
+          "url": "https://www.linkedin.com/jobs/view/4400291371/"
+        }
+      ]
+    },
+    {
+      "company": "Limit Break",
+      "linkedin_url": "https://www.linkedin.com/company/limit-break/jobs/",
+      "slug": "limit-break",
+      "company_id": "28450264",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Staff Unity Engineer (Remote)",
+          "posted": "2026-05-07",
+          "job_id": "4389850777",
+          "url": "https://www.linkedin.com/jobs/view/4389850777/"
+        },
+        {
+          "title": "AI\u30a8\u30f3\u30b8\u30cb\u30a2 AI Engineer (Japan)",
+          "posted": "2026-05-04",
+          "job_id": "4359283830",
+          "url": "https://www.linkedin.com/jobs/view/4359283830/"
+        },
+        {
+          "title": "\u30b7\u30cb\u30a2QA\u30c6\u30b9\u30bf\u30fc Senior QA Tester (Japan)",
+          "posted": null,
+          "job_id": "4294595676",
+          "url": "https://www.linkedin.com/jobs/view/4294595676/"
+        },
+        {
+          "title": "\u30b2\u30fc\u30e0\u30c7\u30b6\u30a4\u30ca\u30fc\uff08\u30a4\u30d9\u30f3\u30c8\uff09Game Designer (Events) (Japan)",
+          "posted": null,
+          "job_id": "4390110028",
+          "url": "https://www.linkedin.com/jobs/view/4390110028/"
+        },
+        {
+          "title": "\u30b2\u30fc\u30e0\u30c7\u30b6\u30a4\u30ca\u30fc\uff08\u6f14\u51fa\uff09Game Designer (Episode) (Japan)",
+          "posted": null,
+          "job_id": "4374037516",
+          "url": "https://www.linkedin.com/jobs/view/4374037516/"
+        },
+        {
+          "title": "\u30b7\u30cb\u30a2VFX\u30a2\u30fc\u30c6\u30a3\u30b9\u30c8 Senior VFX Artist (Japan)",
+          "posted": null,
+          "job_id": "4365920398",
+          "url": "https://www.linkedin.com/jobs/view/4365920398/"
+        },
+        {
+          "title": "Executive Producer \u30a8\u30b0\u30bc\u30af\u30c6\u30a3\u30d6\u30d7\u30ed\u30c7\u30e5\u30fc\u30b5\u30fc\uff08\u30e2\u30d0\u30a4\u30eb\u30b2\u30fc\u30e0\uff09(Japan)",
+          "posted": null,
+          "job_id": "4357621745",
+          "url": "https://www.linkedin.com/jobs/view/4357621745/"
+        },
+        {
+          "title": "Senior Data Scientist \u30b7\u30cb\u30a2\u30fb\u30c7\u30fc\u30bf\u30b5\u30a4\u30a8\u30f3\u30c6\u30a3\u30b9\u30c8 (Japan)",
+          "posted": null,
+          "job_id": "4368099882",
+          "url": "https://www.linkedin.com/jobs/view/4368099882/"
+        },
+        {
+          "title": "Vice President of Marketing & Growth VP \u30de\u30fc\u30b1\u30c6\u30a3\u30f3\u30b0\uff06\u30b0\u30ed\u30fc\u30b9 (Japan)",
+          "posted": null,
+          "job_id": "4360836230",
+          "url": "https://www.linkedin.com/jobs/view/4360836230/"
+        },
+        {
+          "title": "Director Live Ops and Monetization \u30e9\u30a4\u30d6\u30aa\u30da\u30ec\u30fc\u30b7\u30e7\u30f3\uff06\u30de\u30cd\u30bf\u30a4\u30ba\u62c5\u5f53\u30c7\u30a3\u30ec\u30af\u30bf\u30fc (Japan)",
+          "posted": null,
+          "job_id": "4330622218",
+          "url": "https://www.linkedin.com/jobs/view/4330622218/"
+        }
+      ]
+    },
+    {
+      "company": "Metrodora Institute",
+      "linkedin_url": "https://www.linkedin.com/company/metrodorainstitute/jobs/",
+      "slug": "metrodorainstitute",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Mobly",
+      "linkedin_url": "https://www.linkedin.com/company/getmobly/jobs/",
+      "slug": "getmobly",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Modal Living",
+      "linkedin_url": "https://www.linkedin.com/company/livemodal/jobs/",
+      "slug": "livemodal",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Monarx",
+      "linkedin_url": "https://www.linkedin.com/company/monarx/jobs/",
+      "slug": "monarx",
+      "company_id": "18256648",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Senior Technical Support",
+          "posted": "2026-02-09",
+          "job_id": "4370447308",
+          "url": "https://www.linkedin.com/jobs/view/4370447308/"
+        }
+      ]
+    },
+    {
+      "company": "MotionOps",
+      "linkedin_url": "https://www.linkedin.com/company/motionops/jobs/",
+      "slug": "motionops",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Nomyx",
+      "linkedin_url": "https://www.linkedin.com/company/nomyx/jobs/",
+      "slug": "nomyx",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Oka",
+      "linkedin_url": "https://www.linkedin.com/company/oka-the-carbon-insurance-company/jobs/",
+      "slug": "oka-the-carbon-insurance-company",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Oliver IQ",
+      "linkedin_url": "https://www.linkedin.com/company/oliveriq/jobs/",
+      "slug": "oliveriq",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Olumo",
+      "linkedin_url": "https://www.linkedin.com/company/olumo/jobs/",
+      "slug": "olumo",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Ovation",
+      "linkedin_url": "https://www.linkedin.com/company/ovationup/jobs/",
+      "slug": "ovationup",
+      "company_id": "18025498",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Outbound Sales Development Representative (SDR)",
+          "posted": "2026-04-08",
+          "job_id": "4399455600",
+          "url": "https://www.linkedin.com/jobs/view/4399455600/"
+        }
+      ]
+    },
+    {
+      "company": "Paiv",
+      "linkedin_url": "https://www.linkedin.com/company/gogamify/jobs/",
+      "slug": "gogamify",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Paramify",
+      "linkedin_url": "https://www.linkedin.com/company/paramify/jobs/",
+      "slug": "paramify",
+      "company_id": "80788473",
+      "is_hiring": true,
+      "listing_count": 4,
+      "listings": [
+        {
+          "title": "Sales Engineer",
+          "posted": "2026-05-07",
+          "job_id": "4383247965",
+          "url": "https://www.linkedin.com/jobs/view/4383247965/"
+        },
+        {
+          "title": "Cyber Security Solution Engineer (Intern)",
+          "posted": "2026-05-07",
+          "job_id": "4393994090",
+          "url": "https://www.linkedin.com/jobs/view/4393994090/"
+        },
+        {
+          "title": "Client Success Manager",
+          "posted": "2026-05-07",
+          "job_id": "4343049027",
+          "url": "https://www.linkedin.com/jobs/view/4343049027/"
+        },
+        {
+          "title": "Client Success Manager",
+          "posted": "2026-05-07",
+          "job_id": "4411662047",
+          "url": "https://www.linkedin.com/jobs/view/4411662047/"
+        }
+      ]
+    },
+    {
+      "company": "Particl",
+      "linkedin_url": "https://www.linkedin.com/company/getparticl/jobs/",
+      "slug": "getparticl",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Paterna BioSciences",
+      "linkedin_url": "https://www.linkedin.com/company/paternabiosciences/jobs/",
+      "slug": "paternabiosciences",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Paykeeper",
+      "linkedin_url": "https://www.linkedin.com/company/paykeeper/jobs/",
+      "slug": "paykeeper",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Pestie",
+      "linkedin_url": "https://www.linkedin.com/company/pestie/jobs/",
+      "slug": "pestie",
+      "company_id": "19142513",
+      "is_hiring": true,
+      "listing_count": 5,
+      "listings": [
+        {
+          "title": "Customer Service Specialist",
+          "posted": "2026-04-10",
+          "job_id": "4400375721",
+          "url": "https://www.linkedin.com/jobs/view/4400375721/"
+        },
+        {
+          "title": "Product Manager",
+          "posted": "2026-01-08",
+          "job_id": "4358419249",
+          "url": "https://www.linkedin.com/jobs/view/4358419249/"
+        },
+        {
+          "title": "Office Manager",
+          "posted": "2026-04-29",
+          "job_id": "4408212754",
+          "url": "https://www.linkedin.com/jobs/view/4408212754/"
+        },
+        {
+          "title": "Fulfillment Associate",
+          "posted": "2026-03-18",
+          "job_id": "4387243943",
+          "url": "https://www.linkedin.com/jobs/view/4387243943/"
+        },
+        {
+          "title": "CRO Manager",
+          "posted": "2026-04-21",
+          "job_id": "4404861298",
+          "url": "https://www.linkedin.com/jobs/view/4404861298/"
+        }
+      ]
+    },
+    {
+      "company": "Plotline",
+      "linkedin_url": "https://www.linkedin.com/company/plot-line/jobs/",
+      "slug": "plot-line",
+      "company_id": "82753319",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Solutions Architect - North America",
+          "posted": "2026-01-22",
+          "job_id": "4365292940",
+          "url": "https://www.linkedin.com/jobs/view/4365292940/"
+        },
+        {
+          "title": "Senior Product and Brand Designer",
+          "posted": "2025-10-22",
+          "job_id": "4318511377",
+          "url": "https://www.linkedin.com/jobs/view/4318511377/"
+        },
+        {
+          "title": "Production Designer",
+          "posted": "2025-10-22",
+          "job_id": "4318500995",
+          "url": "https://www.linkedin.com/jobs/view/4318500995/"
+        },
+        {
+          "title": "Founding Account Executive - MENA Region",
+          "posted": null,
+          "job_id": "4318505765",
+          "url": "https://www.linkedin.com/jobs/view/4318505765/"
+        },
+        {
+          "title": "Enterprise Account Executive",
+          "posted": "2025-10-22",
+          "job_id": "4318512196",
+          "url": "https://www.linkedin.com/jobs/view/4318512196/"
+        },
+        {
+          "title": "GTM and Product Generalist",
+          "posted": "2025-10-22",
+          "job_id": "4318504433",
+          "url": "https://www.linkedin.com/jobs/view/4318504433/"
+        },
+        {
+          "title": "Enterprise Customer Success Manager - India",
+          "posted": null,
+          "job_id": "4318505746",
+          "url": "https://www.linkedin.com/jobs/view/4318505746/"
+        },
+        {
+          "title": "Key Account Manager - India",
+          "posted": null,
+          "job_id": "4318298976",
+          "url": "https://www.linkedin.com/jobs/view/4318298976/"
+        },
+        {
+          "title": "Finance Associate",
+          "posted": null,
+          "job_id": "4318500723",
+          "url": "https://www.linkedin.com/jobs/view/4318500723/"
+        },
+        {
+          "title": "Founding Account Executive - SEA Region",
+          "posted": null,
+          "job_id": "4318298978",
+          "url": "https://www.linkedin.com/jobs/view/4318298978/"
+        }
+      ]
+    },
+    {
+      "company": "Powder Watts",
+      "linkedin_url": "https://www.linkedin.com/company/powderwatts/jobs/",
+      "slug": "powderwatts",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Qualiti",
+      "linkedin_url": "https://www.linkedin.com/company/qualiti/jobs/",
+      "slug": "qualiti",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Rasa",
+      "linkedin_url": "https://www.linkedin.com/company/rasa-legal/jobs/",
+      "slug": "rasa-legal",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "ReferPro",
+      "linkedin_url": "https://www.linkedin.com/company/refer-pro/jobs/",
+      "slug": "refer-pro",
+      "company_id": "71861919",
+      "is_hiring": true,
+      "listing_count": 3,
+      "listings": [
+        {
+          "title": "Customer Success Manager",
+          "posted": "2026-04-28",
+          "job_id": "4406906578",
+          "url": "https://www.linkedin.com/jobs/view/4406906578/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": "2026-04-27",
+          "job_id": "4405993756",
+          "url": "https://www.linkedin.com/jobs/view/4405993756/"
+        },
+        {
+          "title": "SDR Manager",
+          "posted": "2026-04-30",
+          "job_id": "4406477870",
+          "url": "https://www.linkedin.com/jobs/view/4406477870/"
+        }
+      ]
+    },
+    {
+      "company": "Ripe",
+      "linkedin_url": "https://www.linkedin.com/company/rootrez/jobs/",
+      "slug": "rootrez",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Roster",
+      "linkedin_url": "https://www.linkedin.com/company/getroster/jobs/",
+      "slug": "getroster",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SABX",
+      "linkedin_url": "https://www.linkedin.com/company/sabx/jobs/",
+      "slug": "sabx",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Safety Mojo",
+      "linkedin_url": "https://www.linkedin.com/company/get-mojo-ai/jobs/",
+      "slug": "get-mojo-ai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Salad",
+      "linkedin_url": "https://www.linkedin.com/company/salad-technologies/jobs/",
+      "slug": "salad-technologies",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Sameday",
+      "linkedin_url": "https://www.linkedin.com/company/samedayservices/jobs/",
+      "slug": "samedayservices",
+      "company_id": "74740106",
+      "is_hiring": true,
+      "listing_count": 4,
+      "listings": [
+        {
+          "title": "Senior Front-end Engineer",
+          "posted": "2024-10-11",
+          "job_id": "4046429255",
+          "url": "https://www.linkedin.com/jobs/view/4046429255/"
+        },
+        {
+          "title": "Product Manager",
+          "posted": "2024-10-11",
+          "job_id": "4046429258",
+          "url": "https://www.linkedin.com/jobs/view/4046429258/"
+        },
+        {
+          "title": "Account Executive (B2B)",
+          "posted": "2023-10-08",
+          "job_id": "3734201809",
+          "url": "https://www.linkedin.com/jobs/view/3734201809/"
+        },
+        {
+          "title": "Revenue Operations Manager",
+          "posted": "2025-10-28",
+          "job_id": "4332353883",
+          "url": "https://www.linkedin.com/jobs/view/4332353883/"
+        }
+      ]
+    },
+    {
+      "company": "Savvos",
+      "linkedin_url": "https://www.linkedin.com/company/savvos/jobs/",
+      "slug": "savvos",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SchoolAI",
+      "linkedin_url": "https://www.linkedin.com/company/getschoolai/jobs/",
+      "slug": "getschoolai",
+      "company_id": "90617330",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "GTM Enablement Leader (Revenue Enablement)",
+          "posted": "2026-04-24",
+          "job_id": "4406157179",
+          "url": "https://www.linkedin.com/jobs/view/4406157179/"
+        }
+      ]
+    },
+    {
+      "company": "Seis",
+      "linkedin_url": "https://www.linkedin.com/company/seis-card/jobs/",
+      "slug": "seis-card",
+      "company_id": "78389817",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "\u7f8e\u5bb9\u5e2b\u3010\u5373\u65e5\u52e4\u52d9OK\u3011",
+          "posted": "2026-04-14",
+          "job_id": "4400073624",
+          "url": "https://www.linkedin.com/jobs/view/4400073624/"
+        },
+        {
+          "title": "\u8a17\u5150\u6240\u30fb\u4fdd\u80b2\u652f\u63f4\u6709\u8077\u5834\u306e\u7f8e\u5bb9\u5e2b",
+          "posted": "2026-04-14",
+          "job_id": "4400061955",
+          "url": "https://www.linkedin.com/jobs/view/4400061955/"
+        }
+      ]
+    },
+    {
+      "company": "Skill Struck",
+      "linkedin_url": "https://www.linkedin.com/company/skill-struck/jobs/",
+      "slug": "skill-struck",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Syncware",
+      "linkedin_url": "https://www.linkedin.com/company/getsyncware/jobs/",
+      "slug": "getsyncware",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Tellus",
+      "linkedin_url": "https://www.linkedin.com/company/tellus-sensors/jobs/",
+      "slug": "tellus-sensors",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Troomi",
+      "linkedin_url": "https://www.linkedin.com/company/troomi/jobs/",
+      "slug": "troomi",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Velocity Access",
+      "linkedin_url": "https://www.linkedin.com/company/velocity-access/jobs/",
+      "slug": "velocity-access",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Velosimo",
+      "linkedin_url": "https://www.linkedin.com/company/velosimoinc/jobs/",
+      "slug": "velosimoinc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Videra Health",
+      "linkedin_url": "https://www.linkedin.com/company/viderahealth/jobs/",
+      "slug": "viderahealth",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Wander",
+      "linkedin_url": "https://www.linkedin.com/company/wander-app-inc/jobs/",
+      "slug": "wander-app-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Wasatch BioLabs",
+      "linkedin_url": "https://www.linkedin.com/company/wasatch-biolabs/jobs/",
+      "slug": "wasatch-biolabs",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Xenter",
+      "linkedin_url": "https://www.linkedin.com/company/xenter-corp/jobs/",
+      "slug": "xenter-corp",
+      "company_id": "71987929",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Medical Billing Advisor",
+          "posted": "2026-05-04",
+          "job_id": "4408934055",
+          "url": "https://www.linkedin.com/jobs/view/4408934055/"
+        },
+        {
+          "title": "Medical Billing Advisor",
+          "posted": "2026-04-24",
+          "job_id": "4406133091",
+          "url": "https://www.linkedin.com/jobs/view/4406133091/"
+        }
+      ]
+    },
+    {
+      "company": "Zanskar",
+      "linkedin_url": "https://www.linkedin.com/company/zanskar/jobs/",
+      "slug": "zanskar",
+      "company_id": "82774100",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Summer Internship - MBA",
+          "posted": "2026-04-25",
+          "job_id": "4405398991",
+          "url": "https://www.linkedin.com/jobs/view/4405398991/"
+        },
+        {
+          "title": "Summer Internship - Finance Undergrad",
+          "posted": "2026-04-25",
+          "job_id": "4405722100",
+          "url": "https://www.linkedin.com/jobs/view/4405722100/"
+        },
+        {
+          "title": "Zanskar Summer Internship",
+          "posted": "2026-04-30",
+          "job_id": "4409044650",
+          "url": "https://www.linkedin.com/jobs/view/4409044650/"
+        },
+        {
+          "title": "Project Manager, Partnerships & Projects",
+          "posted": "2026-04-25",
+          "job_id": "4405726052",
+          "url": "https://www.linkedin.com/jobs/view/4405726052/"
+        },
+        {
+          "title": "Mechanical Engineer, Partnerships",
+          "posted": "2026-04-10",
+          "job_id": "4398114604",
+          "url": "https://www.linkedin.com/jobs/view/4398114604/"
+        },
+        {
+          "title": "Development Manager",
+          "posted": "2026-04-25",
+          "job_id": "4405772238",
+          "url": "https://www.linkedin.com/jobs/view/4405772238/"
+        },
+        {
+          "title": "Vice President, Project Delivery",
+          "posted": "2026-04-25",
+          "job_id": "4405727045",
+          "url": "https://www.linkedin.com/jobs/view/4405727045/"
+        },
+        {
+          "title": "Senior Machine Learning Scientist",
+          "posted": "2026-04-10",
+          "job_id": "4398126566",
+          "url": "https://www.linkedin.com/jobs/view/4398126566/"
+        },
+        {
+          "title": "Senior Computational Geophysicist",
+          "posted": "2026-04-10",
+          "job_id": "4398115650",
+          "url": "https://www.linkedin.com/jobs/view/4398115650/"
+        },
+        {
+          "title": "Senior Geothermal Reservoir Engineer",
+          "posted": null,
+          "job_id": "4398107603",
+          "url": "https://www.linkedin.com/jobs/view/4398107603/"
+        }
+      ]
+    },
+    {
+      "company": "Zapmoto",
+      "linkedin_url": "https://www.linkedin.com/company/zapmoto/jobs/",
+      "slug": "zapmoto",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Alianza",
+      "linkedin_url": "https://www.linkedin.com/company/alianza/jobs/",
+      "slug": "alianza",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Blue Eye",
+      "linkedin_url": "https://www.linkedin.com/company/go-blue-eye/jobs/",
+      "slug": "go-blue-eye",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Cotopaxi",
+      "linkedin_url": "https://www.linkedin.com/company/cotopaxi-com/jobs/",
+      "slug": "cotopaxi-com",
+      "company_id": "3493796",
+      "is_hiring": true,
+      "listing_count": 8,
+      "listings": [
+        {
+          "title": "Retail Sales Associate",
+          "posted": "2026-03-24",
+          "job_id": "4393109267",
+          "url": "https://www.linkedin.com/jobs/view/4393109267/"
+        },
+        {
+          "title": "Retail Sales Associate",
+          "posted": "2026-04-16",
+          "job_id": "4401949818",
+          "url": "https://www.linkedin.com/jobs/view/4401949818/"
+        },
+        {
+          "title": "Retail Sales Associate",
+          "posted": "2026-05-07",
+          "job_id": "4412125610",
+          "url": "https://www.linkedin.com/jobs/view/4412125610/"
+        },
+        {
+          "title": "Retail Sales Associate",
+          "posted": "2026-04-15",
+          "job_id": "4400886275",
+          "url": "https://www.linkedin.com/jobs/view/4400886275/"
+        },
+        {
+          "title": "Retail Sales Associate",
+          "posted": "2026-05-07",
+          "job_id": "4412176227",
+          "url": "https://www.linkedin.com/jobs/view/4412176227/"
+        },
+        {
+          "title": "Retail Sales Associate",
+          "posted": "2026-03-27",
+          "job_id": "4393106854",
+          "url": "https://www.linkedin.com/jobs/view/4393106854/"
+        },
+        {
+          "title": "Retail Store Manager",
+          "posted": "2026-04-02",
+          "job_id": "4397575688",
+          "url": "https://www.linkedin.com/jobs/view/4397575688/"
+        },
+        {
+          "title": "Retail Supervisor",
+          "posted": "2026-05-07",
+          "job_id": "4409632330",
+          "url": "https://www.linkedin.com/jobs/view/4409632330/"
+        }
+      ]
+    },
+    {
+      "company": "Cupbop",
+      "linkedin_url": "https://www.linkedin.com/company/cupbop/jobs/",
+      "slug": "cupbop",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Gabb Wireless",
+      "linkedin_url": "https://www.linkedin.com/company/gabb-wireless/jobs/",
+      "slug": "gabb-wireless",
+      "company_id": "19102027",
+      "is_hiring": true,
+      "listing_count": 4,
+      "listings": [
+        {
+          "title": "Dream Job Hotline &#92;uD83D&#92;uDCF1",
+          "posted": "2026-03-16",
+          "job_id": "4400359598",
+          "url": "https://www.linkedin.com/jobs/view/4400359598/"
+        },
+        {
+          "title": "Lead DevOps Engineer",
+          "posted": "2026-04-10",
+          "job_id": "4405689562",
+          "url": "https://www.linkedin.com/jobs/view/4405689562/"
+        },
+        {
+          "title": "Social Media Specialist-[Maternity Leave Cover]",
+          "posted": "2026-05-06",
+          "job_id": "4411263939",
+          "url": "https://www.linkedin.com/jobs/view/4411263939/"
+        },
+        {
+          "title": "Influencer Manager",
+          "posted": "2026-04-10",
+          "job_id": "4410771768",
+          "url": "https://www.linkedin.com/jobs/view/4410771768/"
+        }
+      ]
+    },
+    {
+      "company": "Homie",
+      "linkedin_url": "https://www.linkedin.com/company/homie-com/jobs/",
+      "slug": "homie-com",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Pura",
+      "linkedin_url": "https://www.linkedin.com/company/pura-scents/jobs/",
+      "slug": "pura-scents",
+      "company_id": "4841470",
+      "is_hiring": true,
+      "listing_count": 8,
+      "listings": [
+        {
+          "title": "Staff Software Engineer",
+          "posted": "2026-05-04",
+          "job_id": "4407797305",
+          "url": "https://www.linkedin.com/jobs/view/4407797305/"
+        },
+        {
+          "title": "Security Site Reliability Engineer",
+          "posted": "2026-04-23",
+          "job_id": "4403243079",
+          "url": "https://www.linkedin.com/jobs/view/4403243079/"
+        },
+        {
+          "title": "Sr Account Manager, Brand Partnerships",
+          "posted": "2026-01-30",
+          "job_id": "4356851405",
+          "url": "https://www.linkedin.com/jobs/view/4356851405/"
+        },
+        {
+          "title": "Staff Data Analyst (eCommerce Analytics Specialist)",
+          "posted": "2026-02-25",
+          "job_id": "4375263726",
+          "url": "https://www.linkedin.com/jobs/view/4375263726/"
+        },
+        {
+          "title": "Senior Lifecycle Marketing Strategist, Activation & Conversion",
+          "posted": "2026-03-31",
+          "job_id": "4395864913",
+          "url": "https://www.linkedin.com/jobs/view/4395864913/"
+        },
+        {
+          "title": "Supplier Quality Engineer (SQE) \u2013 Fragrance Manufacturing",
+          "posted": "2026-03-29",
+          "job_id": "4403227218",
+          "url": "https://www.linkedin.com/jobs/view/4403227218/"
+        },
+        {
+          "title": "FP&A Senior Analyst",
+          "posted": "2026-04-24",
+          "job_id": "4403783475",
+          "url": "https://www.linkedin.com/jobs/view/4403783475/"
+        },
+        {
+          "title": "Retail Media Manager",
+          "posted": "2026-05-07",
+          "job_id": "4409288763",
+          "url": "https://www.linkedin.com/jobs/view/4409288763/"
+        }
+      ]
+    },
+    {
+      "company": "Route",
+      "linkedin_url": "https://www.linkedin.com/company/route-app/jobs/",
+      "slug": "route-app",
+      "company_id": "17920955",
+      "is_hiring": true,
+      "listing_count": 8,
+      "listings": [
+        {
+          "title": "Implementation Engineer",
+          "posted": "2026-05-04",
+          "job_id": "4407797578",
+          "url": "https://www.linkedin.com/jobs/view/4407797578/"
+        },
+        {
+          "title": "AI Automation Engineer",
+          "posted": "2026-04-28",
+          "job_id": "4405570711",
+          "url": "https://www.linkedin.com/jobs/view/4405570711/"
+        },
+        {
+          "title": "Data Engineer",
+          "posted": "2026-05-02",
+          "job_id": "4399094010",
+          "url": "https://www.linkedin.com/jobs/view/4399094010/"
+        },
+        {
+          "title": "Sr. FP&A Analyst",
+          "posted": "2026-05-06",
+          "job_id": "4408471430",
+          "url": "https://www.linkedin.com/jobs/view/4408471430/"
+        },
+        {
+          "title": "Enterprise Account Executive",
+          "posted": "2026-05-07",
+          "job_id": "4388479609",
+          "url": "https://www.linkedin.com/jobs/view/4388479609/"
+        },
+        {
+          "title": "Growth Marketing Manager",
+          "posted": "2026-05-07",
+          "job_id": "4400115770",
+          "url": "https://www.linkedin.com/jobs/view/4400115770/"
+        },
+        {
+          "title": "Sales Enablement Manager",
+          "posted": "2026-05-07",
+          "job_id": "4405019690",
+          "url": "https://www.linkedin.com/jobs/view/4405019690/"
+        },
+        {
+          "title": "Sr. Sales Compensation Analyst",
+          "posted": "2026-05-07",
+          "job_id": "4405042109",
+          "url": "https://www.linkedin.com/jobs/view/4405042109/"
+        }
+      ]
+    },
+    {
+      "company": "Solo",
+      "linkedin_url": "https://www.linkedin.com/company/solo-backoffice/jobs/",
+      "slug": "solo-backoffice",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Vanderhall",
+      "linkedin_url": "https://www.linkedin.com/company/vanderhall-motor-works-inc./jobs/",
+      "slug": "vanderhall-motor-works-inc.",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Nomi Health",
+      "linkedin_url": "https://www.linkedin.com/company/nomi-health/jobs/",
+      "slug": "nomi-health",
+      "company_id": "31375171",
+      "is_hiring": true,
+      "listing_count": 5,
+      "listings": [
+        {
+          "title": "Software Engineer (Backend)",
+          "posted": "2026-04-24",
+          "job_id": "4406689384",
+          "url": "https://www.linkedin.com/jobs/view/4406689384/"
+        },
+        {
+          "title": "Senior Manager, Cloud & DevOps Engineering",
+          "posted": "2026-04-28",
+          "job_id": "4408080022",
+          "url": "https://www.linkedin.com/jobs/view/4408080022/"
+        },
+        {
+          "title": "Provider Enrollment Advisor (Inside Sales)",
+          "posted": "2026-04-14",
+          "job_id": "4402027645",
+          "url": "https://www.linkedin.com/jobs/view/4402027645/"
+        },
+        {
+          "title": "Senior Vice President of FP&A",
+          "posted": "2026-04-04",
+          "job_id": "4397478126",
+          "url": "https://www.linkedin.com/jobs/view/4397478126/"
+        },
+        {
+          "title": "Senior Controller",
+          "posted": "2026-04-04",
+          "job_id": "4397461737",
+          "url": "https://www.linkedin.com/jobs/view/4397461737/"
+        }
+      ]
+    },
+    {
+      "company": "American Battery Factory",
+      "linkedin_url": "https://www.linkedin.com/company/american-battery-factory-inc/jobs/",
+      "slug": "american-battery-factory-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Atomic",
+      "linkedin_url": "https://www.linkedin.com/company/atomic-fi/jobs/",
+      "slug": "atomic-fi",
+      "company_id": "53174488",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Account Executive",
+          "posted": "2025-10-22",
+          "job_id": "4318518029",
+          "url": "https://www.linkedin.com/jobs/view/4318518029/"
+        }
+      ]
+    },
+    {
+      "company": "Bacon",
+      "linkedin_url": "https://www.linkedin.com/company/bacon-inc/jobs/",
+      "slug": "bacon-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Bandwango",
+      "linkedin_url": "https://www.linkedin.com/company/bandwango/jobs/",
+      "slug": "bandwango",
+      "company_id": "2941926",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Sales Executive",
+          "posted": "2026-04-30",
+          "job_id": "4409010784",
+          "url": "https://www.linkedin.com/jobs/view/4409010784/"
+        }
+      ]
+    },
+    {
+      "company": "Chargezoom",
+      "linkedin_url": "https://www.linkedin.com/company/chargezoom/jobs/",
+      "slug": "chargezoom",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "HeroDevs",
+      "linkedin_url": "https://www.linkedin.com/company/herodevs/jobs/",
+      "slug": "herodevs",
+      "company_id": "18843991",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Sr. Technical Product Marketing Manager",
+          "posted": "2026-04-10",
+          "job_id": "4399064846",
+          "url": "https://www.linkedin.com/jobs/view/4399064846/"
+        }
+      ]
+    },
+    {
+      "company": "Hona",
+      "linkedin_url": "https://www.linkedin.com/company/honasoftware/jobs/",
+      "slug": "honasoftware",
+      "company_id": "4821616",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Technical Account Manager - Mid Market",
+          "posted": "2026-03-10",
+          "job_id": "4383490017",
+          "url": "https://www.linkedin.com/jobs/view/4383490017/"
+        }
+      ]
+    },
+    {
+      "company": "Hypercraft",
+      "linkedin_url": "https://www.linkedin.com/company/hypercraftusa/jobs/",
+      "slug": "hypercraftusa",
+      "company_id": "74769542",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Business Development Manager - Defense Technologies",
+          "posted": "2025-11-18",
+          "job_id": "4336872581",
+          "url": "https://www.linkedin.com/jobs/view/4336872581/"
+        }
+      ]
+    },
+    {
+      "company": "iDrive Logistics",
+      "linkedin_url": "https://www.linkedin.com/company/i-drive-logistics/jobs/",
+      "slug": "i-drive-logistics",
+      "company_id": "1520983",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Account Executive",
+          "posted": "2025-11-05",
+          "job_id": "4334244827",
+          "url": "https://www.linkedin.com/jobs/view/4334244827/"
+        }
+      ]
+    },
+    {
+      "company": "IsoTalent",
+      "linkedin_url": "https://www.linkedin.com/company/isotalent/jobs/",
+      "slug": "isotalent",
+      "company_id": "10681428",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Sales Engineer",
+          "posted": "2026-04-10",
+          "job_id": "4398182230",
+          "url": "https://www.linkedin.com/jobs/view/4398182230/"
+        },
+        {
+          "title": "Senior Financial Analyst",
+          "posted": null,
+          "job_id": "4403638051",
+          "url": "https://www.linkedin.com/jobs/view/4403638051/"
+        },
+        {
+          "title": "Overnight Manager",
+          "posted": null,
+          "job_id": "4406649230",
+          "url": "https://www.linkedin.com/jobs/view/4406649230/"
+        },
+        {
+          "title": "Board Certified Behavior Analyst",
+          "posted": null,
+          "job_id": "4403997211",
+          "url": "https://www.linkedin.com/jobs/view/4403997211/"
+        },
+        {
+          "title": "Commercial Insurance Customer Service Agent",
+          "posted": null,
+          "job_id": "4397275382",
+          "url": "https://www.linkedin.com/jobs/view/4397275382/"
+        },
+        {
+          "title": "Site Work Crew Lead  ",
+          "posted": null,
+          "job_id": "4407046276",
+          "url": "https://www.linkedin.com/jobs/view/4407046276/"
+        },
+        {
+          "title": "Flexographic Press Operator",
+          "posted": null,
+          "job_id": "4407771739",
+          "url": "https://www.linkedin.com/jobs/view/4407771739/"
+        },
+        {
+          "title": "Physical Therapist Assistant",
+          "posted": null,
+          "job_id": "4407918604",
+          "url": "https://www.linkedin.com/jobs/view/4407918604/"
+        },
+        {
+          "title": "Veterinary Technician",
+          "posted": null,
+          "job_id": "4373341463",
+          "url": "https://www.linkedin.com/jobs/view/4373341463/"
+        },
+        {
+          "title": "VP of Lending",
+          "posted": null,
+          "job_id": "4387987221",
+          "url": "https://www.linkedin.com/jobs/view/4387987221/"
+        }
+      ]
+    },
+    {
+      "company": "Music AI",
+      "linkedin_url": "https://www.linkedin.com/company/moises/jobs/",
+      "slug": "moises",
+      "company_id": "43368220",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Express Your Interest / Join Our Talent Community",
+          "posted": "2024-11-07",
+          "job_id": "4069384093",
+          "url": "https://www.linkedin.com/jobs/view/4069384093/"
+        },
+        {
+          "title": "PhD Research Internships \u2013 Music Generation / Source Separation and Enhancement / Music Information Retrieval",
+          "posted": "2026-01-16",
+          "job_id": "4359265507",
+          "url": "https://www.linkedin.com/jobs/view/4359265507/"
+        }
+      ]
+    },
+    {
+      "company": "Motivhealth",
+      "linkedin_url": "https://www.linkedin.com/company/motivhealth/jobs/",
+      "slug": "motivhealth",
+      "company_id": "35511111",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Senior Underwriter",
+          "posted": "2026-04-24",
+          "job_id": "4405347799",
+          "url": "https://www.linkedin.com/jobs/view/4405347799/"
+        }
+      ]
+    },
+    {
+      "company": "Murf",
+      "linkedin_url": "https://www.linkedin.com/company/murf-ai/jobs/",
+      "slug": "murf-ai",
+      "company_id": "71033326",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "GTM Engineer",
+          "posted": "2026-03-30",
+          "job_id": "4384017261",
+          "url": "https://www.linkedin.com/jobs/view/4384017261/"
+        }
+      ]
+    },
+    {
+      "company": "Nectar HR",
+      "linkedin_url": "https://www.linkedin.com/company/nectarhr/jobs/",
+      "slug": "nectarhr",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Nivati",
+      "linkedin_url": "https://www.linkedin.com/company/nivati-co/jobs/",
+      "slug": "nivati-co",
+      "company_id": "2597712",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Mental Health Counselor / Therapist",
+          "posted": "2026-05-08",
+          "job_id": "4409990081",
+          "url": "https://www.linkedin.com/jobs/view/4409990081/"
+        }
+      ]
+    },
+    {
+      "company": "Nursa",
+      "linkedin_url": "https://www.linkedin.com/company/nursaapp/jobs/",
+      "slug": "nursaapp",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Pillow Cube",
+      "linkedin_url": "https://www.linkedin.com/company/pillow-cube/jobs/",
+      "slug": "pillow-cube",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Project Solar",
+      "linkedin_url": "https://www.linkedin.com/company/project-solar/jobs/",
+      "slug": "project-solar",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Redo",
+      "linkedin_url": "https://www.linkedin.com/company/redo-tech/jobs/",
+      "slug": "redo-tech",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Remi",
+      "linkedin_url": "https://www.linkedin.com/company/remilabs/jobs/",
+      "slug": "remilabs",
+      "company_id": "77116960",
+      "is_hiring": true,
+      "listing_count": 4,
+      "listings": [
+        {
+          "title": "Software Engineer I/II",
+          "posted": "2026-04-08",
+          "job_id": "4395932297",
+          "url": "https://www.linkedin.com/jobs/view/4395932297/"
+        },
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2026-03-27",
+          "job_id": "4390794540",
+          "url": "https://www.linkedin.com/jobs/view/4390794540/"
+        },
+        {
+          "title": "Staff Software Engineer",
+          "posted": "2026-03-27",
+          "job_id": "4390797564",
+          "url": "https://www.linkedin.com/jobs/view/4390797564/"
+        },
+        {
+          "title": "Product Designer",
+          "posted": "2026-04-04",
+          "job_id": "4394270475",
+          "url": "https://www.linkedin.com/jobs/view/4394270475/"
+        }
+      ]
+    },
+    {
+      "company": "Rivet Health",
+      "linkedin_url": "https://www.linkedin.com/company/rivethealth/jobs/",
+      "slug": "rivethealth",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Stay AI",
+      "linkedin_url": "https://www.linkedin.com/company/stayai/jobs/",
+      "slug": "stayai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Strider",
+      "linkedin_url": "https://www.linkedin.com/company/teamstrider/jobs/",
+      "slug": "teamstrider",
+      "company_id": "26613695",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Forward Deployed Engineer",
+          "posted": "2026-03-06",
+          "job_id": "4313117838",
+          "url": "https://www.linkedin.com/jobs/view/4313117838/"
+        },
+        {
+          "title": "Executive Client Success Manager",
+          "posted": "2026-04-18",
+          "job_id": "4362115580",
+          "url": "https://www.linkedin.com/jobs/view/4362115580/"
+        },
+        {
+          "title": "Forward Deployed Engineer",
+          "posted": null,
+          "job_id": "4369121956",
+          "url": "https://www.linkedin.com/jobs/view/4369121956/"
+        },
+        {
+          "title": "Client Success Manager - Commercial and Academia",
+          "posted": "2026-04-30",
+          "job_id": "4396351067",
+          "url": "https://www.linkedin.com/jobs/view/4396351067/"
+        },
+        {
+          "title": "Commercial Account Executive",
+          "posted": "2026-05-05",
+          "job_id": "4408933943",
+          "url": "https://www.linkedin.com/jobs/view/4408933943/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": null,
+          "job_id": "4389306732",
+          "url": "https://www.linkedin.com/jobs/view/4389306732/"
+        },
+        {
+          "title": "Governance, Risk, and Compliance (GRC) Analyst",
+          "posted": null,
+          "job_id": "4400015832",
+          "url": "https://www.linkedin.com/jobs/view/4400015832/"
+        },
+        {
+          "title": "Workplace Experience Manager",
+          "posted": "2026-04-23",
+          "job_id": "4392448351",
+          "url": "https://www.linkedin.com/jobs/view/4392448351/"
+        },
+        {
+          "title": "FP&A Manager",
+          "posted": "2026-04-24",
+          "job_id": "4405062317",
+          "url": "https://www.linkedin.com/jobs/view/4405062317/"
+        },
+        {
+          "title": "Head of Sales - Japan",
+          "posted": null,
+          "job_id": "4383280315",
+          "url": "https://www.linkedin.com/jobs/view/4383280315/"
+        }
+      ]
+    },
+    {
+      "company": "Tava Health",
+      "linkedin_url": "https://www.linkedin.com/company/tava-health/jobs/",
+      "slug": "tava-health",
+      "company_id": "40905228",
+      "is_hiring": true,
+      "listing_count": 6,
+      "listings": [
+        {
+          "title": "Senior Product Designer",
+          "posted": "2026-01-08",
+          "job_id": "4358547611",
+          "url": "https://www.linkedin.com/jobs/view/4358547611/"
+        },
+        {
+          "title": "Provider Growth Associate",
+          "posted": "2026-01-09",
+          "job_id": "4359661269",
+          "url": "https://www.linkedin.com/jobs/view/4359661269/"
+        },
+        {
+          "title": "Support Associate",
+          "posted": "2026-04-08",
+          "job_id": "4399244185",
+          "url": "https://www.linkedin.com/jobs/view/4399244185/"
+        },
+        {
+          "title": "Commercial Product Marketing Manager",
+          "posted": "2026-03-03",
+          "job_id": "4380170873",
+          "url": "https://www.linkedin.com/jobs/view/4380170873/"
+        },
+        {
+          "title": "Payer Enablement Specialist",
+          "posted": "2026-04-24",
+          "job_id": "4406128094",
+          "url": "https://www.linkedin.com/jobs/view/4406128094/"
+        },
+        {
+          "title": "Director of Brand Marketing",
+          "posted": "2026-03-24",
+          "job_id": "4389933517",
+          "url": "https://www.linkedin.com/jobs/view/4389933517/"
+        }
+      ]
+    },
+    {
+      "company": "The Picklr",
+      "linkedin_url": "https://www.linkedin.com/company/thepicklr/jobs/",
+      "slug": "thepicklr",
+      "company_id": "71346217",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "The Picklr - Weekend Opener",
+          "posted": "2026-05-06",
+          "job_id": "4411254168",
+          "url": "https://www.linkedin.com/jobs/view/4411254168/"
+        },
+        {
+          "title": "Part Time Closer - The Picklr",
+          "posted": "2026-05-06",
+          "job_id": "4411239382",
+          "url": "https://www.linkedin.com/jobs/view/4411239382/"
+        }
+      ]
+    },
+    {
+      "company": "Torus",
+      "linkedin_url": "https://www.linkedin.com/company/torusrev/jobs/",
+      "slug": "torusrev",
+      "company_id": "74892168",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Staff Software Engineer (Typescript) - US Based Remote",
+          "posted": "2026-04-24",
+          "job_id": "4397190216",
+          "url": "https://www.linkedin.com/jobs/view/4397190216/"
+        },
+        {
+          "title": "Maintenance Technician",
+          "posted": null,
+          "job_id": "4403863367",
+          "url": "https://www.linkedin.com/jobs/view/4403863367/"
+        },
+        {
+          "title": "Journeyman Electrician",
+          "posted": null,
+          "job_id": "4385794146",
+          "url": "https://www.linkedin.com/jobs/view/4385794146/"
+        },
+        {
+          "title": "Power Electrical Engineer",
+          "posted": null,
+          "job_id": "4387887923",
+          "url": "https://www.linkedin.com/jobs/view/4387887923/"
+        },
+        {
+          "title": "Energy Storage Design Engineer (C&I/Medium Voltage)",
+          "posted": null,
+          "job_id": "4370551645",
+          "url": "https://www.linkedin.com/jobs/view/4370551645/"
+        },
+        {
+          "title": "CNC Machinist VTL Operator II",
+          "posted": null,
+          "job_id": "4382307768",
+          "url": "https://www.linkedin.com/jobs/view/4382307768/"
+        },
+        {
+          "title": "Journeyman Electrician - Overwatch",
+          "posted": null,
+          "job_id": "4392328620",
+          "url": "https://www.linkedin.com/jobs/view/4392328620/"
+        },
+        {
+          "title": "Facilities Custodian",
+          "posted": null,
+          "job_id": "4407568310",
+          "url": "https://www.linkedin.com/jobs/view/4407568310/"
+        },
+        {
+          "title": "Fabrication Manufacturing Production Manager",
+          "posted": null,
+          "job_id": "4398958330",
+          "url": "https://www.linkedin.com/jobs/view/4398958330/"
+        },
+        {
+          "title": "Director of HSE & Facilities",
+          "posted": null,
+          "job_id": "4409672779",
+          "url": "https://www.linkedin.com/jobs/view/4409672779/"
+        }
+      ]
+    },
+    {
+      "company": "Vanilla",
+      "linkedin_url": "https://www.linkedin.com/company/justvanilla/jobs/",
+      "slug": "justvanilla",
+      "company_id": "51671407",
+      "is_hiring": true,
+      "listing_count": 6,
+      "listings": [
+        {
+          "title": "Lead Front End Engineer",
+          "posted": "2026-02-28",
+          "job_id": "4379214731",
+          "url": "https://www.linkedin.com/jobs/view/4379214731/"
+        },
+        {
+          "title": "Senior Product Manager",
+          "posted": "2026-05-06",
+          "job_id": "4410955896",
+          "url": "https://www.linkedin.com/jobs/view/4410955896/"
+        },
+        {
+          "title": "Senior Software Engineer - AI Applications",
+          "posted": "2026-01-10",
+          "job_id": "4359971227",
+          "url": "https://www.linkedin.com/jobs/view/4359971227/"
+        },
+        {
+          "title": "Customer Success Manager",
+          "posted": "2026-04-17",
+          "job_id": "4403547493",
+          "url": "https://www.linkedin.com/jobs/view/4403547493/"
+        },
+        {
+          "title": "Customer Care Specialist",
+          "posted": "2026-03-20",
+          "job_id": "4388169018",
+          "url": "https://www.linkedin.com/jobs/view/4388169018/"
+        },
+        {
+          "title": "Strategic Partnerships Director",
+          "posted": "2026-03-10",
+          "job_id": "4383860028",
+          "url": "https://www.linkedin.com/jobs/view/4383860028/"
+        }
+      ]
+    },
+    {
+      "company": "Voze",
+      "linkedin_url": "https://www.linkedin.com/company/usevoze/jobs/",
+      "slug": "usevoze",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Xevant",
+      "linkedin_url": "https://www.linkedin.com/company/xevant/jobs/",
+      "slug": "xevant",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Zartico",
+      "linkedin_url": "https://www.linkedin.com/company/zartico/jobs/",
+      "slug": "zartico",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "3Helix",
+      "linkedin_url": "https://www.linkedin.com/company/3helix-inc/jobs/",
+      "slug": "3helix-inc",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "DrumCV",
+      "linkedin_url": "https://www.linkedin.com/company/drumcv/jobs/",
+      "slug": "drumcv",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Canopy Tax",
+      "linkedin_url": "https://www.linkedin.com/company/canopy-inc/jobs/",
+      "slug": "canopy-inc",
+      "company_id": "3593313",
+      "is_hiring": true,
+      "listing_count": 9,
+      "listings": [
+        {
+          "title": "Senior Full Stack Engineer",
+          "posted": "2026-05-05",
+          "job_id": "4410778150",
+          "url": "https://www.linkedin.com/jobs/view/4410778150/"
+        },
+        {
+          "title": "Implementation Specialist, SMB",
+          "posted": "2026-05-05",
+          "job_id": "4410774457",
+          "url": "https://www.linkedin.com/jobs/view/4410774457/"
+        },
+        {
+          "title": "Customer Support Specialist - Tier I",
+          "posted": "2026-03-24",
+          "job_id": "4389785404",
+          "url": "https://www.linkedin.com/jobs/view/4389785404/"
+        },
+        {
+          "title": "Implementation Specialist, Mid Market",
+          "posted": "2026-03-19",
+          "job_id": "4387667858",
+          "url": "https://www.linkedin.com/jobs/view/4387667858/"
+        },
+        {
+          "title": "Director of Customer Support",
+          "posted": "2026-04-24",
+          "job_id": "4406119834",
+          "url": "https://www.linkedin.com/jobs/view/4406119834/"
+        },
+        {
+          "title": "Senior Business Systems Manager",
+          "posted": "2026-03-25",
+          "job_id": "4389952718",
+          "url": "https://www.linkedin.com/jobs/view/4389952718/"
+        },
+        {
+          "title": "Strategic Partnerships Director (Private Equity)",
+          "posted": "2026-04-13",
+          "job_id": "4401511929",
+          "url": "https://www.linkedin.com/jobs/view/4401511929/"
+        },
+        {
+          "title": "Director of Account Management",
+          "posted": "2026-05-08",
+          "job_id": "4412186367",
+          "url": "https://www.linkedin.com/jobs/view/4412186367/"
+        },
+        {
+          "title": "Deal Desk Manager",
+          "posted": "2026-04-25",
+          "job_id": "4406820352",
+          "url": "https://www.linkedin.com/jobs/view/4406820352/"
+        }
+      ]
+    },
+    {
+      "company": "ObservePoint",
+      "linkedin_url": "https://www.linkedin.com/company/observepoint/jobs/",
+      "slug": "observepoint",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "MX",
+      "linkedin_url": "https://www.linkedin.com/company/mxenabled/jobs/",
+      "slug": "mxenabled",
+      "company_id": "425337",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Senior Analytics Engineer",
+          "posted": "2026-04-04",
+          "job_id": "4406083931",
+          "url": "https://www.linkedin.com/jobs/view/4406083931/"
+        },
+        {
+          "title": "Product Marketing Manager",
+          "posted": "2026-03-16",
+          "job_id": "4386323623",
+          "url": "https://www.linkedin.com/jobs/view/4386323623/"
+        },
+        {
+          "title": "Client Strategy Executive",
+          "posted": "2026-04-15",
+          "job_id": "4402641289",
+          "url": "https://www.linkedin.com/jobs/view/4402641289/"
+        },
+        {
+          "title": "People Experience Generalist",
+          "posted": "2026-03-16",
+          "job_id": "4386316953",
+          "url": "https://www.linkedin.com/jobs/view/4386316953/"
+        },
+        {
+          "title": "Operations Associate, External Relations",
+          "posted": "2026-04-06",
+          "job_id": "4398302322",
+          "url": "https://www.linkedin.com/jobs/view/4398302322/"
+        },
+        {
+          "title": "Sr Detection & Response Engineer",
+          "posted": null,
+          "job_id": "4402993103",
+          "url": "https://www.linkedin.com/jobs/view/4402993103/"
+        },
+        {
+          "title": "AI Revenue Operations Manager",
+          "posted": "2026-05-05",
+          "job_id": "4408440469",
+          "url": "https://www.linkedin.com/jobs/view/4408440469/"
+        },
+        {
+          "title": "Senior Software Engineer - AI Platforms",
+          "posted": "2026-05-05",
+          "job_id": "4409369791",
+          "url": "https://www.linkedin.com/jobs/view/4409369791/"
+        },
+        {
+          "title": "Technical Operations Manager",
+          "posted": null,
+          "job_id": "4402992102",
+          "url": "https://www.linkedin.com/jobs/view/4402992102/"
+        },
+        {
+          "title": "Director, Revenue & Marketing Operations",
+          "posted": "2026-05-05",
+          "job_id": "4408424963",
+          "url": "https://www.linkedin.com/jobs/view/4408424963/"
+        }
+      ]
+    },
+    {
+      "company": "Neighbor",
+      "linkedin_url": "https://www.linkedin.com/company/neighbor/jobs/",
+      "slug": "neighbor",
+      "company_id": "18164617",
+      "is_hiring": true,
+      "listing_count": 6,
+      "listings": [
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2026-05-05",
+          "job_id": "4410773447",
+          "url": "https://www.linkedin.com/jobs/view/4410773447/"
+        },
+        {
+          "title": "Data Engineer",
+          "posted": "2026-02-10",
+          "job_id": "4370913560",
+          "url": "https://www.linkedin.com/jobs/view/4370913560/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": "2026-03-17",
+          "job_id": "4386927263",
+          "url": "https://www.linkedin.com/jobs/view/4386927263/"
+        },
+        {
+          "title": "Senior Data Analyst",
+          "posted": "2026-02-05",
+          "job_id": "4369699118",
+          "url": "https://www.linkedin.com/jobs/view/4369699118/"
+        },
+        {
+          "title": "Sales Development Representative Internship",
+          "posted": "2026-03-20",
+          "job_id": "4388592431",
+          "url": "https://www.linkedin.com/jobs/view/4388592431/"
+        },
+        {
+          "title": "Founding Partnerships Lead",
+          "posted": "2026-04-15",
+          "job_id": "4401802280",
+          "url": "https://www.linkedin.com/jobs/view/4401802280/"
+        }
+      ]
+    },
+    {
+      "company": "BookClub",
+      "linkedin_url": "https://www.linkedin.com/company/bookclubdotcom/jobs/",
+      "slug": "bookclubdotcom",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Liveview Technologies",
+      "linkedin_url": "https://www.linkedin.com/company/lvt/jobs/",
+      "slug": "lvt",
+      "company_id": "3176725",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Software Engineer III",
+          "posted": "2026-04-27",
+          "job_id": "4394332844",
+          "url": "https://www.linkedin.com/jobs/view/4394332844/"
+        },
+        {
+          "title": "Field Partner, Business Development",
+          "posted": null,
+          "job_id": "4394335647",
+          "url": "https://www.linkedin.com/jobs/view/4394335647/"
+        },
+        {
+          "title": "Strategic Revenue & Growth Executive",
+          "posted": null,
+          "job_id": "4410078869",
+          "url": "https://www.linkedin.com/jobs/view/4410078869/"
+        },
+        {
+          "title": "Senior Director, Field Marketing",
+          "posted": null,
+          "job_id": "4408287871",
+          "url": "https://www.linkedin.com/jobs/view/4408287871/"
+        },
+        {
+          "title": "Area Vice President, Business and Market Development \u2013 Mission Critical Infrastructure",
+          "posted": null,
+          "job_id": "4393211718",
+          "url": "https://www.linkedin.com/jobs/view/4393211718/"
+        },
+        {
+          "title": "Sales Excellence Manager",
+          "posted": null,
+          "job_id": "4409096398",
+          "url": "https://www.linkedin.com/jobs/view/4409096398/"
+        },
+        {
+          "title": "Safety and Facilities Manager",
+          "posted": null,
+          "job_id": "4401783718",
+          "url": "https://www.linkedin.com/jobs/view/4401783718/"
+        },
+        {
+          "title": "Revenue Accounting Manager",
+          "posted": null,
+          "job_id": "4405461228",
+          "url": "https://www.linkedin.com/jobs/view/4405461228/"
+        },
+        {
+          "title": "Director of Public Sector Capture",
+          "posted": null,
+          "job_id": "4393218550",
+          "url": "https://www.linkedin.com/jobs/view/4393218550/"
+        },
+        {
+          "title": "Area Vice President, Business and Market Development \u2013 Mission Critical Infrastructure",
+          "posted": null,
+          "job_id": "4393209813",
+          "url": "https://www.linkedin.com/jobs/view/4393209813/"
+        }
+      ]
+    },
+    {
+      "company": "Lucid",
+      "linkedin_url": "https://www.linkedin.com/company/lucidsoftware/jobs/",
+      "slug": "lucidsoftware",
+      "company_id": "1214453",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "UX Designer",
+          "posted": "2026-03-03",
+          "job_id": "4380175882",
+          "url": "https://www.linkedin.com/jobs/view/4380175882/"
+        },
+        {
+          "title": "EMEA SMB Expansion Account Executive",
+          "posted": null,
+          "job_id": "4373982094",
+          "url": "https://www.linkedin.com/jobs/view/4373982094/"
+        },
+        {
+          "title": "EMEA SMB New Logo Account Executive",
+          "posted": null,
+          "job_id": "4373978203",
+          "url": "https://www.linkedin.com/jobs/view/4373978203/"
+        },
+        {
+          "title": "EMEA Enterprise New Logo Account Executive",
+          "posted": null,
+          "job_id": "4410038950",
+          "url": "https://www.linkedin.com/jobs/view/4410038950/"
+        },
+        {
+          "title": "Sr. International Digital Marketing Specialist",
+          "posted": null,
+          "job_id": "4397353419",
+          "url": "https://www.linkedin.com/jobs/view/4397353419/"
+        },
+        {
+          "title": "APAC Business Development Representative",
+          "posted": null,
+          "job_id": "4400355194",
+          "url": "https://www.linkedin.com/jobs/view/4400355194/"
+        },
+        {
+          "title": "EMEA Enterprise Expansion Account Executive",
+          "posted": null,
+          "job_id": "4402034536",
+          "url": "https://www.linkedin.com/jobs/view/4402034536/"
+        },
+        {
+          "title": "APAC Corporate New Logo Account Executive",
+          "posted": null,
+          "job_id": "4393252738",
+          "url": "https://www.linkedin.com/jobs/view/4393252738/"
+        },
+        {
+          "title": "EMEA Mid Market Expansion Account Executive (DACH)",
+          "posted": null,
+          "job_id": "4373984062",
+          "url": "https://www.linkedin.com/jobs/view/4373984062/"
+        },
+        {
+          "title": "APAC SMB New Logo Account Executive",
+          "posted": null,
+          "job_id": "4393270015",
+          "url": "https://www.linkedin.com/jobs/view/4393270015/"
+        }
+      ]
+    },
+    {
+      "company": "Jump",
+      "linkedin_url": "https://www.linkedin.com/company/jump-app-ai/jobs/",
+      "slug": "jump-app-ai",
+      "company_id": "99834287",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Solutions Engineer",
+          "posted": "2026-01-23",
+          "job_id": "4365431050",
+          "url": "https://www.linkedin.com/jobs/view/4365431050/"
+        },
+        {
+          "title": "RevOps Analyst",
+          "posted": null,
+          "job_id": "4390669224",
+          "url": "https://www.linkedin.com/jobs/view/4390669224/"
+        },
+        {
+          "title": "Enterprise Account Executive",
+          "posted": null,
+          "job_id": "4381922025",
+          "url": "https://www.linkedin.com/jobs/view/4381922025/"
+        },
+        {
+          "title": "Director of Product Marketing",
+          "posted": null,
+          "job_id": "4411235999",
+          "url": "https://www.linkedin.com/jobs/view/4411235999/"
+        },
+        {
+          "title": "Applied AI Evaluation Scientist",
+          "posted": "2026-02-24",
+          "job_id": "4377084394",
+          "url": "https://www.linkedin.com/jobs/view/4377084394/"
+        },
+        {
+          "title": "Strategic Account Executive",
+          "posted": null,
+          "job_id": "4385814234",
+          "url": "https://www.linkedin.com/jobs/view/4385814234/"
+        },
+        {
+          "title": "Commercial Counsel",
+          "posted": "2026-04-06",
+          "job_id": "4398074152",
+          "url": "https://www.linkedin.com/jobs/view/4398074152/"
+        },
+        {
+          "title": "Growth Marketing Sr. Manager",
+          "posted": null,
+          "job_id": "4394314722",
+          "url": "https://www.linkedin.com/jobs/view/4394314722/"
+        },
+        {
+          "title": "Marketing Operations Director",
+          "posted": null,
+          "job_id": "4393944305",
+          "url": "https://www.linkedin.com/jobs/view/4393944305/"
+        },
+        {
+          "title": "Sr. Director, Demand Generation",
+          "posted": null,
+          "job_id": "4393930891",
+          "url": "https://www.linkedin.com/jobs/view/4393930891/"
+        }
+      ]
+    },
+    {
+      "company": "Previ",
+      "linkedin_url": "https://www.linkedin.com/company/previbenefit/jobs/",
+      "slug": "previbenefit",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Alpyne",
+      "linkedin_url": "https://www.linkedin.com/company/getalpyne/jobs/",
+      "slug": "getalpyne",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Distro",
+      "linkedin_url": "https://www.linkedin.com/company/distroio/jobs/",
+      "slug": "distroio",
+      "company_id": "78749981",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Executive Assistant",
+          "posted": "2026-04-25",
+          "job_id": "4393888613",
+          "url": "https://www.linkedin.com/jobs/view/4393888613/"
+        },
+        {
+          "title": "Manager de Underwriting",
+          "posted": null,
+          "job_id": "4409936946",
+          "url": "https://www.linkedin.com/jobs/view/4409936946/"
+        },
+        {
+          "title": "Personal Injury Associate",
+          "posted": null,
+          "job_id": "4410491267",
+          "url": "https://www.linkedin.com/jobs/view/4410491267/"
+        },
+        {
+          "title": "Staff Accountant",
+          "posted": null,
+          "job_id": "4390767176",
+          "url": "https://www.linkedin.com/jobs/view/4390767176/"
+        },
+        {
+          "title": "Trial Attorney/ Personal Injury",
+          "posted": null,
+          "job_id": "4409946763",
+          "url": "https://www.linkedin.com/jobs/view/4409946763/"
+        },
+        {
+          "title": "Quality Controller - Telecom",
+          "posted": null,
+          "job_id": "4410833132",
+          "url": "https://www.linkedin.com/jobs/view/4410833132/"
+        },
+        {
+          "title": "Workers\u2019 Compensation Attorney",
+          "posted": null,
+          "job_id": "4409946722",
+          "url": "https://www.linkedin.com/jobs/view/4409946722/"
+        },
+        {
+          "title": "HR Attorney",
+          "posted": null,
+          "job_id": "4409992190",
+          "url": "https://www.linkedin.com/jobs/view/4409992190/"
+        },
+        {
+          "title": "Advanced Registered Nurse Practitioner",
+          "posted": null,
+          "job_id": "4408921667",
+          "url": "https://www.linkedin.com/jobs/view/4408921667/"
+        },
+        {
+          "title": "Principal DC Power Installer (L4)",
+          "posted": null,
+          "job_id": "4400765407",
+          "url": "https://www.linkedin.com/jobs/view/4400765407/"
+        }
+      ]
+    },
+    {
+      "company": "Parallel",
+      "linkedin_url": "https://www.linkedin.com/company/getparallel/jobs/",
+      "slug": "getparallel",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Avy",
+      "linkedin_url": null,
+      "flag": "no_linkedin_url",
+      "is_hiring": null,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Awardco",
+      "linkedin_url": "https://www.linkedin.com/company/awardco/jobs/",
+      "slug": "awardco",
+      "company_id": "2820889",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Client Support Representative - Part Time",
+          "posted": "2026-04-26",
+          "job_id": "4367511195",
+          "url": "https://www.linkedin.com/jobs/view/4367511195/"
+        },
+        {
+          "title": "Client Support Representative",
+          "posted": "2026-04-25",
+          "job_id": "4394236594",
+          "url": "https://www.linkedin.com/jobs/view/4394236594/"
+        },
+        {
+          "title": "Order Support Representative - Full Time",
+          "posted": "2026-05-07",
+          "job_id": "4409993875",
+          "url": "https://www.linkedin.com/jobs/view/4409993875/"
+        },
+        {
+          "title": "Fulfillment Account Manager",
+          "posted": "2026-04-28",
+          "job_id": "4394732176",
+          "url": "https://www.linkedin.com/jobs/view/4394732176/"
+        },
+        {
+          "title": "Awardco Engage Sales Strategist",
+          "posted": null,
+          "job_id": "4401127342",
+          "url": "https://www.linkedin.com/jobs/view/4401127342/"
+        },
+        {
+          "title": "Mid- Market  Account Executive (UK)",
+          "posted": null,
+          "job_id": "4400778849",
+          "url": "https://www.linkedin.com/jobs/view/4400778849/"
+        },
+        {
+          "title": "Gifting Procurement Specialist",
+          "posted": "2026-04-28",
+          "job_id": "4394731225",
+          "url": "https://www.linkedin.com/jobs/view/4394731225/"
+        },
+        {
+          "title": "Lead Data Scientist",
+          "posted": "2026-05-02",
+          "job_id": "4359111107",
+          "url": "https://www.linkedin.com/jobs/view/4359111107/"
+        },
+        {
+          "title": "Director, Marketplace Partnerships",
+          "posted": null,
+          "job_id": "4405017513",
+          "url": "https://www.linkedin.com/jobs/view/4405017513/"
+        },
+        {
+          "title": "Compensation Analyst",
+          "posted": null,
+          "job_id": "4369891319",
+          "url": "https://www.linkedin.com/jobs/view/4369891319/"
+        }
+      ]
+    },
+    {
+      "company": "Filevine",
+      "linkedin_url": "https://www.linkedin.com/company/filevine/jobs/",
+      "slug": "filevine",
+      "company_id": "4821616",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Senior Software Development Engineer (Back-end)",
+          "posted": "2026-02-19",
+          "job_id": "4386390492",
+          "url": "https://www.linkedin.com/jobs/view/4386390492/"
+        },
+        {
+          "title": "Event Operations Coordinator",
+          "posted": null,
+          "job_id": "4401582612",
+          "url": "https://www.linkedin.com/jobs/view/4401582612/"
+        },
+        {
+          "title": "Machine Learning Data Annotator",
+          "posted": null,
+          "job_id": "4358288030",
+          "url": "https://www.linkedin.com/jobs/view/4358288030/"
+        },
+        {
+          "title": "Event Marketing Manager (Trade Shows and Sponsored Events)",
+          "posted": null,
+          "job_id": "4371629461",
+          "url": "https://www.linkedin.com/jobs/view/4371629461/"
+        },
+        {
+          "title": "Machine Learning Engineer",
+          "posted": null,
+          "job_id": "4410958775",
+          "url": "https://www.linkedin.com/jobs/view/4410958775/"
+        },
+        {
+          "title": "Billing/Collections Specialist",
+          "posted": null,
+          "job_id": "4405600604",
+          "url": "https://www.linkedin.com/jobs/view/4405600604/"
+        },
+        {
+          "title": "Vice President of Sales",
+          "posted": null,
+          "job_id": "4405277171",
+          "url": "https://www.linkedin.com/jobs/view/4405277171/"
+        },
+        {
+          "title": "Performance Marketing Manager",
+          "posted": null,
+          "job_id": "4385145438",
+          "url": "https://www.linkedin.com/jobs/view/4385145438/"
+        },
+        {
+          "title": "Senior Data Scientist - ML Operations & Analytics",
+          "posted": null,
+          "job_id": "4343364068",
+          "url": "https://www.linkedin.com/jobs/view/4343364068/"
+        },
+        {
+          "title": "Filevine Administrator",
+          "posted": null,
+          "job_id": "4401519075",
+          "url": "https://www.linkedin.com/jobs/view/4401519075/"
+        }
+      ]
+    },
+    {
+      "company": "Snoball",
+      "linkedin_url": "https://www.linkedin.com/company/snoballplatform/jobs/",
+      "slug": "snoballplatform",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Referpro",
+      "linkedin_url": "https://www.linkedin.com/company/refer-pro/jobs/",
+      "slug": "refer-pro",
+      "company_id": "71861919",
+      "is_hiring": true,
+      "listing_count": 3,
+      "listings": [
+        {
+          "title": "Customer Success Manager",
+          "posted": "2026-04-28",
+          "job_id": "4406906578",
+          "url": "https://www.linkedin.com/jobs/view/4406906578/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": "2026-04-27",
+          "job_id": "4405993756",
+          "url": "https://www.linkedin.com/jobs/view/4405993756/"
+        },
+        {
+          "title": "SDR Manager",
+          "posted": "2026-04-30",
+          "job_id": "4406477870",
+          "url": "https://www.linkedin.com/jobs/view/4406477870/"
+        }
+      ]
+    },
+    {
+      "company": "DeepSee",
+      "linkedin_url": "https://www.linkedin.com/company/deepsee/jobs/",
+      "slug": "deepsee",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "AskElephant",
+      "linkedin_url": "https://www.linkedin.com/company/askelephant/jobs/",
+      "slug": "askelephant",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Whistic",
+      "linkedin_url": "https://www.linkedin.com/company/whistic/jobs/",
+      "slug": "whistic",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Helperly",
+      "linkedin_url": "https://www.linkedin.com/company/helperlycare/jobs/",
+      "slug": "helperlycare",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Lendio",
+      "linkedin_url": "https://www.linkedin.com/company/lendio/jobs/",
+      "slug": "lendio",
+      "company_id": "1910768",
+      "is_hiring": true,
+      "listing_count": 4,
+      "listings": [
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2026-04-28",
+          "job_id": "4378053072",
+          "url": "https://www.linkedin.com/jobs/view/4378053072/"
+        },
+        {
+          "title": "Technical Implementations Consultant",
+          "posted": "2026-04-28",
+          "job_id": "4404505227",
+          "url": "https://www.linkedin.com/jobs/view/4404505227/"
+        },
+        {
+          "title": "PR & Content Manager (Contract)",
+          "posted": "2026-04-30",
+          "job_id": "4409102163",
+          "url": "https://www.linkedin.com/jobs/view/4409102163/"
+        },
+        {
+          "title": "Paid Marketing Specialist",
+          "posted": "2026-05-06",
+          "job_id": "4411282472",
+          "url": "https://www.linkedin.com/jobs/view/4411282472/"
+        }
+      ]
+    },
+    {
+      "company": "ControlQore",
+      "linkedin_url": "https://www.linkedin.com/company/controlqore/jobs/",
+      "slug": "controlqore",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Kuali",
+      "linkedin_url": "https://www.linkedin.com/company/kualico/jobs/",
+      "slug": "kualico",
+      "company_id": "4606528",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Director, Professional Services",
+          "posted": "2026-04-24",
+          "job_id": "4405387366",
+          "url": "https://www.linkedin.com/jobs/view/4405387366/"
+        },
+        {
+          "title": "Director, Customer Success Management",
+          "posted": "2026-04-24",
+          "job_id": "4405388236",
+          "url": "https://www.linkedin.com/jobs/view/4405388236/"
+        }
+      ]
+    },
+    {
+      "company": "Carketa",
+      "linkedin_url": "https://www.linkedin.com/company/carketa/jobs/",
+      "slug": "carketa",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Moneta",
+      "linkedin_url": "https://www.linkedin.com/company/monetacloud/jobs/",
+      "slug": "monetacloud",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SponsorCX",
+      "linkedin_url": "https://www.linkedin.com/company/sponsorcx/jobs/",
+      "slug": "sponsorcx",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Mindless Labs",
+      "linkedin_url": "https://www.linkedin.com/company/mindlesslabs/jobs/",
+      "slug": "mindlesslabs",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Benji Card",
+      "linkedin_url": "https://www.linkedin.com/company/benji-card/jobs/",
+      "slug": "benji-card",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "JobNimbus",
+      "linkedin_url": "https://www.linkedin.com/company/jobnimbus/jobs/",
+      "slug": "jobnimbus",
+      "company_id": "2455555",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2026-03-02",
+          "job_id": "4379105332",
+          "url": "https://www.linkedin.com/jobs/view/4379105332/"
+        },
+        {
+          "title": "Principal Software Engineer - Payments",
+          "posted": "2026-03-14",
+          "job_id": "4384626174",
+          "url": "https://www.linkedin.com/jobs/view/4384626174/"
+        },
+        {
+          "title": "DevOps Engineer",
+          "posted": "2026-03-03",
+          "job_id": "4379417859",
+          "url": "https://www.linkedin.com/jobs/view/4379417859/"
+        },
+        {
+          "title": "Technical Support Specialist",
+          "posted": "2026-03-31",
+          "job_id": "4392482847",
+          "url": "https://www.linkedin.com/jobs/view/4392482847/"
+        },
+        {
+          "title": "FDE Product Manager",
+          "posted": "2026-04-21",
+          "job_id": "4403999718",
+          "url": "https://www.linkedin.com/jobs/view/4403999718/"
+        },
+        {
+          "title": "Customer Onboarding Specialist",
+          "posted": "2026-02-26",
+          "job_id": "4388987033",
+          "url": "https://www.linkedin.com/jobs/view/4388987033/"
+        },
+        {
+          "title": "GTM Engineer",
+          "posted": "2026-05-06",
+          "job_id": "4409966445",
+          "url": "https://www.linkedin.com/jobs/view/4409966445/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": null,
+          "job_id": "4392479886",
+          "url": "https://www.linkedin.com/jobs/view/4392479886/"
+        },
+        {
+          "title": "Vice President of Product",
+          "posted": "2026-05-04",
+          "job_id": "4410086519",
+          "url": "https://www.linkedin.com/jobs/view/4410086519/"
+        },
+        {
+          "title": "Senior Product Manager - Accounting Domain",
+          "posted": "2026-03-04",
+          "job_id": "4381117895",
+          "url": "https://www.linkedin.com/jobs/view/4381117895/"
+        }
+      ]
+    },
+    {
+      "company": "Cove",
+      "linkedin_url": "https://www.linkedin.com/company/covesmart/jobs/",
+      "slug": "covesmart",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Guard IQ",
+      "linkedin_url": "https://www.linkedin.com/company/guard-iq/jobs/",
+      "slug": "guard-iq",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Enzo Health",
+      "linkedin_url": "https://www.linkedin.com/company/enzo-health/jobs/",
+      "slug": "enzo-health",
+      "company_id": "99259078",
+      "is_hiring": true,
+      "listing_count": 6,
+      "listings": [
+        {
+          "title": "Senior Full Stack Engineer",
+          "posted": "2026-05-04",
+          "job_id": "4410207866",
+          "url": "https://www.linkedin.com/jobs/view/4410207866/"
+        },
+        {
+          "title": "Senior Mobile Engineer",
+          "posted": "2026-05-04",
+          "job_id": "4410212499",
+          "url": "https://www.linkedin.com/jobs/view/4410212499/"
+        },
+        {
+          "title": "Product Manager",
+          "posted": "2026-05-04",
+          "job_id": "4410228229",
+          "url": "https://www.linkedin.com/jobs/view/4410228229/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": "2026-01-22",
+          "job_id": "4365354388",
+          "url": "https://www.linkedin.com/jobs/view/4365354388/"
+        },
+        {
+          "title": "Controller",
+          "posted": "2026-05-04",
+          "job_id": "4410207874",
+          "url": "https://www.linkedin.com/jobs/view/4410207874/"
+        },
+        {
+          "title": "PRN Clinical Quality Reviewer: Home Health Coding & OASIS",
+          "posted": "2026-05-06",
+          "job_id": "4410968430",
+          "url": "https://www.linkedin.com/jobs/view/4410968430/"
+        }
+      ]
+    },
+    {
+      "company": "Pocketbook",
+      "linkedin_url": "https://www.linkedin.com/company/pocketbk/jobs/",
+      "slug": "pocketbk",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Neighbor",
+      "linkedin_url": "https://www.linkedin.com/company/neighbor/jobs/",
+      "slug": "neighbor",
+      "company_id": "18164617",
+      "is_hiring": true,
+      "listing_count": 6,
+      "listings": [
+        {
+          "title": "Senior Software Engineer",
+          "posted": "2026-05-05",
+          "job_id": "4410773447",
+          "url": "https://www.linkedin.com/jobs/view/4410773447/"
+        },
+        {
+          "title": "Data Engineer",
+          "posted": "2026-02-10",
+          "job_id": "4370913560",
+          "url": "https://www.linkedin.com/jobs/view/4370913560/"
+        },
+        {
+          "title": "Sales Development Representative",
+          "posted": "2026-03-17",
+          "job_id": "4386927263",
+          "url": "https://www.linkedin.com/jobs/view/4386927263/"
+        },
+        {
+          "title": "Senior Data Analyst",
+          "posted": "2026-02-05",
+          "job_id": "4369699118",
+          "url": "https://www.linkedin.com/jobs/view/4369699118/"
+        },
+        {
+          "title": "Sales Development Representative Internship",
+          "posted": "2026-03-20",
+          "job_id": "4388592431",
+          "url": "https://www.linkedin.com/jobs/view/4388592431/"
+        },
+        {
+          "title": "Founding Partnerships Lead",
+          "posted": "2026-04-15",
+          "job_id": "4401802280",
+          "url": "https://www.linkedin.com/jobs/view/4401802280/"
+        }
+      ]
+    },
+    {
+      "company": "Zonos",
+      "linkedin_url": "https://www.linkedin.com/company/zonos/jobs/",
+      "slug": "zonos",
+      "company_id": "539800",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Senior/Staff Backend Engineer",
+          "posted": "2026-05-01",
+          "job_id": "4407967717",
+          "url": "https://www.linkedin.com/jobs/view/4407967717/"
+        },
+        {
+          "title": "Licensed Customs Broker",
+          "posted": "2026-04-15",
+          "job_id": "4402518073",
+          "url": "https://www.linkedin.com/jobs/view/4402518073/"
+        }
+      ]
+    },
+    {
+      "company": "Vasion",
+      "linkedin_url": "https://www.linkedin.com/company/vasion-software/jobs/",
+      "slug": "vasion-software",
+      "company_id": "4035",
+      "is_hiring": true,
+      "listing_count": 10,
+      "listings": [
+        {
+          "title": "Staff Product Designer",
+          "posted": "2026-05-06",
+          "job_id": "4409971198",
+          "url": "https://www.linkedin.com/jobs/view/4409971198/"
+        },
+        {
+          "title": "Staff Product Designer",
+          "posted": "2026-05-04",
+          "job_id": "4410215456",
+          "url": "https://www.linkedin.com/jobs/view/4410215456/"
+        },
+        {
+          "title": "Senior Pricing Manager",
+          "posted": null,
+          "job_id": "4408502776",
+          "url": "https://www.linkedin.com/jobs/view/4408502776/"
+        },
+        {
+          "title": "Account Executive - Commercial",
+          "posted": null,
+          "job_id": "4390279612",
+          "url": "https://www.linkedin.com/jobs/view/4390279612/"
+        },
+        {
+          "title": "Senior Pricing Manager",
+          "posted": null,
+          "job_id": "4408509123",
+          "url": "https://www.linkedin.com/jobs/view/4408509123/"
+        },
+        {
+          "title": "Senior Account Executive - Federal",
+          "posted": null,
+          "job_id": "4400269056",
+          "url": "https://www.linkedin.com/jobs/view/4400269056/"
+        },
+        {
+          "title": "Customer Success Operations Manager",
+          "posted": null,
+          "job_id": "4408375821",
+          "url": "https://www.linkedin.com/jobs/view/4408375821/"
+        },
+        {
+          "title": "Senior Pricing Manager",
+          "posted": null,
+          "job_id": "4408331629",
+          "url": "https://www.linkedin.com/jobs/view/4408331629/"
+        },
+        {
+          "title": "Partner Account Director",
+          "posted": null,
+          "job_id": "4401312240",
+          "url": "https://www.linkedin.com/jobs/view/4401312240/"
+        },
+        {
+          "title": "Senior Pricing Manager",
+          "posted": null,
+          "job_id": "4408388302",
+          "url": "https://www.linkedin.com/jobs/view/4408388302/"
+        }
+      ]
+    },
+    {
+      "company": "Renew Biotechnologies",
+      "linkedin_url": "https://www.linkedin.com/company/renew-biotechnologies/jobs/",
+      "slug": "renew-biotechnologies",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "VIUS",
+      "linkedin_url": "https://www.linkedin.com/company/viusbuilt/jobs/",
+      "slug": "viusbuilt",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Fluid",
+      "linkedin_url": "https://www.linkedin.com/company/fluid-livefree/jobs/",
+      "slug": "fluid-livefree",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Trinsic",
+      "linkedin_url": "https://www.linkedin.com/company/14820679/jobs/",
+      "slug": "14820679",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Plansight",
+      "linkedin_url": "https://www.linkedin.com/company/plansight/jobs/",
+      "slug": "plansight",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SalesRabbit",
+      "linkedin_url": "https://www.linkedin.com/company/salesrabbit/jobs/",
+      "slug": "salesrabbit",
+      "company_id": "3223514",
+      "is_hiring": true,
+      "listing_count": 3,
+      "listings": [
+        {
+          "title": "Engineering Manager",
+          "posted": "2026-04-15",
+          "job_id": "4399328187",
+          "url": "https://www.linkedin.com/jobs/view/4399328187/"
+        },
+        {
+          "title": "Technical Customer Support Specialist - Contract-to-hire opportunity",
+          "posted": "2026-04-29",
+          "job_id": "4404104256",
+          "url": "https://www.linkedin.com/jobs/view/4404104256/"
+        },
+        {
+          "title": "Director, Business Systems & Analytics",
+          "posted": "2026-04-29",
+          "job_id": "4399923365",
+          "url": "https://www.linkedin.com/jobs/view/4399923365/"
+        }
+      ]
+    },
+    {
+      "company": "Mallow",
+      "linkedin_url": "https://www.linkedin.com/company/getmallow/jobs/",
+      "slug": "getmallow",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Listo Global",
+      "linkedin_url": "https://www.linkedin.com/company/listo-global/jobs/",
+      "slug": "listo-global",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Relay Health",
+      "linkedin_url": "https://www.linkedin.com/company/74098548/jobs/",
+      "slug": "74098548",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Airbatch",
+      "linkedin_url": "https://www.linkedin.com/company/airbatch/jobs/",
+      "slug": "airbatch",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Elektrik App Inc",
+      "linkedin_url": "https://www.linkedin.com/company/elektrikapp/jobs/",
+      "slug": "elektrikapp",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Grain",
+      "linkedin_url": "https://www.linkedin.com/company/grainhq/jobs/",
+      "slug": "grainhq",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Alcomy",
+      "linkedin_url": "https://www.linkedin.com/company/alcomy/jobs/",
+      "slug": "alcomy",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Devote",
+      "linkedin_url": "https://www.linkedin.com/company/usedevote/jobs/",
+      "slug": "usedevote",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Learnie",
+      "linkedin_url": "https://www.linkedin.com/company/learnie/jobs/",
+      "slug": "learnie",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Clientbook",
+      "linkedin_url": "https://www.linkedin.com/company/clientbook-retail/jobs/",
+      "slug": "clientbook-retail",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "ADDAX Overland",
+      "linkedin_url": "https://www.linkedin.com/company/addax-overland/jobs/",
+      "slug": "addax-overland",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "ElizaChat",
+      "linkedin_url": "https://www.linkedin.com/company/eliza-chat/jobs/",
+      "slug": "eliza-chat",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Thymeless Enterprises",
+      "linkedin_url": "https://www.linkedin.com/company/thymeless/jobs/",
+      "slug": "thymeless",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Solo",
+      "linkedin_url": "https://www.linkedin.com/company/36086542/jobs/",
+      "slug": "36086542",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SquarePeg",
+      "linkedin_url": "https://www.linkedin.com/company/squarepeg-hires/jobs/",
+      "slug": "squarepeg-hires",
+      "company_id": "10581613",
+      "is_hiring": true,
+      "listing_count": 2,
+      "listings": [
+        {
+          "title": "Senior QA Automation & Workflow Validation Engineer",
+          "posted": "2026-04-27",
+          "job_id": "4407523678",
+          "url": "https://www.linkedin.com/jobs/view/4407523678/"
+        },
+        {
+          "title": "Marketing Operations Manager",
+          "posted": "2026-04-30",
+          "job_id": "4399406540",
+          "url": "https://www.linkedin.com/jobs/view/4399406540/"
+        }
+      ]
+    },
+    {
+      "company": "Swell",
+      "linkedin_url": "https://www.linkedin.com/company/swell-cx/jobs/",
+      "slug": "swell-cx",
+      "company_id": "17937029",
+      "is_hiring": true,
+      "listing_count": 1,
+      "listings": [
+        {
+          "title": "Enterprise Sales Development Representative (SDR)",
+          "posted": "2026-01-18",
+          "job_id": "4372105402",
+          "url": "https://www.linkedin.com/jobs/view/4372105402/"
+        }
+      ]
+    },
+    {
+      "company": "Monovo",
+      "linkedin_url": "https://www.linkedin.com/company/monovotech/jobs/",
+      "slug": "monovotech",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Adminify AI",
+      "linkedin_url": "https://www.linkedin.com/company/adminify-ai/jobs/",
+      "slug": "adminify-ai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Territories.AI",
+      "linkedin_url": "https://www.linkedin.com/company/territories-ai/jobs/",
+      "slug": "territories-ai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "SpaceAgent",
+      "linkedin_url": "https://www.linkedin.com/company/97418896/jobs/",
+      "slug": "97418896",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "PowerBx",
+      "linkedin_url": "https://www.linkedin.com/company/6426403/jobs/",
+      "slug": "6426403",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "TheraPro.ai",
+      "linkedin_url": "https://www.linkedin.com/company/theraproai/jobs/",
+      "slug": "theraproai",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    },
+    {
+      "company": "Nodal Power Inc",
+      "linkedin_url": "https://www.linkedin.com/company/nodal-power-systems/jobs/",
+      "slug": "nodal-power-systems",
+      "company_id": null,
+      "is_hiring": false,
+      "listing_count": 0,
+      "listings": []
+    }
+  ]
+}

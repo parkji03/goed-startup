@@ -142,7 +142,7 @@ function normalizeWebsite(raw: string): string | undefined {
   return `https://${trimmed}`;
 }
 
-function cleanString(raw: string): string | undefined {
+function cleanString(raw: string | undefined): string | undefined {
   const trimmed = raw?.trim();
   return trimmed || undefined;
 }

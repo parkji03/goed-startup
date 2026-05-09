@@ -111,12 +111,7 @@ export const investorBriefValidator = v.object({
   extractedAt: v.optional(v.number()),
 });
 
-export const hiringStatusValidator = v.union(
-  v.literal('actively'),
-  v.literal('occasionally'),
-  v.literal('not'),
-  v.literal('unknown'),
-);
+export const hiringStatusValidator = v.union(v.boolean(), v.literal('unknown'));
 
 export const companyStatusValidator = v.union(
   v.literal('pending'),
@@ -250,15 +245,20 @@ export default defineSchema({
     // itself signals provenance — anything inside is best-effort, not curated.
     investorBrief: v.optional(investorBriefValidator),
 
-    // Spec-required fields, populated via self-service after seed
+    // Spec-required fields, populated via self-service after seed.
+    // hiringStatus + jobPostings are temporarily optional so the schema can
+    // push over rows seeded before these fields existed; flip back to
+    // required once `companies:backfillRequiredFields` has run on every env.
     yearFounded: v.optional(v.number()),
-    hiringStatus: hiringStatusValidator,
-    jobPostings: v.array(
-      v.object({
-        title: v.string(),
-        link: v.string(),
-        department: v.optional(v.string()),
-      }),
+    hiringStatus: v.optional(hiringStatusValidator),
+    jobPostings: v.optional(
+      v.array(
+        v.object({
+          title: v.string(),
+          link: v.string(),
+          department: v.optional(v.string()),
+        }),
+      ),
     ),
     photos: v.array(v.id('_storage')),
 

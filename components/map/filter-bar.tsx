@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
 import {
   EMPLOYEE_COUNT_IDS,
   SECTOR_IDS,
@@ -105,6 +107,22 @@ export function FilterBar({
     [tTax],
   );
 
+  // City options come from data, not a closed enum, so they're loaded
+  // reactively. The Convex query is scoped to the full published set —
+  // unaffected by the user's other filter selections — so the dropdown
+  // stays stable as filters compose. Display label includes the count
+  // ("Lehi (12)") to surface where the dense markets are; the `id` is
+  // the lowercase city key, the same shape the Convex filter uses.
+  const cityList = useQuery(api.companies.cityList);
+  const cityOptions = useMemo<Option<string>[]>(
+    () =>
+      (cityList ?? []).map((c) => ({
+        id: c.key,
+        name: `${c.display} (${c.count})`,
+      })),
+    [cityList],
+  );
+
   return (
     // Single-row layout. Search has a fixed width so it never resizes
     // when chips grow (e.g. a count badge appears); the chrome around
@@ -144,6 +162,13 @@ export function FilterBar({
         onChange={(employeeCounts) =>
           updateFilters({ ...filters, employeeCounts })
         }
+      />
+      <FilterChip
+        size={size}
+        label={tFilters('city.label')}
+        options={cityOptions}
+        value={filters.cities}
+        onChange={(cities) => updateFilters({ ...filters, cities })}
       />
     </div>
   );

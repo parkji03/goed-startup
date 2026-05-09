@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { Button } from 'react-aria-components/Button';
 import {
+  EMPTY_FILTERS,
   isFiltersActive,
   parseFiltersFromParams,
   serializeFiltersToParams,
@@ -72,8 +73,7 @@ export function FloatingFilterBar({
   const active = isFiltersActive(filters);
 
   const onClearAll = () => {
-    const next = { q: '', sectors: [], stages: [], employeeCounts: [] };
-    const qs = serializeFiltersToParams(next);
+    const qs = serializeFiltersToParams(EMPTY_FILTERS);
     const url = qs ? `${pathname}?${qs}` : pathname;
     router.replace(url, { scroll: false });
   };

@@ -55,6 +55,10 @@
         "placeholder": "Cualquier tamaño",
         "searchPlaceholder": "Filtrar tamaños…"
       },
+      "city": {
+        "label": "Ciudad",
+        "placeholder": "Cualquier ciudad"
+      },
       "clear": "Limpiar todo",
       "resultsCount": "Mostrando {shown} de {total}"
     },
