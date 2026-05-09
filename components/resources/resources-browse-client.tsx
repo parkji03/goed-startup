@@ -210,6 +210,12 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
                                 <ResourceRow key={String(r._id)} resource={r} />
                               ))}
                             </div>
+                            {total > items.length ? (
+                              <Text className="mt-2 text-xs text-muted-fg">
+                                Showing {items.length} of {total} — refine the
+                                filters to narrow this list.
+                              </Text>
+                            ) : null}
                           </DisclosurePanel>
                         </div>
                       )}
@@ -239,6 +245,12 @@ export function ResourcesBrowseClient({ preloadedGrouped }: Props) {
                         <ResourceCard key={String(r._id)} resource={r} />
                       ))}
                     </div>
+                    {total > items.length ? (
+                      <Text className="text-xs text-muted-fg">
+                        Showing {items.length} of {total} — refine the filters
+                        to narrow this list.
+                      </Text>
+                    ) : null}
                   </div>
                 );
               })}

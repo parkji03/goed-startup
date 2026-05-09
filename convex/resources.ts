@@ -212,7 +212,10 @@ type GroupedCategory = { items: GroupedItem[]; total: number };
 export const listGroupedByCategory = query({
   args: { limitPerCategory: v.optional(v.number()) },
   handler: async (ctx, { limitPerCategory }) => {
-    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 200);
+    // Default 50 keeps SSR payloads small. Hard cap at 500 gives headroom
+    // before a category's full slice doesn't fit in one payload — a
+    // paginated endpoint is the next step beyond that.
+    const lim = Math.min(Math.max(limitPerCategory ?? 50, 1), 500);
     const results = Object.fromEntries(
       RESOURCE_CATEGORY_KEYS.map((k) => [k, { items: [], total: 0 } as GroupedCategory]),
     ) as Record<ResourceCategoryKey, GroupedCategory>;

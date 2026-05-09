@@ -1,7 +1,7 @@
 "use client";
 
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { type Preloaded, usePreloadedQuery } from "convex/react";
+import type { api } from "@/convex/_generated/api";
 import { GuideCard } from "@/components/guides/guide-card";
 import { buttonStyles } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
@@ -9,12 +9,12 @@ import { Text } from "@/components/ui/text";
 import { Link } from "@/i18n/navigation";
 import { GUIDE_CATEGORIES } from "@/lib/guides/categories";
 
-export function GuidesBrowseClient() {
-  const grouped = useQuery(api.guides.listGroupedByCategory, { limitPerCategory: 50 });
+type Props = {
+  preloadedGrouped: Preloaded<typeof api.guides.listGroupedByCategory>;
+};
 
-  if (grouped === undefined) {
-    return <Text className="px-4 py-10 text-center text-muted-fg">Loading guides…</Text>;
-  }
+export function GuidesBrowseClient({ preloadedGrouped }: Props) {
+  const grouped = usePreloadedQuery(preloadedGrouped);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-10">
@@ -39,7 +39,7 @@ export function GuidesBrowseClient() {
 
       <div className="space-y-10">
         {GUIDE_CATEGORIES
-          .filter((c) => c.key !== "journey-step") // surfaced via the dedicated journey button
+          .filter((c) => c.key !== "journey-step")
           .map((cat) => {
             const group = grouped[cat.key];
             if (!group || group.items.length === 0) return null;
@@ -60,6 +60,12 @@ export function GuidesBrowseClient() {
                     <GuideCard key={g._id as string} guide={g} />
                   ))}
                 </div>
+                {group.total > group.items.length ? (
+                  <Text className="mt-3 text-xs text-muted-fg">
+                    Showing {group.items.length} of {group.total} guides in this
+                    section.
+                  </Text>
+                ) : null}
               </section>
             );
           })}

@@ -4,7 +4,17 @@ import { api } from "@/convex/_generated/api";
 import { routing } from "@/i18n/routing";
 import { SITE_URL } from "@/lib/seo";
 
-const STATIC_PATHS = ["/", "/resources", "/map", "/guide"] as const;
+const STATIC_PATHS = [
+  "/",
+  "/resources",
+  "/guides",
+  "/guides/journey",
+  "/news",
+  "/map",
+  "/guide",
+] as const;
+
+type SlugEntry = { slug: string; lastModified: number };
 
 function abs(path: string, locale: string): string {
   const localePath = locale === routing.defaultLocale ? "" : `/${locale}`;
@@ -16,18 +26,24 @@ function languageAlternates(path: string): Record<string, string> {
   return Object.fromEntries(routing.locales.map((l) => [l, abs(path, l)]));
 }
 
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // Fail open: if Convex is unreachable at build time we still emit static
-  // routes so deploy pipelines don't break. Without NEXT_PUBLIC_CONVEX_URL
-  // we skip the dynamic fetch entirely.
-  let resourceEntries: Array<{ slug: string; lastModified: number }> = [];
-  if (process.env.NEXT_PUBLIC_CONVEX_URL) {
-    try {
-      resourceEntries = await fetchQuery(api.resources.sitemapEntries, {});
-    } catch {
-      resourceEntries = [];
-    }
+async function safeEntries<Q extends Parameters<typeof fetchQuery>[0]>(
+  q: Q,
+): Promise<SlugEntry[]> {
+  if (!process.env.NEXT_PUBLIC_CONVEX_URL) return [];
+  try {
+    return (await fetchQuery(q, {})) as SlugEntry[];
+  } catch {
+    return [];
   }
+}
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Fan out the Convex reads in parallel; fail open if either is unreachable
+  // so deploy pipelines never break on a missing dev deployment.
+  const [resourceEntries, guideEntries] = await Promise.all([
+    safeEntries(api.resources.sitemapEntries),
+    safeEntries(api.guides.sitemapEntries),
+  ]);
 
   const now = new Date();
 
@@ -51,5 +67,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
-  return [...staticEntries, ...resourceUrls];
+  const guideUrls: MetadataRoute.Sitemap = guideEntries.flatMap((g) =>
+    routing.locales.map((locale) => ({
+      url: abs(`/guides/${g.slug}`, locale),
+      lastModified: new Date(g.lastModified),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      alternates: { languages: languageAlternates(`/guides/${g.slug}`) },
+    })),
+  );
+
+  return [...staticEntries, ...resourceUrls, ...guideUrls];
 }
