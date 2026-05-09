@@ -147,7 +147,7 @@ CRITICAL VOCABULARY CONSTRAINTS — values must match exactly:
   category    ∈ {${CATEGORY_LIST}}
 
 Rules:
-  • description: ≤600 chars, plain prose. Lead with what the program does and who it serves. State eligibility, dollar amounts, or scope when mentioned. No marketing fluff.
+  • description: ≤600 chars, plain prose. Lead with what the program does and who it serves. State eligibility, dollar amounts, or scope when mentioned. No marketing fluff. Do NOT include year-specific deadlines (e.g., "Apply by July 25, 2025") — articles may be stale; if a recurring program has cyclical applications, write "Application windows open annually — check the official site for the current cycle." instead.
   • communities: Only list communities the program explicitly serves (e.g., Rural, Veteran). For general-purpose programs, return ["Any"].
   • industries: For industry-specific programs (e.g., biotech-only), list only those. For general-purpose programs, list ALL 10 industries (matching the existing CSV pattern).
   • locations: For statewide programs, list ALL 29 counties. For region-specific programs (e.g., southern Utah only), list the relevant counties.
