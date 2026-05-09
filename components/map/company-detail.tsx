@@ -3,12 +3,15 @@
 import {
   ArrowLeftIcon,
   ArrowTopRightOnSquareIcon,
+  BriefcaseIcon,
   GlobeAltIcon,
   MapPinIcon,
 } from '@heroicons/react/20/solid';
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useQuery } from 'convex/react';
 import { Button } from 'react-aria-components/Button';
+import { api } from '@/convex/_generated/api';
 import type { CompanyForList } from '@/hooks/useFilteredCompanies';
 import { domainFromUrl, logoDevUrl } from '@/lib/logo';
 import { SECTOR_TINTS } from '@/lib/companies/sector-styling';
@@ -55,6 +58,13 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
   ].join(' ');
   const enterStyle = (delay: number): React.CSSProperties => ({
     transitionDelay: `${delay}ms`,
+  });
+
+  // Lazy-fetch listings only when this detail view is mounted. Keeps the
+  // map's `searchForMap` payload lean — listings can be 5+ rows per company,
+  // which would otherwise bloat every subscription update across the corpus.
+  const listings = useQuery(api.companies.listingsForCompany, {
+    companyId: company._id,
   });
 
   const stats: Array<{ label: string; value: string | null }> = [
@@ -183,6 +193,35 @@ export function CompanyDetail({ company, onBack, onView }: CompanyDetailProps) {
                 ) : null,
               )}
             </dl>
+          </div>
+        )}
+
+        {/* Open roles — pulled from the LinkedIn scrape and persisted in the
+            companyJobPostings table. Self-suppresses when empty so we don't
+            stamp an empty section under "Information". */}
+        {listings && listings.length > 0 && (
+          <div className={`${enterClass} mt-7`} style={enterStyle(220)}>
+            <SectionLabel>
+              {tDetail('openRoles.eyebrow', { count: listings.length })}
+            </SectionLabel>
+            <ul className="mt-3 divide-y divide-border/60 rounded-2xl border border-border bg-bg/50">
+              {listings.map((l) => (
+                <li key={l._id}>
+                  <a
+                    href={l.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-3 px-3 py-2.5 transition-colors hover:bg-muted/40 focus-visible:bg-muted/40 focus-visible:outline-none"
+                  >
+                    <BriefcaseIcon className="size-4 shrink-0 text-muted-fg" />
+                    <span className="min-w-0 flex-1 truncate text-sm font-medium text-fg">
+                      {l.title}
+                    </span>
+                    <ArrowTopRightOnSquareIcon className="size-3.5 shrink-0 text-muted-fg" />
+                  </a>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
 

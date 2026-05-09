@@ -97,6 +97,11 @@ export function CompanyCard({ company, onSelect, onView }: CompanyCardProps) {
                 icon={<LinkedInIcon className="size-4" />}
               />
             )}
+            <HiringIndicator
+              status={company.hiringStatus}
+              count={company.openListingsCount}
+              t={tCard}
+            />
             <Button
               type="button"
               onPress={() => onView(company)}
@@ -108,6 +113,44 @@ export function CompanyCard({ company, onSelect, onView }: CompanyCardProps) {
         </div>
       </div>
     </article>
+  );
+}
+
+/**
+ * Inline hiring indicator. Renders as a soft tinted pill so it reads as a
+ * peer to the surrounding icon buttons rather than floating text — matches
+ * the rounded-full language of the sector pill at the top of the card and
+ * lets the background tint do the status work (no extra dot needed).
+ *
+ * Returns null for `'unknown'` so the card stays tidy when we have no
+ * signal at all.
+ */
+function HiringIndicator({
+  status,
+  count,
+  t,
+}: {
+  status: boolean | 'unknown';
+  count: number;
+  t: (key: string, values?: Record<string, string | number>) => string;
+}) {
+  if (status === 'unknown') return null;
+  const isHiring = status === true;
+  const label =
+    isHiring && count > 0
+      ? t('hiringWithCount', { count })
+      : t(isHiring ? 'hiring' : 'notHiring');
+  return (
+    <span
+      className={[
+        'inline-flex h-7 shrink-0 items-center rounded-full px-2.5 text-[11px] font-medium leading-none',
+        isHiring
+          ? 'bg-emerald-500/10 text-emerald-700 dark:bg-emerald-400/15 dark:text-emerald-300'
+          : 'bg-muted/60 text-muted-fg',
+      ].join(' ')}
+    >
+      {label}
+    </span>
   );
 }
 

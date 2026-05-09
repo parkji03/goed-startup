@@ -4,10 +4,12 @@ import { useMemo } from 'react';
 import { useQuery } from 'convex/react';
 import type { FeatureCollection, Point } from 'geojson';
 import { api } from '@/convex/_generated/api';
-import type {
-  EmployeeCountId,
-  SectorId,
-  StageId,
+import type { Id } from '@/convex/_generated/dataModel';
+import {
+  hiringFilterIdToStatus,
+  type EmployeeCountId,
+  type SectorId,
+  type StageId,
 } from '@/lib/companies/taxonomy';
 import type { InvestorBrief } from '@/lib/companies/investor-brief';
 import { EMPTY_FILTERS, type MapFilters } from '@/lib/companies/filters';
@@ -15,6 +17,10 @@ import { EMPTY_FILTERS, type MapFilters } from '@/lib/companies/filters';
 /**
  * Trimmed properties carried in each map feature — only what the renderer
  * needs (everything else is fetched separately for the cards).
+ *
+ * `_id` is typed as a plain string here because Mapbox's GeoJSON feature
+ * properties must be JSON-serializable, and the branded `Id<...>` type
+ * doesn't survive the round-trip through the GL JS source.
  */
 export type CompanyFeatureProps = {
   _id: string;
@@ -28,7 +34,7 @@ export type CompanyFeatureProps = {
  * Full per-company record consumed by the results sidebar's cards.
  */
 export type CompanyForList = {
-  _id: string;
+  _id: Id<'companies'>;
   name: string;
   slug: string;
   sector: SectorId;
@@ -47,6 +53,13 @@ export type CompanyForList = {
   lng: number;
   lat: number;
   investorBrief?: InvestorBrief;
+  /**
+   * Hiring snapshot from the most recent LinkedIn scrape. `'unknown'` is
+   * the projection's default for rows that never had it computed.
+   */
+  hiringStatus: boolean | 'unknown';
+  /** Denormalized count of open job postings on this company. */
+  openListingsCount: number;
 };
 
 export type FilteredCompanies = {
@@ -83,6 +96,12 @@ export function useFilteredCompanies(
         ? filters.employeeCounts
         : undefined,
       cities: filters.cities.length ? filters.cities : undefined,
+      // Convex stores hiringStatus as `boolean | 'unknown'`; the URL/UI
+      // uses string IDs. Translate at the boundary so the wire format
+      // matches the doc shape.
+      hiringStatuses: filters.hiringStatuses.length
+        ? filters.hiringStatuses.map(hiringFilterIdToStatus)
+        : undefined,
     }),
     [
       filters.q,
@@ -90,6 +109,7 @@ export function useFilteredCompanies(
       filters.stages,
       filters.employeeCounts,
       filters.cities,
+      filters.hiringStatuses,
     ],
   );
 

@@ -246,11 +246,31 @@ export default defineSchema({
     investorBrief: v.optional(investorBriefValidator),
 
     // Spec-required fields, populated via self-service after seed.
-    // hiringStatus + jobPostings are temporarily optional so the schema can
-    // push over rows seeded before these fields existed; flip back to
-    // required once `companies:backfillRequiredFields` has run on every env.
+    // hiringStatus is temporarily optional so the schema can push over rows
+    // seeded before this field existed; flip back to required once the seed
+    // has run on every env.
     yearFounded: v.optional(v.number()),
     hiringStatus: v.optional(hiringStatusValidator),
+    /**
+     * Last time `hiringStatus` (and the `companyJobPostings` rows for this
+     * company) were refreshed from a LinkedIn scrape. Lets the UI show
+     * "as of …" provenance and lets us spot stale data.
+     */
+    linkedinSyncedAt: v.optional(v.number()),
+    /**
+     * Denormalized count of `companyJobPostings` rows for this company.
+     * Maintained by `seedOne` so the map list can render "5 open roles"
+     * without paying a per-row child query. Stays in lockstep with the
+     * listings table because seedOne is the only writer of either.
+     */
+    openListingsCount: v.optional(v.number()),
+    /**
+     * Deprecated — superseded by the standalone `companyJobPostings`
+     * table. Kept on the validator only so existing rows that still carry
+     * an empty array can pass schema validation. seedOne explicitly writes
+     * `jobPostings: undefined` on re-seed to drain the field row-by-row;
+     * once every row is clean this can be dropped.
+     */
     jobPostings: v.optional(
       v.array(
         v.object({
@@ -283,4 +303,33 @@ export default defineSchema({
       searchField: 'searchText',
       filterFields: ['status'],
     }),
+
+  /**
+   * Open job listings per company. Lives in its own table (not as an array
+   * on the parent) so growth is unbounded and updates don't rewrite the
+   * whole company doc — see Convex schema guidelines on unbounded child
+   * collections. Seeded by `companies.seedOne` from
+   * `linkedin-hiring-data.json`; refreshed by re-running the seed.
+   *
+   * The `by_companyId_and_postedAt` index lets the detail panel paginate
+   * newest-first without an in-memory sort.
+   */
+  companyJobPostings: defineTable({
+    companyId: v.id('companies'),
+    /** Where this listing was discovered. Today only LinkedIn scrapes. */
+    source: v.union(v.literal('linkedin'), v.literal('manual')),
+    /** Stable id from the source system (e.g. LinkedIn `job_id`). Optional
+     * because manual entries don't have one. */
+    externalId: v.optional(v.string()),
+    title: v.string(),
+    url: v.string(),
+    department: v.optional(v.string()),
+    location: v.optional(v.string()),
+    /** ms epoch. Optional because LinkedIn sometimes hides the post date. */
+    postedAt: v.optional(v.number()),
+    /** ms epoch — when this row was written by the seed. */
+    scrapedAt: v.number(),
+  })
+    .index('by_companyId', ['companyId'])
+    .index('by_companyId_and_postedAt', ['companyId', 'postedAt']),
 });

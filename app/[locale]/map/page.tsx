@@ -63,6 +63,18 @@ export default function MapPage() {
   // the user hasn't typed/filtered anything.
   const panelOpen = isFiltersActive(filters) || selectedCompany != null;
 
+  // When the panel is open it covers the left side of the canvas, so a
+  // marker placed at canvas center sits uncomfortably close to the panel
+  // edge. Offset the camera target so the marker lands well inside the
+  // visible (right) portion of the map. Positive X shifts the lng/lat
+  // right of canvas center.
+  const panelOpenRef = useRef(panelOpen);
+  useEffect(() => {
+    panelOpenRef.current = panelOpen;
+  }, [panelOpen]);
+  const cameraOffset = (): [number, number] =>
+    panelOpenRef.current ? [200, 0] : [0, 0];
+
   // Soft pan to a company without changing zoom — used when the user picks
   // a card from the list. The marker comes into view without yanking the
   // user's current zoom level.
@@ -71,6 +83,7 @@ export default function MapPage() {
     if (!map) return;
     map.easeTo({
       center: [company.lng, company.lat],
+      offset: cameraOffset(),
       duration: 600,
       essential: true,
     });
@@ -84,6 +97,7 @@ export default function MapPage() {
     map.flyTo({
       center: [company.lng, company.lat],
       zoom: 17,
+      offset: cameraOffset(),
       essential: true,
     });
   }, []);
@@ -276,6 +290,7 @@ export default function MapPage() {
           map.easeTo({
             center: [lng, lat],
             zoom: zoom ?? map.getZoom() + 1,
+            offset: cameraOffset(),
           });
         });
       });

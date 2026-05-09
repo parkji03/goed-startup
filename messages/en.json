@@ -59,6 +59,14 @@
         "label": "City",
         "placeholder": "Any city"
       },
+      "hiring": {
+        "label": "Hiring",
+        "placeholder": "Any status"
+      },
+      "toggle": {
+        "show": "Show filters",
+        "hide": "Hide filters"
+      },
       "clear": "Clear all",
       "resultsCount": "Showing {shown} of {total}"
     },
@@ -76,6 +84,9 @@
         "employees": "Employees",
         "founded": "Founded",
         "sector": "Sector"
+      },
+      "openRoles": {
+        "eyebrow": "Open roles · {count}"
       },
       "brief": {
         "eyebrow": "AI-extracted brief",
@@ -119,7 +130,10 @@
       "linkedin": "LinkedIn",
       "viewOnMap": "View on map",
       "employeesValue": "{count} employees",
-      "foundedValue": "Founded {year}"
+      "foundedValue": "Founded {year}",
+      "hiring": "Hiring",
+      "notHiring": "Not hiring",
+      "hiringWithCount": "Hiring · {count, plural, one {# open role} other {# open roles}}"
     },
     "list": {
       "emptyTitle": "No matches",
@@ -157,6 +171,11 @@
       "201-500": "201–500",
       "501-1k": "501–1K",
       "1k-5k": "1K–5K"
+    },
+    "hiringStatuses": {
+      "hiring": "Hiring",
+      "not-hiring": "Not hiring",
+      "unknown": "Unknown"
     },
     "targetMarkets": {
       "enterprise": "Enterprise",

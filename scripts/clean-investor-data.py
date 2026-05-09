@@ -30,6 +30,32 @@ OUTPUT_CSV = "Map Data for Builder Day - investor-data-clean.csv"
 OBJECT_COLS = {"Differentiation Claim", "Funding"}
 ARRAY_COLS = {"Founders", "Notable Customers", "Key Metrics", "Integrations", "Pages Crawled", "Hallucination Flags"}
 
+# Free-text scalar columns where the LLM is supposed to OMIT the field rather
+# than emit a placeholder, but sometimes writes "Unable to determine..." etc.
+SCALAR_FREETEXT_COLS = {"Pitch", "Product Category"}
+
+# Matches the placeholder phrasings observed from Haiku 4.5 (Bedrock/Portkey)
+# when the model couldn't extract a value from the crawled markdown. The system
+# prompt tells it to leave the field empty, but it sometimes ignores that. Keep
+# this anchored to the START so we don't nuke real prose that happens to contain
+# the word "unknown".
+PLACEHOLDER_RE = re.compile(
+    r"^\s*("
+    r"unable to (determine|find|extract|identify|locate|verify)"
+    r"|unknown"
+    r"|n/?a"
+    r"|none(?: (?:available|listed|provided|specified))?"
+    r"|not (available|stated|specified|provided|listed|disclosed|mentioned|clear|applicable|found)"
+    r")\b",
+    re.IGNORECASE,
+)
+
+
+def is_placeholder_text(s: str | None) -> bool:
+    if not s:
+        return False
+    return bool(PLACEHOLDER_RE.match(s.strip()))
+
 # Enums must match convex/schema.ts. Out-of-vocabulary values get coerced
 # to the nearest in-vocab equivalent (or cleared if no good match).
 TARGET_MARKET_ENUM = {"enterprise", "mid-market", "smb", "consumer", "developer", "prosumer"}
@@ -92,9 +118,19 @@ def coerce_object(raw: str, col_name: str = "") -> tuple[dict | None, str]:
         if isinstance(parsed, dict):
             if is_placeholder_garbage(parsed):
                 return None, "placeholder-cleared"
-            # Drop fields whose value is literally "<UNKNOWN>"
-            cleaned = {k: v for k, v in parsed.items()
-                       if not (isinstance(v, str) and v.strip() in ("<UNKNOWN>", "UNKNOWN"))}
+            # Drop fields whose value is literally "<UNKNOWN>" or matches a
+            # free-text placeholder phrase like "Unable to determine...".
+            cleaned = {
+                k: v for k, v in parsed.items()
+                if not (
+                    isinstance(v, str)
+                    and (v.strip() in ("<UNKNOWN>", "UNKNOWN") or is_placeholder_text(v))
+                )
+            }
+            # Special-case Differentiation Claim: if the `claim` itself is a
+            # placeholder, the whole object is meaningless — drop it.
+            if col_name == "Differentiation Claim" and not cleaned.get("claim"):
+                return None, "placeholder-cleared"
             return (cleaned if cleaned else None), ("placeholder-cleared" if not cleaned else "")
         if isinstance(parsed, str):
             return ({"claim": parsed} if parsed else None), "string-as-obj"
@@ -219,6 +255,11 @@ def main():
             v, kind = normalize_enum(r["Monetization Model"], MONETIZATION_ENUM)
             tally(f"Monetization Model: {kind}" if kind else "")
             r["Monetization Model"] = v
+
+        for col in SCALAR_FREETEXT_COLS:
+            if col in r and is_placeholder_text(r[col]):
+                tally(f"{col}: placeholder-cleared")
+                r[col] = ""
 
         for col in OBJECT_COLS:
             if col not in r:

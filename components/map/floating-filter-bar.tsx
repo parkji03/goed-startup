@@ -82,11 +82,12 @@ export function FloatingFilterBar({
     <div
       className={[
         'fixed left-3 top-[70px] z-10 flex w-fit flex-col overflow-hidden border border-border bg-bg/95 shadow-lg backdrop-blur-md',
-        // Cap at 700px so the chrome doesn't grow unbounded as filters
-        // and badges stack up; the inner viewport-safety bound keeps it
-        // from spilling off-screen on narrower windows. Mobile
-        // collapses to edge-to-edge.
-        'max-w-[min(700px,calc(100vw-1.5rem))] max-md:left-2 max-md:right-2 max-md:w-auto max-md:max-w-none',
+        // Floor at 560px so the chrome stays a stable target at rest;
+        // cap at 620px so it can't grow unbounded as filters and badges
+        // stack up; the inner viewport-safety bound keeps it from
+        // spilling off-screen on narrower windows. Mobile collapses to
+        // edge-to-edge and drops both bounds.
+        'min-w-[560px] max-w-[min(620px,calc(100vw-1.5rem))] max-md:left-2 max-md:right-2 max-md:w-auto max-md:min-w-0 max-md:max-w-none',
         // Single fixed corner radius. `rounded-full` reads as a pill
         // at the FilterBar's collapsed height, but its 9999px value
         // gets clamped to half-min-dimension per frame — animating

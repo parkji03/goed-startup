@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/tooltip';
 import {
   hasInvestorContent,
+  sanitizeBrief,
   type Founder,
   type Funding,
   type InvestorBrief as InvestorBriefData,
@@ -39,8 +40,11 @@ export function InvestorBrief({ brief, className, style }: InvestorBriefProps) {
   const format = useFormatter();
 
   if (!hasInvestorContent(brief)) return null;
-  // Narrow: hasInvestorContent returns false for undefined.
-  const data = brief!;
+  // sanitizeBrief strips LLM placeholder strings ("Unable to determine...",
+  // "Unknown", etc.) so each section's `data.x && ...` guard works correctly.
+  // Non-null because hasInvestorContent ran the same sanitization and returned
+  // true, which requires at least one populated field.
+  const data = sanitizeBrief(brief)!;
 
   const fundingDisplay = formatFunding(data.funding, format, t);
   const modelDisplay = formatModel(data.targetMarket, data.monetizationModel, tTax, t);
@@ -114,11 +118,14 @@ export function InvestorBrief({ brief, className, style }: InvestorBriefProps) {
           </blockquote>
         )}
 
-        {/* 2-column stat grid. Two cells per row instead of four gives each
-            value ~2× the horizontal room, which is enough to fit the longest
-            real-world strings (e.g., "Series B · $330M",
-            "SMB · Subscription", "Led by Sumeru Equity Partners") on a
-            single line at the panel's natural width. */}
+        {/* 2-column stat grid. Two cells per row gives each value ~2× the
+            horizontal room of a four-column layout. Values wrap onto a
+            second line when they're long ("Series A (or later equity) ·
+            $53M"); short ones still fit on a single line — but we never
+            let content spill into a neighbor column.
+            `min-w-0` on the cell + `break-words` on the value cooperate
+            so a single long token (rare, e.g. a 30-char investor name)
+            also won't overflow. */}
         {visibleStats.length > 0 && (
           <dl className="mt-4 grid grid-cols-2 gap-x-5 gap-y-4">
             {visibleStats.map((s) => (
@@ -126,11 +133,11 @@ export function InvestorBrief({ brief, className, style }: InvestorBriefProps) {
                 <dt className="text-[10px] font-semibold uppercase tracking-[0.14em] text-muted-fg">
                   {s.label}
                 </dt>
-                <dd className="mt-1 whitespace-nowrap font-mono text-sm font-semibold text-fg">
+                <dd className="mt-1 break-words font-mono text-sm font-semibold leading-snug text-fg">
                   {s.primary}
                 </dd>
                 {s.secondary && (
-                  <dd className="mt-0.5 whitespace-nowrap text-[11px] leading-snug text-muted-fg">
+                  <dd className="mt-0.5 break-words text-[11px] leading-snug text-muted-fg">
                     {s.secondary}
                   </dd>
                 )}

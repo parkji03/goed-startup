@@ -70,6 +70,26 @@ export type EmployeeCountId = (typeof EMPLOYEE_COUNTS)[number]['id'];
 export const EMPLOYEE_COUNT_IDS = EMPLOYEE_COUNTS.map((e) => e.id) as readonly EmployeeCountId[];
 
 // ---------------------------------------------------------------------------
+// Hiring status (filter-only — the underlying doc field is `true | false |
+// 'unknown'`; these string IDs exist so the value is URL-serializable and
+// translatable. `hiringFilterIdToStatus` bridges the two representations.
+// 'unknown' is intentionally NOT a filter option — it just means "no signal",
+// which is rarely a useful filter axis. Stale `?hiring=unknown` URLs drop
+// silently via the type guard.)
+// ---------------------------------------------------------------------------
+
+export const HIRING_STATUS_IDS = ['hiring', 'not-hiring'] as const;
+export type HiringStatusFilterId = (typeof HIRING_STATUS_IDS)[number];
+
+export function isHiringStatusFilterId(x: string): x is HiringStatusFilterId {
+  return (HIRING_STATUS_IDS as readonly string[]).includes(x);
+}
+
+export function hiringFilterIdToStatus(id: HiringStatusFilterId): boolean {
+  return id === 'hiring';
+}
+
+// ---------------------------------------------------------------------------
 // CSV → id normalization (used by seed script)
 // ---------------------------------------------------------------------------
 

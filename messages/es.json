@@ -59,6 +59,14 @@
         "label": "Ciudad",
         "placeholder": "Cualquier ciudad"
       },
+      "hiring": {
+        "label": "Contratando",
+        "placeholder": "Cualquier estado"
+      },
+      "toggle": {
+        "show": "Mostrar filtros",
+        "hide": "Ocultar filtros"
+      },
       "clear": "Limpiar todo",
       "resultsCount": "Mostrando {shown} de {total}"
     },
@@ -76,6 +84,9 @@
         "employees": "Empleados",
         "founded": "Fundada",
         "sector": "Sector"
+      },
+      "openRoles": {
+        "eyebrow": "Vacantes · {count}"
       },
       "brief": {
         "eyebrow": "Resumen extraído por IA",
@@ -119,7 +130,10 @@
       "linkedin": "LinkedIn",
       "viewOnMap": "Ver en el mapa",
       "employeesValue": "{count} empleados",
-      "foundedValue": "Fundada en {year}"
+      "foundedValue": "Fundada en {year}",
+      "hiring": "Contratando",
+      "notHiring": "No contratando",
+      "hiringWithCount": "Contratando · {count, plural, one {# vacante} other {# vacantes}}"
     },
     "list": {
       "emptyTitle": "Sin resultados",
@@ -157,6 +171,11 @@
       "201-500": "201–500",
       "501-1k": "501–1K",
       "1k-5k": "1K–5K"
+    },
+    "hiringStatuses": {
+      "hiring": "Contratando",
+      "not-hiring": "No contratando",
+      "unknown": "Desconocido"
     },
     "targetMarkets": {
       "enterprise": "Enterprise",

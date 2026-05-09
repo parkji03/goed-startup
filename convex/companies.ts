@@ -6,20 +6,42 @@ import {
   employeeCountValidator,
   locationValidator,
   investorBriefValidator,
+  hiringStatusValidator,
 } from './schema';
+
+/**
+ * Args shape for an inbound job listing during seed. Kept as a const so the
+ * seedOne mutation and the listings-replace helper share the same validator.
+ */
+const seedJobListingValidator = v.object({
+  source: v.union(v.literal('linkedin'), v.literal('manual')),
+  externalId: v.optional(v.string()),
+  title: v.string(),
+  url: v.string(),
+  department: v.optional(v.string()),
+  location: v.optional(v.string()),
+  postedAt: v.optional(v.number()),
+});
 
 /**
  * Concatenate the user-visible text fields into a single string indexed by
  * the `search_text` search index. Joining keeps the schema to one search
- * index instead of three (name + website + description), at the cost of
- * losing per-field weighting — fine for our small corpus.
+ * index instead of three (name + website + description + listing titles),
+ * at the cost of losing per-field weighting — fine for our small corpus.
+ *
+ * Listing titles are included so a search like "engineer" surfaces every
+ * company with an open engineering role. Any code path that mutates a
+ * company's listings must keep this string in sync (today only `seedOne`
+ * writes listings, and it rebuilds searchText every run).
  */
 function buildSearchText(
   name: string,
   website?: string,
   description?: string,
+  listingTitles?: string[],
 ): string {
-  return [name, website, description]
+  const titles = listingTitles?.length ? listingTitles.join(' ') : undefined;
+  return [name, website, description, titles]
     .filter((s): s is string => Boolean(s && s.trim()))
     .join(' ');
 }
@@ -58,8 +80,18 @@ export const searchForMap = query({
     stages: v.optional(v.array(stageValidator)),
     employeeCounts: v.optional(v.array(employeeCountValidator)),
     cities: v.optional(v.array(v.string())),
+    /**
+     * Each entry is an actual `hiringStatus` value (true / false /
+     * 'unknown'). The hook layer translates UI/URL filter IDs
+     * ('hiring' / 'not-hiring' / 'unknown') to these before calling, so
+     * Convex never sees the URL representation.
+     */
+    hiringStatuses: v.optional(v.array(hiringStatusValidator)),
   },
-  handler: async (ctx, { q, sectors, stages, employeeCounts, cities }) => {
+  handler: async (
+    ctx,
+    { q, sectors, stages, employeeCounts, cities, hiringStatuses },
+  ) => {
     const trimmed = q?.trim() ?? '';
 
     // Cap reads at a generous bound so the map can render the entire
@@ -89,6 +121,11 @@ export const searchForMap = query({
     const citySet = cities && cities.length
       ? new Set(cities.map((c) => c.trim().toLowerCase()))
       : null;
+    // Boolean / 'unknown' values stored on the doc; legacy rows that
+    // never got a hiringStatus written are treated as 'unknown' below.
+    const hiringSet = hiringStatuses && hiringStatuses.length
+      ? new Set<boolean | 'unknown'>(hiringStatuses)
+      : null;
 
     const filtered = rows
       .filter((c) => c.location.lat != null && c.location.lng != null)
@@ -104,7 +141,8 @@ export const searchForMap = query({
           !citySet ||
           (c.location.city != null &&
             citySet.has(c.location.city.trim().toLowerCase())),
-      );
+      )
+      .filter((c) => !hiringSet || hiringSet.has(c.hiringStatus ?? 'unknown'));
 
     // Re-rank so company-name matches surface above website/description-only
     // matches. Convex's BM25 over the combined searchText weights all three
@@ -143,6 +181,11 @@ export const searchForMap = query({
         lng: c.location.lng!,
         lat: c.location.lat!,
         investorBrief: c.investorBrief,
+        // Hiring snapshot — drives the per-card hiring indicator. Falls
+        // back to 'unknown' for legacy rows that never went through the
+        // LinkedIn-aware seed.
+        hiringStatus: c.hiringStatus ?? ('unknown' as const),
+        openListingsCount: c.openListingsCount ?? 0,
       }));
   },
 });
@@ -215,10 +258,12 @@ export const bySlug = query({
 });
 
 /**
- * One-shot: populate `searchText` on every company that doesn't have it yet.
- * Run after the schema migration with:
+ * One-shot: rebuild `searchText` for every company. Useful after changing
+ * the buildSearchText shape (e.g. adding listing titles) without re-running
+ * the full CSV seed. Idempotent — only patches rows whose value actually
+ * changed.
+ *
  *   npx convex run companies:backfillSearchText
- * Idempotent — re-running rewrites the same value (cheap no-op patches).
  */
 export const backfillSearchText = mutation({
   args: {},
@@ -226,7 +271,16 @@ export const backfillSearchText = mutation({
     const rows = await ctx.db.query('companies').collect();
     let written = 0;
     for (const row of rows) {
-      const next = buildSearchText(row.name, row.website, row.description);
+      const listings = await ctx.db
+        .query('companyJobPostings')
+        .withIndex('by_companyId', (q) => q.eq('companyId', row._id))
+        .collect();
+      const next = buildSearchText(
+        row.name,
+        row.website,
+        row.description,
+        listings.map((l) => l.title),
+      );
       if (row.searchText !== next) {
         await ctx.db.patch(row._id, { searchText: next });
         written++;
@@ -366,39 +420,185 @@ export const seedOne = mutation({
 
     // Investor brief — AI-extracted from website crawls. Best-effort, not curated.
     investorBrief: v.optional(investorBriefValidator),
+
+    /**
+     * Hiring snapshot derived from the LinkedIn scrape. The seed script
+     * computes this from `linkedin-hiring-data.json`:
+     *   has-linkedin + listings → true
+     *   has-linkedin + no listings → false
+     *   no linkedin / unknown → 'unknown'
+     */
+    hiringStatus: v.optional(hiringStatusValidator),
+    /** ms epoch when the LinkedIn scrape that produced `hiringStatus` ran. */
+    linkedinSyncedAt: v.optional(v.number()),
+    /**
+     * Replace-all set of job listings for this company. Provided ⇒ wipe
+     * the existing rows in `companyJobPostings` for this company and
+     * insert these. Omitted ⇒ leave existing listings alone (lets you
+     * re-seed company metadata without churning postings).
+     */
+    jobListings: v.optional(v.array(seedJobListingValidator)),
   },
   handler: async (ctx, args) => {
+    const { jobListings, ...companyArgs } = args;
     const existing = await ctx.db
       .query('companies')
-      .withIndex('by_slug', (q) => q.eq('slug', args.slug))
+      .withIndex('by_slug', (q) => q.eq('slug', companyArgs.slug))
       .unique();
 
     const now = Date.now();
     const writePayload = {
-      ...args,
-      searchText: buildSearchText(args.name, args.website, args.description),
-      hiringStatus: 'unknown' as const,
-      jobPostings: [] as { title: string; link: string; department?: string }[],
+      ...companyArgs,
+      searchText: buildSearchText(
+        companyArgs.name,
+        companyArgs.website,
+        companyArgs.description,
+        jobListings?.map((l) => l.title),
+      ),
+      // Default to 'unknown' when the seed didn't compute one (e.g. for a
+      // partial run that skipped LinkedIn).
+      hiringStatus: companyArgs.hiringStatus ?? ('unknown' as const),
+      // Denormalized listings count — only written when the caller passes
+      // a fresh listings batch, otherwise we'd zero out on a metadata-only
+      // re-seed. `[]` is fine on intent ("we checked, no listings") and
+      // drops the count to 0.
+      ...(jobListings !== undefined
+        ? { openListingsCount: jobListings.length }
+        : {}),
+      // Drain the legacy `jobPostings` array field on every write — once
+      // every row passes through this path, the field can be dropped from
+      // the schema entirely. Convex treats `undefined` in a patch as
+      // "remove this field".
+      jobPostings: undefined,
       photos: [] as never[],
       status: 'published' as const,
       lastEditedAt: now,
       diffLog: [] as { userId?: string; timestamp: number; changes: string }[],
     };
 
+    let companyId;
+    let action: 'inserted' | 'updated';
     if (existing) {
       await ctx.db.patch(existing._id, writePayload);
-      return { _id: existing._id, action: 'updated' as const };
+      companyId = existing._id;
+      action = 'updated';
+    } else {
+      companyId = await ctx.db.insert('companies', writePayload);
+      action = 'inserted';
     }
 
-    const _id = await ctx.db.insert('companies', writePayload);
-    return { _id, action: 'inserted' as const };
+    // Replace job listings atomically with the company write. Bounded
+    // delete: a single company has at most a handful of LinkedIn postings,
+    // well under transaction limits.
+    if (jobListings !== undefined) {
+      const stale = await ctx.db
+        .query('companyJobPostings')
+        .withIndex('by_companyId', (q) => q.eq('companyId', companyId))
+        .collect();
+      for (const r of stale) await ctx.db.delete(r._id);
+      const scrapedAt = companyArgs.linkedinSyncedAt ?? now;
+      for (const l of jobListings) {
+        await ctx.db.insert('companyJobPostings', {
+          ...l,
+          companyId,
+          scrapedAt,
+        });
+      }
+    }
+
+    return {
+      _id: companyId,
+      action,
+      listingsReplaced: jobListings?.length ?? 0,
+    };
   },
 });
 
 /**
- * One-shot backfill for rows seeded before `hiringStatus` and `jobPostings`
- * became required. Patches in safe defaults so schema validation passes.
- * Idempotent — only writes when a field is missing.
+ * All open listings for a company, newest-first. Driven by the index that
+ * orders `(companyId, postedAt)` so no in-memory sort is needed; rows
+ * without `postedAt` sort last (Convex sorts undefined as null).
+ */
+export const listingsForCompany = query({
+  args: { companyId: v.id('companies') },
+  handler: async (ctx, { companyId }) => {
+    return await ctx.db
+      .query('companyJobPostings')
+      .withIndex('by_companyId_and_postedAt', (q) =>
+        q.eq('companyId', companyId),
+      )
+      .order('desc')
+      .take(50);
+  },
+});
+
+/**
+ * Every open listing across the corpus, with the parent company's display
+ * fields joined in. Powers a global jobs view; stays cheap because the
+ * corpus is small (low hundreds of listings) and the company set is read
+ * once per call rather than per-row.
+ *
+ * Sort: newest-first by `postedAt` (undefined sorts last). No global
+ * `by_postedAt` index because at this scale a 1000-row in-memory sort
+ * costs nothing — add the index if the table ever exceeds ~5k rows.
+ */
+export const allListings = query({
+  args: {},
+  handler: async (ctx) => {
+    // Generous bound — well above the current 304-row corpus and within
+    // Convex's per-query limits.
+    const LISTINGS_CAP = 1000;
+    const listings = await ctx.db
+      .query('companyJobPostings')
+      .take(LISTINGS_CAP);
+
+    // Batch the company lookups so we hit each parent doc once even when
+    // a company has many listings.
+    const uniqueCompanyIds = Array.from(
+      new Set(listings.map((l) => l.companyId)),
+    );
+    const companyDocs = await Promise.all(
+      uniqueCompanyIds.map((id) => ctx.db.get(id)),
+    );
+    const byId = new Map(
+      companyDocs
+        .filter((c): c is NonNullable<typeof c> => c != null)
+        .map((c) => [c._id, c] as const),
+    );
+
+    return listings
+      .map((l) => {
+        const c = byId.get(l.companyId);
+        if (!c || c.status !== 'published') return null;
+        return {
+          _id: l._id,
+          title: l.title,
+          url: l.url,
+          source: l.source,
+          department: l.department,
+          location: l.location,
+          postedAt: l.postedAt,
+          scrapedAt: l.scrapedAt,
+          company: {
+            _id: c._id,
+            name: c.name,
+            slug: c.slug,
+            sector: c.sector,
+            city: c.location.city,
+            website: c.website,
+          },
+        };
+      })
+      .filter(<T,>(x: T | null): x is T => x !== null)
+      .sort((a, b) => (b.postedAt ?? 0) - (a.postedAt ?? 0));
+  },
+});
+
+/**
+ * One-shot backfill for rows seeded before `hiringStatus` became required.
+ * Patches in `'unknown'` so schema validation passes. Idempotent — only
+ * writes when the field is missing. Re-running the LinkedIn-driven seed
+ * supersedes this for any row it touches.
  */
 export const backfillRequiredFields = mutation({
   args: {},
@@ -406,14 +606,8 @@ export const backfillRequiredFields = mutation({
     const rows = await ctx.db.query('companies').collect();
     let patched = 0;
     for (const row of rows) {
-      const update: {
-        hiringStatus?: 'unknown';
-        jobPostings?: { title: string; link: string; department?: string }[];
-      } = {};
-      if (row.hiringStatus === undefined) update.hiringStatus = 'unknown';
-      if (row.jobPostings === undefined) update.jobPostings = [];
-      if (Object.keys(update).length > 0) {
-        await ctx.db.patch(row._id, update);
+      if (row.hiringStatus === undefined) {
+        await ctx.db.patch(row._id, { hiringStatus: 'unknown' });
         patched++;
       }
     }

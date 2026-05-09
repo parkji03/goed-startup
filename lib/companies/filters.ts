@@ -2,7 +2,7 @@
  * URL-encoded filter state for the map.
  *
  * Persisted to the URL so views are shareable and survive refresh:
- *   ?q=lehi&sector=fintech,consumer&stage=seed,series-a&employees=11-50&city=lehi,provo
+ *   ?q=lehi&sector=fintech,consumer&stage=seed,series-a&employees=11-50&city=lehi,provo&hiring=hiring,not-hiring
  *
  * Empty values aren't serialized at all (no `?q=&sector=`) — the URL stays
  * tidy when nothing is filtered.
@@ -10,9 +10,11 @@
 
 import {
   isEmployeeCountId,
+  isHiringStatusFilterId,
   isSectorId,
   isStageId,
   type EmployeeCountId,
+  type HiringStatusFilterId,
   type SectorId,
   type StageId,
 } from './taxonomy';
@@ -23,6 +25,7 @@ export type MapFilters = {
   stages: StageId[];
   employeeCounts: EmployeeCountId[];
   cities: string[];
+  hiringStatuses: HiringStatusFilterId[];
 };
 
 export const EMPTY_FILTERS: MapFilters = {
@@ -31,6 +34,7 @@ export const EMPTY_FILTERS: MapFilters = {
   stages: [],
   employeeCounts: [],
   cities: [],
+  hiringStatuses: [],
 };
 
 export function isFiltersActive(f: MapFilters): boolean {
@@ -39,7 +43,8 @@ export function isFiltersActive(f: MapFilters): boolean {
     f.sectors.length > 0 ||
     f.stages.length > 0 ||
     f.employeeCounts.length > 0 ||
-    f.cities.length > 0
+    f.cities.length > 0 ||
+    f.hiringStatuses.length > 0
   );
 }
 
@@ -73,6 +78,7 @@ export function parseFiltersFromParams(
     stages: parseCsvParam(params.get('stage'), isStageId),
     employeeCounts: parseCsvParam(params.get('employees'), isEmployeeCountId),
     cities: parseCitiesCsv(params.get('city')),
+    hiringStatuses: parseCsvParam(params.get('hiring'), isHiringStatusFilterId),
   };
 }
 
@@ -103,6 +109,7 @@ export function serializeFiltersToParams(f: MapFilters): string {
   if (f.stages.length) params.set('stage', f.stages.join(','));
   if (f.employeeCounts.length) params.set('employees', f.employeeCounts.join(','));
   if (f.cities.length) params.set('city', f.cities.join(','));
+  if (f.hiringStatuses.length) params.set('hiring', f.hiringStatuses.join(','));
   return params.toString();
 }
 
